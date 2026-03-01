@@ -1,0 +1,32 @@
+*.sqlite*
+
+# Node & Front-end Dependencies (Tailwind, etc.)
+/node_modules
+npm-debug.log
+yarn-error.log
+
+# Laravel Core & Vendor
+/vendor
+/.phpunit.cache
+.phpunit.result.cache
+
+# Public & Storage
+/public/build
+/public/hot
+/public/storage
+/storage/*.key
+
+# Environment Variables (CRITICAL FOR SECURITY)
+.env
+.env.backup
+.env.production
+auth.json
+
+# IDEs and Editors
+/.fleet
+/.idea
+/.vscode
+
+# Virtual Machines / Local Dev
+Homestead.json
+Homestead.yaml
