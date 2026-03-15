@@ -13,29 +13,20 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
+            // Common fields for all users (couples, vendors, and admins)
             $table->string('email')->unique(); // Email column for user authentication
             $table->timestamp('email_verified_at')->nullable(); // Email verification timestamp
             $table->string('password'); // Password column for authentication
-            $table->string('role'); // Role column to distinguish between admin , couple and vendor
+            $table->string('role')->default('couple'); // Role column to distinguish between admin , couple and vendor
             $table->string('device_token')->nullable(); // Token for mobile app authentication
+            $table->text('profile_photo_path')->nullable(); // Profile photo path for users (optional)
 
-            // For couples, we can store the names of both partners in the same row
-            $table->string('partner_1_name')->nullable(); // Partner 1 name
-            $table->string('partner_2_name')->nullable(); // Partner 2 name
-            $table->date('wedding_date')->nullable(); // Wedding date for couples
-            $table->time('wedding_time')->nullable(); // Wedding time for couples
-            $table->string('wedding_venue')->nullable(); // Wedding venue for couples
-            $table->decimal('total_budget_limit', 10, 2)->nullable(); // Budget for couples
+            // For couples, we can store their wedding details in the Couple table
+            // For vendors, we can store the business name and contact information in the Vendor table
+            // For admin, we can just use the email and password for authentication
 
-            // For vendors, we can store the business name and contact information
-            $table->string('business_name')->nullable(); // Business name for vendors
-            $table->string('business_type')->nullable(); // Service type for vendors (e.g., catering, photography)
-            $table->string('contact_number')->nullable(); // Contact number for vendors
-            $table->string('status')->default('pending'); // Status for vendors (e.g., pending, approved, rejected)
-            $table->text('address')->nullable(); // Address for vendors
-            $table->text('business_documents')->nullable(); // Business documents for vendors (e.g., licenses, certifications)
-
-
+            // Additional fields for vendors and couples can be added in their respective tables (e.g., couples table for wedding details, vendors table for business information)
+            $table->boolean('is_active')->default(true); // Active status for users (e.g., active, inactive)
             $table->rememberToken();
             $table->timestamps();
         });

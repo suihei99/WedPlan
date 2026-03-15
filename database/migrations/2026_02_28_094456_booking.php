@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Foreign key to users table
-            $table->foreignIdFor(User::class)->constrained()->onDelete('cascade'); // Foreign key to users table for couple booking
+            $table->foreignIdFor(User::class, 'couple_id')->nullable()->constrained('users')->onDelete('set null'); // Foreign key to users table for vendor booking
             $table->string('type_service'); // Type of service being booked (e.g., Venue, Catering, etc.)
             $table->date('booking_date');
             $table->boolean('status')->default(true); // booking status (e.g., , confirmed = true, canceled = false)

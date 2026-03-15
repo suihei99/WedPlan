@@ -6,11 +6,23 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasApiTokens, SoftDeletes;
+
+    // Define constants for user roles
+    const ROLE_ADMIN = 'admin';
+    const ROLE_COUPLE = 'couple';
+    const ROLE_VENDOR = 'vendor';
+
+    // All valid roles for easy validation
+    const ROLES = [ self::ROLE_ADMIN, self::ROLE_COUPLE, self::ROLE_VENDOR];
 
     /**
      * The attributes that are mass assignable.
@@ -21,8 +33,12 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'device_token',
+        'profile_photo_path',
+        'is_active',
     ];
 
+  
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -30,6 +46,7 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
+        'device_token',
         'remember_token',
     ];
 
@@ -43,6 +60,68 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_active' => 'boolean',
         ];
     }
+
+    // Define the relationship with the Couple model
+    public function couple(): HasOne
+    {
+        return $this->hasOne(Couple::class);
+    }
+    public function vendor(): HasOne
+    {
+        return $this->hasOne(Vendor::class);
+    }
+    // Admin has no specific relationship, as they are just users with admin role and can manage both couples and vendors
+
+    // Define the relationship with the Guest model
+    public function guests()
+    {
+        return $this->hasMany(Guest::class);
+    }
+
+
+    // Role check helper methods
+    public function isAdmin(): bool
+    {        
+        return $this->role === self::ROLE_ADMIN;
+    }
+    public function isCouple(): bool
+    {
+        return $this->role === self::ROLE_COUPLE;
+    }
+    public function isVendor(): bool
+    {
+        return $this->role === self::ROLE_VENDOR;
+    }
+
+    // Dynamic user accesor to get the profile information based on the role
+    public function getProfileAttribute()
+    {
+        if ($this->isCouple()) {
+            return $this->couple; // Return the related couple profile
+        } elseif ($this->isVendor()) {
+            return $this->vendor; // Return the related vendor profile
+        }
+        return null; // Admins do not have a specific profile
+    }
+
+    // Query Scope to filter users by role
+    public function scopeAdmins($query)
+    {
+        return $query->where('role', self::ROLE_ADMIN);
+    }
+    public function scopeCouples($query)
+    {
+        return $query->where('role', self::ROLE_COUPLE);
+    }
+    public function scopeVendors($query)
+    {
+        return $query->where('role', self::ROLE_VENDOR);
+    }
+
+
+
 }
+
