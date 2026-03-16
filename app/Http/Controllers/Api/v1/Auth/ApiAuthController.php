@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Api\v1\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\LoginRequest;
-use App\Http\Rquests\Auth\RegisterCoupleRequest;
-use App\Http\Requests\Auth\RegisterVendorRequest;
+use App\Http\Requests\Requests\Auth\LoginRequest;
+use App\Http\Requests\Requests\Auth\RegisterCoupleRequest;
+use App\Http\Requests\Requests\Auth\RegisterVendorRequest;
 use App\Services\AuthService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

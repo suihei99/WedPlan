@@ -3,7 +3,7 @@
 namespace App\Http\Requests\Requests\Auth;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Http\Requests\Requests\Auth\Password;
+use Illuminate\Validation\Rules\Password;
 
 class RegisterVendorRequest extends FormRequest
 {
@@ -25,7 +25,7 @@ class RegisterVendorRequest extends FormRequest
         return [
             // user fields
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed', Password::default()],
+            'password' => ['required', 'string', 'min:8', 'confirmed',Password::defaults()],
 
             // vendor fields
             'business_name' => ['required', 'string', 'max:255'],

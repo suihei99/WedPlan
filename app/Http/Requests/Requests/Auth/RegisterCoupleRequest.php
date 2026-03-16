@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Requests\Auth;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Password;
 
 class RegisterCoupleRequest extends FormRequest
 {
@@ -24,7 +25,7 @@ class RegisterCoupleRequest extends FormRequest
         return [
             // user fields
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed', Password::default()],
+            'password' => ['required', 'string', 'min:8', 'confirmed', Password::defaults()],
     
             // couple fields
             'partner1_name' => ['required', 'string', 'max:255'],
