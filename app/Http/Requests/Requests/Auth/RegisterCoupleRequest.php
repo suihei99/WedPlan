@@ -12,7 +12,7 @@ class RegisterCoupleRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -26,7 +26,7 @@ class RegisterCoupleRequest extends FormRequest
             // user fields
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed', Password::defaults()],
-    
+
             // couple fields
             'partner1_name' => ['required', 'string', 'max:255'],
             'partner2_name' => ['required', 'string', 'max:255'],

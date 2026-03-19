@@ -4,25 +4,25 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasApiTokens, SoftDeletes;
+    use HasApiTokens, HasFactory, Notifiable;
 
     // Define constants for user roles
     const ROLE_ADMIN = 'admin';
+
     const ROLE_COUPLE = 'couple';
+
     const ROLE_VENDOR = 'vendor';
 
     // All valid roles for easy validation
-    const ROLES = [ self::ROLE_ADMIN, self::ROLE_COUPLE, self::ROLE_VENDOR];
+    const ROLES = [self::ROLE_ADMIN, self::ROLE_COUPLE, self::ROLE_VENDOR];
 
     /**
      * The attributes that are mass assignable.
@@ -38,7 +38,6 @@ class User extends Authenticatable
         'is_active',
     ];
 
-  
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -69,6 +68,7 @@ class User extends Authenticatable
     {
         return $this->hasOne(Couple::class);
     }
+
     public function vendor(): HasOne
     {
         return $this->hasOne(Vendor::class);
@@ -81,16 +81,17 @@ class User extends Authenticatable
         return $this->hasMany(Guest::class);
     }
 
-
     // Role check helper methods
     public function isAdmin(): bool
-    {        
+    {
         return $this->role === self::ROLE_ADMIN;
     }
+
     public function isCouple(): bool
     {
         return $this->role === self::ROLE_COUPLE;
     }
+
     public function isVendor(): bool
     {
         return $this->role === self::ROLE_VENDOR;
@@ -104,6 +105,7 @@ class User extends Authenticatable
         } elseif ($this->isVendor()) {
             return $this->vendor; // Return the related vendor profile
         }
+
         return null; // Admins do not have a specific profile
     }
 
@@ -112,16 +114,14 @@ class User extends Authenticatable
     {
         return $query->where('role', self::ROLE_ADMIN);
     }
+
     public function scopeCouples($query)
     {
         return $query->where('role', self::ROLE_COUPLE);
     }
+
     public function scopeVendors($query)
     {
         return $query->where('role', self::ROLE_VENDOR);
     }
-
-
-
 }
-

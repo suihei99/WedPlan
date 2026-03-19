@@ -14,28 +14,29 @@ class RoleMiddleware
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next , string ...$roles): Response
+    public function handle(Request $request, Closure $next, string ...$roles): Response
     {
         $user = $request->user();
 
         // Not authenticated
-        if (!$user) {
+        if (! $user) {
             return $request->expectsJson()
                 ? response()->json(['message' => 'Unauthenticated.'], 401)
                 : redirect()->route('login');
         }
-        
+
         // validation role is a known role
         if (! in_array($user->role, User::ROLES)) {
             abort(403, 'Invalid user role.');
         }
 
-        if(! in_array($user->role, $roles)) {
+        // Check if user role is in allowed roles
+        if (! in_array($user->role, $roles)) {
             return $request->expectsJson()
                 ? response()->json(['message' => 'Forbidden. Insufficient permissions.'], 403)
                 : abort(403, 'Forbidden. Insufficient permissions.');
         }
-        
+
         return $next($request);
     }
 }

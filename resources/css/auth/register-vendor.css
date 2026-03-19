@@ -1,0 +1,219 @@
+@import './register-couple.css';
+
+.register-vendor-body {
+    background:
+        radial-gradient(circle at 6% 14%, rgba(244, 112, 138, 0.2), transparent 36%),
+        radial-gradient(circle at 88% 10%, rgba(224, 79, 109, 0.16), transparent 30%),
+        radial-gradient(circle at 80% 82%, rgba(227, 156, 177, 0.12), transparent 26%),
+        linear-gradient(152deg, #fff6f9 0%, #ffeaf0 48%, #f7d8e2 100%);
+}
+
+.vendor-layer {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.vendor-orb {
+    position: absolute;
+    border-radius: 999px;
+    filter: blur(5px);
+    animation: float-card 7.6s ease-in-out infinite;
+}
+
+.vendor-orb-1 {
+    width: 250px;
+    height: 250px;
+    left: -70px;
+    top: 6%;
+    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.96), rgba(244, 112, 138, 0.2));
+}
+
+.vendor-orb-2 {
+    width: 280px;
+    height: 280px;
+    right: -86px;
+    top: 22%;
+    background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.94), rgba(224, 79, 109, 0.19));
+    animation-delay: 1.2s;
+}
+
+.vendor-orb-3 {
+    width: 210px;
+    height: 210px;
+    right: 20%;
+    bottom: -62px;
+    background: radial-gradient(circle at 45% 45%, rgba(255, 255, 255, 0.85), rgba(224, 79, 109, 0.16));
+    animation-delay: 2.3s;
+}
+
+.vendor-shell {
+    max-width: 1260px;
+}
+
+.vendor-brand-panel {
+    background: linear-gradient(158deg, rgba(255, 255, 255, 0.75), rgba(252, 219, 230, 0.76));
+}
+
+.vendor-brand-title {
+    max-width: 13ch;
+}
+
+.vendor-highlight {
+    gap: 0.8rem;
+}
+
+.vendor-highlight-card {
+    border-color: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.7);
+}
+
+.vendor-form-panel {
+    max-width: 620px;
+}
+
+.vendor-form-card {
+    max-width: 590px;
+    padding: 1.95rem 1.7rem;
+}
+
+.vendor-kicker {
+    background: linear-gradient(135deg, #ffedf2, #ffd9e3);
+    border-color: #f7bfd0;
+}
+
+.vendor-form-grid {
+    gap: 0.88rem;
+}
+
+.field-select {
+    appearance: none;
+    cursor: pointer;
+    background-image: linear-gradient(45deg, transparent 50%, #c87890 50%), linear-gradient(135deg, #c87890 50%, transparent 50%);
+    background-position: calc(100% - 18px) calc(50% + 1px), calc(100% - 13px) calc(50% + 1px);
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+    padding-right: 2.1rem;
+}
+
+.field-helper {
+    font-size: 0.72rem;
+    color: #916772;
+    margin-top: 0.15rem;
+}
+
+.input-wrap-textarea {
+    align-items: flex-start;
+}
+
+.textarea-icon {
+    padding-top: 0.72rem;
+}
+
+.field-textarea {
+    resize: vertical;
+    min-height: 94px;
+    padding-top: 0.66rem;
+    line-height: 1.45;
+}
+
+.upload-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    border: 1.4px solid #efbccb;
+    border-radius: 12px;
+    background: #fff;
+    padding: 0.52rem 0.62rem;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+
+.upload-wrap:hover {
+    border-color: #e04f6d;
+    box-shadow: 0 10px 20px rgba(224, 79, 109, 0.12);
+    transform: translateY(-1px);
+}
+
+.upload-wrap-error {
+    border-color: #e04f6d;
+    background: #fff7f8;
+}
+
+.upload-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 124px;
+    border-radius: 9px;
+    background: linear-gradient(135deg, #f47b96, #e04f6d);
+    color: #fff;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    padding: 0.5rem 0.95rem;
+}
+
+.upload-meta {
+    font-size: 0.77rem;
+    color: #7f5a66;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.upload-input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+.upload-notes {
+    margin-top: 0.45rem;
+    padding-left: 1rem;
+    color: #8b6470;
+    font-size: 0.72rem;
+    line-height: 1.45;
+    display: grid;
+    gap: 0.28rem;
+}
+
+.vendor-consent {
+    background: #fff8fa;
+}
+
+.vendor-submit {
+    margin-top: 0.9rem;
+}
+
+@media (max-width: 1050px) {
+    .vendor-form-card {
+        max-width: 560px;
+    }
+}
+
+@media (max-width: 680px) {
+    .vendor-form-card {
+        padding: 1.55rem 1.1rem;
+    }
+
+    .upload-wrap {
+        flex-wrap: wrap;
+        gap: 0.52rem;
+    }
+
+    .upload-button {
+        min-width: 112px;
+    }
+
+    .upload-meta {
+        width: 100%;
+    }
+}

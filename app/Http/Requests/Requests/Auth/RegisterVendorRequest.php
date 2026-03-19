@@ -12,7 +12,7 @@ class RegisterVendorRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -25,7 +25,7 @@ class RegisterVendorRequest extends FormRequest
         return [
             // user fields
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed',Password::defaults()],
+            'password' => ['required', 'string', 'min:8', 'confirmed', Password::defaults()],
 
             // vendor fields
             'business_name' => ['required', 'string', 'max:255'],
