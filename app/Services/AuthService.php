@@ -1,28 +1,29 @@
 <?php
+
 namespace App\Services;
 
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
-use Pest\Support\Arr;
+use Illuminate\Support\Facades\Hash;
 
 class AuthService
 {
     /**
      * Login - Authenticate user and generate token (vendor, couple, admin)
      * Return user data and token on success, error message on failure
-     * @param string $email
-     * @param string $password
-    */
+     *
+     * @param  string  $email
+     * @param  string  $password
+     */
     public function Login(array $credentials): ?array
     {
         $user = User::where('email', $credentials['email'])->where('is_active', true)->first();
 
-        if(!$user || !Hash::check($credentials['password'], $user->password)) {
+        if (! $user || ! Hash::check($credentials['password'], $user->password)) {
             return null; // Invalid credentials or inactive account
         }
 
-        //Eager load related data based on role
+        // Eager load related data based on role
         if ($user->isCouple()) {
             $user->load('couple'); // Load couple profile
         } elseif ($user->isVendor()) {
@@ -37,15 +38,15 @@ class AuthService
             'token' => $token,
             'role' => $user->role, // Return the role of the user (vendor, couple, admin)
         ];
-    }        
-    
+    }
+
     /*
     * Register a Couple.
     * Create a new user with role 'couple' and associated couple profile.
     */
     public function registerCouple(array $data): ?User
     {
-        return DB::transaction(function () use ($data){
+        return DB::transaction(function () use ($data) {
             $user = User::create([
                 'email' => $data['email'],
                 'password' => Hash::make($data['password']),
@@ -53,8 +54,8 @@ class AuthService
             ]);
 
             $user->couple()->create([
-                'partner1_name' => $data['partner1_name'],
-                'partner2_name' => $data['partner2_name'],
+                'partner1_name' => $data['partner1_name'], // Required field for couple profile
+                'partner2_name' => $data['partner2_name'], // Required field for couple profile
                 'wedding_date' => $data['wedding_date'] ?? null,
                 'wedding_time' => $data['wedding_time'] ?? null,
                 'wedding_location' => $data['wedding_location'] ?? null,
@@ -69,10 +70,9 @@ class AuthService
     * Register a Vendor.
     * Create a new user with role 'vendor' and associated vendor profile.
     */
-    public function registerVendor(array $data) : User
+    public function registerVendor(array $data): User
     {
-        return DB::transaction(function () use ($data)
-        {
+        return DB::transaction(function () use ($data) {
             $user = User::create([
                 'email' => $data['email'],
                 'password' => Hash::make($data['password']),

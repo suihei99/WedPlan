@@ -75,12 +75,6 @@ class User extends Authenticatable
     }
     // Admin has no specific relationship, as they are just users with admin role and can manage both couples and vendors
 
-    // Define the relationship with the Guest model
-    public function guests()
-    {
-        return $this->hasMany(Guest::class);
-    }
-
     // Role check helper methods
     public function isAdmin(): bool
     {

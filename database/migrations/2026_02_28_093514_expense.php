@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('expenses', function (Blueprint $table){
+        Schema::create('expenses', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Foreign key to users table
+            $table->foreignId('budget_category_id')->constrained('budgetcategories')->onDelete('cascade'); // Foreign key to budgetcategories table
             $table->string('expense_name'); // Name of the expense
             $table->decimal('amount', 10, 2); // Amount of the expense
             $table->date('date_paid')->nullable(); // Date when the expense was paid
             $table->text('description')->nullable(); // Additional notes about the expense
-            $table->string('paymenbt_method')->nullable(); // Payment method (e.g., credit card, cash, etc.)
+            $table->string('payment_method')->nullable(); // Payment method (e.g., credit card, cash, etc.)
             $table->timestamps();
         });
     }

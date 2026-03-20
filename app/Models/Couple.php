@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Couple extends Model
 {
@@ -33,5 +33,23 @@ class Couple extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    // Define the relationship with the BudgetCategory model
+    public function budgetCategories()
+    {
+        return $this->hasMany(BudgetCategory::class);
+    }
+
+    // Define the relationship with the Guest model
+    public function guests()
+    {
+        return $this->hasMany(Guest::class);
+    }
+
+    // Define the relationship with the Task model
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
     }
 }
