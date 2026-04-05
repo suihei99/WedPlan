@@ -16,7 +16,6 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Foreign key to couples table
             $table->string('category_name'); // Name of the budget category (e.g., Venue, Catering, etc.)
             $table->decimal('allocated_amount', 10, 2)->default(0); // Allocated budget amount for the category
-            $table->decimal('spent_amount', 10, 2)->default(0); // Amount spent in the category
             $table->timestamps();
         });
     }

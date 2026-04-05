@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\v1\Auth\ApiAuthController;
+use App\Http\Controllers\Api\v1\Couple\ApiBudgetController;
 
 
 /*
@@ -34,10 +35,28 @@ Route::prefix('v1')->group(function () {
         // });
 
         // // Couple
-        // Route::middleware('role:couple')->prefix('couple')->group(function () {
-        //     Route::get('profile', [CoupleApiController::class, 'profile']);
-        //     Route::put('profile', [CoupleApiController::class, 'updateProfile']);
-        // });
+        Route::middleware('role:couple')->prefix('couple')->group(function () {
+        //    Route::get('dashboard', [CoupleDashboardController::class, 'index']);\
+
+            // Budget management API routes
+            Route::get('/budget', [ApiBudgetController::class, 'index']);
+            Route::post('/budget', [ApiBudgetController::class, 'store']);
+            Route::get('/budget/{budgetCategory}', [ApiBudgetController::class, 'show']);
+            Route::put('/budget/{budgetCategory}', [ApiBudgetController::class, 'update']);
+            Route::delete('/budget/{budgetCategory}', [ApiBudgetController::class, 'destroy']);
+
+            // Expenses with Budget Categories API routes can be added here in the future
+            
+            // Guest management API routes can be added here in the future
+
+            // Task management API routes can be added here in the future
+
+            // AI Budgeting API routes can be added here in the future
+
+            //Setting - Couple
+            Route::get('/settings', [ApiSettingController::class, 'index']);
+            Route::put('/settings', [ApiSettingController::class, 'update']);
+        });
     });
 });
 

@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Vendor extends Model
 {
@@ -25,13 +27,27 @@ class Vendor extends Model
     {
         return [
             'status'=> 'boolean',
+            'business_documents' => 'string',
         ];
     }
 
 
     // Define the relationship with the User model
-    public function user()
+    public function user() : BelongsTo
     {
         return $this->belongsTo(User::class);
     }
+
+    // Define the relationship with the Servies model
+    public function services() : HasMany
+    {
+        return $this->hasMany(Service::class);
+    }
+    
+    // Define the relationship with the Bookings model
+    public function bookings() : HasMany
+    {
+        return $this->hasMany(Booking::class);
+    }
+
 }

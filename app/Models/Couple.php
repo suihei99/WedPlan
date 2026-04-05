@@ -4,6 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Collection;
+
 
 class Couple extends Model
 {
@@ -30,13 +35,13 @@ class Couple extends Model
     }
 
     // Define the relationship with the User model
-    public function user()
+    public function user() : BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     // Define the relationship with the BudgetCategory model
-    public function budgetCategories()
+    public function budgetCategories() : HasMany
     {
         return $this->hasMany(BudgetCategory::class);
     }
@@ -52,4 +57,18 @@ class Couple extends Model
     {
         return $this->hasMany(Task::class);
     }
+
+    // Accessor to calculate the total budget spent across all categories
+    // Total spent across all categories
+    public function getTotalBudgetSpentAttribute() : float
+    {
+        return $this->budgetCategories->flatMap->expenses->sum('amount_spent');
+    }
+
+    // Accessor to calculate the remaining budget
+    public function getRemainingBudgetAttribute() : float
+    {
+        return $this->total_budget_limit - $this->total_budget_spent;
+    }
+
 }
