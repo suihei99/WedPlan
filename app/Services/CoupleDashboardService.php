@@ -16,12 +16,19 @@ class CoupleDashboardService
         private GuestService $guestService, 
         private TaskService $taskService) {}
 
+
+    
+    // Get a summary of the couple's dashboard, including tasks, guests, and budget information    
     public function getSummary(Couple $couple) : array
     {
         return [
-            'tasks' => $this->taskService->getSummary($couple),
-            'guests' => $this->guestService->getSummary($couple),
             'budget' => $this->budgetService->getSummary($couple),
+            'guests_summary' => $this->guestService->getSummary($couple),
+            'upcoming_tasks' => $this->taskService->getUpcomingTasks($couple),
+            'tasks_done' => $couple->tasks()->where('is_completed', true)->count(),
+            'tasks_total' => $couple->tasks()->count(),
+            'days_until_wedding' => $couple->wedding_date ? now()->diffInDays($couple->wedding_date, false) : null,
+            'couples' => $couple->couples()->get(),
         ];
     }
 }

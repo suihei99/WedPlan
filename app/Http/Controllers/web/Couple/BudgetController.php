@@ -7,7 +7,6 @@ use App\Models\BudgetCategory;
 use App\Services\BudgetService;
 use App\Http\Requests\Requests\Couple\BudgetCategoryRequest;
 use App\Models\Couple;
-use App\Models\Budget;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 

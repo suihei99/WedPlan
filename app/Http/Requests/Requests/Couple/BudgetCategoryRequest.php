@@ -4,14 +4,14 @@ namespace App\Http\Requests\Requests\Couple;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class BudgetService extends FormRequest
+class BudgetCategoryRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,8 @@ class BudgetService extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'category_name' => ['required', 'string', 'max:255'],
+            'allocated_amount' => ['required', 'numeric', 'min:0'],
         ];
     }
 }

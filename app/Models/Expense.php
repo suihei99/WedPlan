@@ -19,7 +19,7 @@ class Expense extends Model
         'budget_category_id',
         'expense_name',
         'amount',
-        'expense_date',
+        'date_paid',
         'description',
         'payment_method',
     ];
@@ -28,7 +28,7 @@ class Expense extends Model
     {
         return [
             'amount' => 'decimal:2',
-            'expense_date' => 'date',
+            'date_paid' => 'date',
             'description' => 'string',
             'payment_method' => 'string',
         ];
