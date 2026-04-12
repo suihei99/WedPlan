@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Requests\Couple;
 
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class BudgetCategoryRequest extends FormRequest
 {
@@ -11,7 +13,9 @@ class BudgetCategoryRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        $user = Auth::user();
+
+        return $user instanceof User && $user->isCouple();
     }
 
     /**

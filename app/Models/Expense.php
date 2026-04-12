@@ -5,9 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Mockery\Generator\Method;
-
 
 class Expense extends Model
 {
@@ -40,11 +37,14 @@ class Expense extends Model
         return $this->belongsTo(BudgetCategory::class, 'budget_category_id');
     }
 
-    //Payment method contants
+    // Payment method contants
     const METHOD_CASH = 'Cash';
-    const METHOD_CREDITCARD= 'Credit Card';
-    const METHOD_DEDITCARD = 'Debit Card';
+
+    const METHOD_CREDITCARD = 'Credit Card';
+
+    const METHOD_DEBITCARD = 'Debit Card';
+
     const METHOD_TRANSFER = 'Bank_Transfer';
 
-    const METHOD = [self::METHOD_CASH, self::METHOD_CREDITCARD, self::METHOD_DEDITCARD, self::METHOD_TRANSFER];
+    const METHOD = [self::METHOD_CASH, self::METHOD_CREDITCARD, self::METHOD_DEBITCARD, self::METHOD_TRANSFER];
 }

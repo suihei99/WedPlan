@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Notifications\Notifiable;
 
@@ -25,19 +25,21 @@ class Task extends Model
         return [
             'deadline' => 'date',
             'is_completed' => 'boolean',
-            'priority' => 'tinyInteger',
+            'priority' => 'integer',
         ];
     }
 
     // Priority levels
-    const PRIORITY_LOW = 1;
-    const PRIORITY_MEDIUM = 2;
-    const PRIORITY_HIGH = 3;
-   
-    // Relationship to Couple model
-    public function couple() : BelongsTo
+    const PRIORITY_LOW = 0;
+
+    const PRIORITY_MEDIUM = 1;
+
+    const PRIORITY_HIGH = 2;
+
+    // Relationship to User model
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(Couple::class , 'user_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     // Scope overdue tasks
@@ -46,11 +48,12 @@ class Task extends Model
         return $query->where('deadline', '<', now())->where('is_completed', false);
     }
 
-    public function scopeByPriority($query, $priority)
+    public function scopeByPriority($query, ?int $priority = null)
     {
-        return $query->where('priority', $priority);
+        if ($priority !== null) {
+            return $query->where('priority', $priority);
+        }
+
+        return $query->orderByDesc('priority');
     }
-
-
 }
-

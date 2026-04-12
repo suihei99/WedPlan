@@ -1,12 +1,10 @@
 <?php
 
 use App\Http\Controllers\web\Auth\WebAuthController;
-use App\Http\Controllers\web\Couple\CoupleDashboardController;
-use App\Http\Controllers\web\Vendor\VendorDashboardController;
-use App\Http\Controllers\web\Admin\AdminDashboardController;
-use App\Http\Controllers\web\Couple\TaskController;
+use App\Http\Controllers\web\Couple\BudgetController;
+use App\Http\Controllers\web\Couple\DashboardCoupleController;
 use App\Http\Controllers\web\Couple\GuestController;
-use App\Http\Controllers\Web\Couple\BudgetController;
+use App\Http\Controllers\web\Couple\TaskController;
 use App\Http\Controllers\web\Setting\SettingController;
 use Illuminate\Support\Facades\Route;
 
@@ -36,7 +34,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     // Admin dashboard
     Route::get('/dashboard', function () {
         return view('admin.dashboard');
-    })->name('admin.dashboard');
+    })->name('dashboard');
 
     // Additional admin routes can be added here
 });
@@ -46,7 +44,7 @@ Route::middleware(['auth', 'role:vendor'])->prefix('vendor')->name('vendor.')->g
     // Vendor dashboard
     Route::get('/dashboard', function () {
         return view('vendor.dashboard');
-    })->name('vendor.dashboard');
+    })->name('dashboard');
 
     // Additional vendor routes can be added here
 });
@@ -54,7 +52,7 @@ Route::middleware(['auth', 'role:vendor'])->prefix('vendor')->name('vendor.')->g
 // Couple routes
 Route::middleware(['auth', 'role:couple'])->prefix('couple')->name('couple.')->group(function () {
     // Couple dashboard
-    // Route::get('dashboard', [CoupleDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [DashboardCoupleController::class, 'showCoupleDashboard'])->name('dashboard');
 
     // Budget management
     Route::get('/budget', [BudgetController::class, 'index'])->name('budget.index');
@@ -67,7 +65,7 @@ Route::middleware(['auth', 'role:couple'])->prefix('couple')->name('couple.')->g
 
     // Expense management into Budget categories can be added here
     Route::get('/budget/{budgetCategory}/expenses', [BudgetController::class, 'showExpenses'])->name('budget.expenses');
-    Route::put('/budget/{budgetCategory}/expenses{expense}', [BudgetController::class, 'completedExpense'])->name('budget.expenses.update');
+    Route::put('/budget/{budgetCategory}/expenses/{expense}/complete', [BudgetController::class, 'completedExpense'])->name('budget.expenses.complete');
     Route::get('/budget/{budgetCategory}/expenses/create', [BudgetController::class, 'displayAddExpenseForm'])->name('budget.expenses.create');
     Route::post('/budget/{budgetCategory}/expenses/added', [BudgetController::class, 'addExpense'])->name('budget.expenses.add');
     Route::get('/budget/{budgetCategory}/expenses/{expense}', [BudgetController::class, 'showExpense'])->name('budget.expenses.show');
@@ -75,7 +73,7 @@ Route::middleware(['auth', 'role:couple'])->prefix('couple')->name('couple.')->g
     Route::put('/budget/{budgetCategory}/expenses/{expense}/due-date', [BudgetController::class, 'dueDateExpense'])->name('budget.expenses.due-date');
     Route::delete('/budget/{budgetCategory}/expenses/{expense}', [BudgetController::class, 'destroyExpense'])->name('budget.expenses.delete');
 
-    //Guest management routes can be added here
+    // Guest management routes can be added here
     Route::get('/guests', [GuestController::class, 'showGuests'])->name('guests.index');
     Route::get('/guests/create', [GuestController::class, 'displayAddGuestForm'])->name('guests.create');
     Route::post('/guests/create/added', [GuestController::class, 'store'])->name('guests.store');
@@ -85,7 +83,7 @@ Route::middleware(['auth', 'role:couple'])->prefix('couple')->name('couple.')->g
     Route::post('/guests/{guest}/check-in', [GuestController::class, 'checkin'])->name('guests.checkin');
     Route::delete('/guests/{guest}', [GuestController::class, 'destroy'])->name('guests.destroy');
 
-    //Task management routes can be added here
+    // Task management routes can be added here
     Route::get('/tasks', [TaskController::class, 'showTasks'])->name('tasks.index');
     Route::get('/tasks/create', [TaskController::class, 'displayAddTaskForm'])->name('tasks.create');
     Route::post('/tasks/create/added', [TaskController::class, 'store'])->name('tasks.store');

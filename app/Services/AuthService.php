@@ -11,11 +11,8 @@ class AuthService
     /**
      * Login - Authenticate user and generate token (vendor, couple, admin)
      * Return user data and token on success, error message on failure
-     *
-     * @param  string  $email
-     * @param  string  $password
      */
-    public function Login(array $credentials): ?array
+    public function login(array $credentials): ?array
     {
         $user = User::where('email', $credentials['email'])->where('is_active', true)->first();
 
@@ -54,11 +51,11 @@ class AuthService
             ]);
 
             $user->couple()->create([
-                'partner1_name' => $data['partner1_name'], // Required field for couple profile
-                'partner2_name' => $data['partner2_name'], // Required field for couple profile
+                'partner_1_name' => $data['partner_1_name'], // Required field for couple profile
+                'partner_2_name' => $data['partner_2_name'], // Required field for couple profile
                 'wedding_date' => $data['wedding_date'] ?? null,
                 'wedding_time' => $data['wedding_time'] ?? null,
-                'wedding_location' => $data['wedding_location'] ?? null,
+                'wedding_venue' => $data['wedding_venue'] ?? null,
                 'total_budget_limit' => $data['total_budget_limit'] ?? null,
             ]);
 

@@ -3,27 +3,24 @@
 namespace App\Http\Controllers\web\Couple;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
-use App\Models\Couple;
-use App\Models\Budget;
-use App\Services\CoupleService;
+use App\Services\CoupleDashboardService;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardCoupleController extends Controller
 {
-    protected $coupleService;
-
-    public function __construct(CoupleService $coupleService)
-    {
-        $this->coupleService = $coupleService;
-    }
+    public function __construct(private readonly CoupleDashboardService $coupleService) {}
 
     // Display couple dashboard with wedding date countdown, budget summary, and upcoming tasks
     public function showCoupleDashboard()
     {
-        $user = Auth::user();
-        $dashboardData = $this->coupleService->getDashboardData($user);
+        $couple = Auth::user()?->couple;
 
-        return view('couple.dashboard', compact('dashboardData'));
+        if (! $couple) {
+            abort(403, 'Couple profile not found.');
+        }
+
+        $dashboardData = $this->coupleService->getSummary($couple);
+
+        return view('couple.dashboard-couple', compact('dashboardData'));
     }
 }

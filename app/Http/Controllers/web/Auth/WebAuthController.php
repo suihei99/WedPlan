@@ -53,7 +53,7 @@ class WebAuthController extends Controller
             User::ROLE_ADMIN => redirect()->route('admin.dashboard'),
             User::ROLE_COUPLE => redirect()->route('couple.dashboard'),
             User::ROLE_VENDOR => redirect()->route('vendor.dashboard'),
-            default => redirect()->route('/')
+            default => redirect('/')
         };
 
     }
@@ -61,7 +61,7 @@ class WebAuthController extends Controller
     // Handle Registration for Couples
     public function registerCouple(RegisterCoupleRequest $request)
     {
-        $user = $this->authService->registerCouple($result = $request->validated());
+        $user = $this->authService->registerCouple($request->validated());
         Auth::login($user);
 
         return redirect()->route('couple.dashboard')->with('success', 'Registration successful! Welcome to our wedding planning platform.');
@@ -70,7 +70,7 @@ class WebAuthController extends Controller
     // Handle Registration for Vendors
     public function registerVendor(RegisterVendorRequest $request)
     {
-        $user = $this->authService->registerVendor($result = $request->validated());
+        $user = $this->authService->registerVendor($request->validated());
         Auth::login($user);
 
         return redirect()->route('login')->with('info', 'Registration successful! Your account is pending approval. We will notify you once it has been reviewed.');

@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Booking extends Model
@@ -31,16 +31,15 @@ class Booking extends Model
         ];
     }
 
-    // Define the relationship with the Vendor model
-    public function vendor() : BelongsTo
+    // Define the relationship with the vendor user
+    public function vendor(): BelongsTo
     {
-        return $this->belongsTo(Vendor::class, 'user_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
-    // Define the relationship with the Couple model
-    public function couple() : BelongsTo
+    // Define the relationship with the couple user
+    public function couple(): BelongsTo
     {
-        return $this->belongsTo(Couple::class, 'couple_id');
+        return $this->belongsTo(User::class, 'couple_id');
     }
-
 }

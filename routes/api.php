@@ -1,16 +1,19 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\v1\Auth\ApiAuthController;
 use App\Http\Controllers\Api\v1\Couple\ApiBudgetController;
-
+use App\Http\Controllers\Api\v1\Couple\ApiDashboardController;
+use App\Http\Controllers\Api\v1\Couple\ApiExpenseController;
+use App\Http\Controllers\Api\v1\Couple\ApiGuestController;
+use App\Http\Controllers\Api\v1\Couple\ApiTaskController;
+use App\Http\Controllers\Api\v1\Setting\ApiSettingController;
+use Illuminate\Support\Facades\Route;
 
 /*
-* API Routes - These Routes are API restful for integration with Flutter app which used for vendor, couple and guest (from couple). 
+* API Routes - These Routes are API restful for integration with Flutter app which used for vendor, couple and guest (from couple).
 * All routes are prefixed with /api/v1/ for versioning and future scalability.
 * Admin is no longer included in the API routes as they will manage the system through the web interface.
-*/ 
+*/
 
 // Public routes
 Route::prefix('v1')->group(function () {
@@ -36,7 +39,8 @@ Route::prefix('v1')->group(function () {
 
         // // Couple
         Route::middleware('role:couple')->prefix('couple')->group(function () {
-        //    Route::get('dashboard', [CoupleDashboardController::class, 'index']);\
+            // Dashboard
+            Route::get('/dashboard', [ApiDashboardController::class, 'index']);
 
             // Budget management API routes
             Route::get('/budget', [ApiBudgetController::class, 'index']);
@@ -45,18 +49,35 @@ Route::prefix('v1')->group(function () {
             Route::put('/budget/{budgetCategory}', [ApiBudgetController::class, 'update']);
             Route::delete('/budget/{budgetCategory}', [ApiBudgetController::class, 'destroy']);
 
-            // Expenses with Budget Categories API routes can be added here in the future
-            
-            // Guest management API routes can be added here in the future
+            // Expense API routes
+            Route::get('/expenses', [ApiExpenseController::class, 'index']);
+            Route::post('/expenses', [ApiExpenseController::class, 'store']);
+            Route::get('/expenses/{expense}', [ApiExpenseController::class, 'show']);
+            Route::put('/expenses/{expense}', [ApiExpenseController::class, 'update']);
+            Route::delete('/expenses/{expense}', [ApiExpenseController::class, 'destroy']);
 
-            // Task management API routes can be added here in the future
+            // Guest API routes
+            Route::get('/guests', [ApiGuestController::class, 'index']);
+            Route::post('/guests', [ApiGuestController::class, 'store']);
+            Route::get('/guests/{guest}', [ApiGuestController::class, 'show']);
+            Route::put('/guests/{guest}', [ApiGuestController::class, 'update']);
+            Route::put('/guests/{guest}/rsvp', [ApiGuestController::class, 'updateRsvp']);
+            Route::post('/guests/{guest}/check-in', [ApiGuestController::class, 'checkin']);
+            Route::delete('/guests/{guest}', [ApiGuestController::class, 'destroy']);
+
+            // Task API routes
+            Route::get('/tasks', [ApiTaskController::class, 'index']);
+            Route::post('/tasks', [ApiTaskController::class, 'store']);
+            Route::get('/tasks/{task}', [ApiTaskController::class, 'show']);
+            Route::put('/tasks/{task}', [ApiTaskController::class, 'update']);
+            Route::put('/tasks/{task}/complete', [ApiTaskController::class, 'markComplete']);
+            Route::delete('/tasks/{task}', [ApiTaskController::class, 'destroy']);
 
             // AI Budgeting API routes can be added here in the future
 
-            //Setting - Couple
+            // Setting - Couple
             Route::get('/settings', [ApiSettingController::class, 'index']);
             Route::put('/settings', [ApiSettingController::class, 'update']);
         });
     });
 });
-

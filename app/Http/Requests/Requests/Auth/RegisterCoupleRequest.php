@@ -28,10 +28,10 @@ class RegisterCoupleRequest extends FormRequest
             'password' => ['required', 'string', 'min:8', 'confirmed', Password::defaults()],
 
             // couple fields
-            'partner1_name' => ['required', 'string', 'max:255'],
-            'partner2_name' => ['required', 'string', 'max:255'],
+            'partner_1_name' => ['required', 'string', 'max:255'],
+            'partner_2_name' => ['required', 'string', 'max:255'],
             'wedding_date' => ['nullable', 'date', 'after:today'],
-            'wedding_location' => ['required', 'string', 'max:255'],
+            'wedding_venue' => ['required', 'string', 'max:255'],
             'wedding_time' => ['nullable', 'date_format:H:i'],
             'total_budget_limit' => ['nullable', 'numeric', 'min:0'],
         ];
