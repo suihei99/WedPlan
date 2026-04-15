@@ -12,6 +12,8 @@ class BudgetCategory extends Model
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory;
 
+    protected $table = 'budgetcategories';
+
     // Define the fillable attributes for mass assignment
     protected $fillable = [
         'user_id',
@@ -19,7 +21,7 @@ class BudgetCategory extends Model
         'allocated_amount',
     ];
 
-    protected function casts()
+    protected function casts(): array
     {
         return [
             'allocated_amount' => 'decimal:2',

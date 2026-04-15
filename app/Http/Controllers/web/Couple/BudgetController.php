@@ -26,7 +26,7 @@ class BudgetController extends Controller
         $couple = $this->currentCouple();
         $summary = $this->budgetService->getSummary($couple);
 
-        return view('couple.budget.index', compact('summary'));
+        return view('couple.budget.index', compact('summary', 'couple'));
     }
 
     public function displayAddCategoryForm()

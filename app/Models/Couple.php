@@ -26,7 +26,6 @@ class Couple extends Model
     {
         return [
             'wedding_date' => 'date',
-            'wedding_time' => 'time',
             'total_budget_limit' => 'decimal:2',
         ];
     }

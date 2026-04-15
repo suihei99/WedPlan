@@ -1,0 +1,306 @@
+:root {
+    --wedding-blush-50: #fff5f7;
+    --wedding-blush-100: #ffe8ee;
+    --wedding-blush-200: #ffd1dc;
+    --wedding-rose: #f4708a;
+    --wedding-rose-deep: #e04f6d;
+    --wedding-ink: #21161a;
+    --wedding-muted: #7d6670;
+    --wedding-surface: #f5f1f2;
+    --wedding-card: #f0eaec;
+    --wedding-border: #e4dade;
+}
+
+.couple-app {
+    margin: 0;
+    min-height: 100vh;
+    font-family: var(--font-sans), sans-serif;
+    color: var(--wedding-ink);
+    background:
+        radial-gradient(circle at 14% 10%, rgba(244, 112, 138, 0.12), transparent 34%),
+        radial-gradient(circle at 78% 14%, rgba(224, 79, 109, 0.1), transparent 28%),
+        var(--wedding-surface);
+}
+
+.couple-app-shell {
+    display: flex;
+    min-height: 100vh;
+}
+
+.couple-sidebar {
+    width: 270px;
+    background: linear-gradient(180deg, #f7f2f4 0%, #f1ebee 100%);
+    border-right: 1px solid var(--wedding-border);
+    padding: 1.2rem 1rem 1.4rem;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 40;
+}
+
+.sidebar-logo-card {
+    border-radius: 12px;
+    background: #f7f4f5;
+    padding: 0.95rem 0.75rem;
+}
+
+.sidebar-logo-link {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    text-decoration: none;
+    color: inherit;
+}
+
+.sidebar-logo-image {
+    width: 58px;
+    height: 58px;
+    object-fit: contain;
+}
+
+.sidebar-logo-copy h1 {
+    margin: 0;
+    font-size: 1.9rem;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.01em;
+}
+
+.sidebar-logo-copy p {
+    margin: 0.2rem 0 0;
+    color: #57464d;
+    font-size: 0.8rem;
+}
+
+.sidebar-couple-card {
+    margin-top: 0.85rem;
+    padding: 0.8rem;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    border: 1px solid #ece3e6;
+    background: #fbf8f9;
+}
+
+.sidebar-couple-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: #eee7ea;
+    color: #3e2e35;
+    font-size: 0.84rem;
+    font-weight: 700;
+}
+
+.sidebar-couple-card h2 {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1.25;
+}
+
+.sidebar-couple-card p {
+    margin: 0.2rem 0 0;
+    font-size: 0.82rem;
+    color: #72606a;
+}
+
+.sidebar-nav {
+    margin-top: 0.85rem;
+    display: grid;
+    gap: 0.2rem;
+}
+
+.sidebar-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    border-radius: 10px;
+    padding: 0.7rem 0.72rem;
+    text-decoration: none;
+    color: #22171b;
+    font-size: 0.96rem;
+    font-weight: 600;
+    transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.sidebar-nav-icon {
+    width: 1.16rem;
+    height: 1.16rem;
+    flex: 0 0 auto;
+}
+
+.sidebar-nav-item:hover {
+    background: #fce9ef;
+    transform: translateX(2px);
+}
+
+.sidebar-nav-item.active {
+    background: linear-gradient(135deg, #f59bb0 0%, var(--wedding-rose) 100%);
+    color: #ffffff;
+    box-shadow: 0 10px 20px rgba(224, 79, 109, 0.22);
+}
+
+.sidebar-nav-item.disabled {
+    color: #97858d;
+    background: transparent;
+    cursor: not-allowed;
+    opacity: 0.82;
+}
+
+.sidebar-logout {
+    margin-top: 1rem;
+    padding-top: 0.8rem;
+    border-top: 1px solid var(--wedding-border);
+}
+
+.sidebar-logout-button {
+    width: 100%;
+    border: 0;
+    border-radius: 10px;
+    background: #fff1f5;
+    color: var(--wedding-rose-deep);
+    font-size: 0.98rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.7rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.sidebar-logout-button svg {
+    width: 1rem;
+    height: 1rem;
+}
+
+.sidebar-logout-button:hover {
+    background: #ffe2ea;
+    transform: translateY(-1px);
+}
+
+.couple-main {
+    flex: 1;
+    min-width: 0;
+}
+
+.couple-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.45rem;
+    border-bottom: 1px solid var(--wedding-border);
+    background: rgba(245, 241, 242, 0.92);
+    backdrop-filter: blur(8px);
+    position: sticky;
+    top: 0;
+    z-index: 30;
+}
+
+.mobile-menu-button {
+    width: 2.45rem;
+    height: 2.45rem;
+    border: 1px solid #e8dce1;
+    border-radius: 0.7rem;
+    background: #fff8fa;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.22rem;
+    padding: 0 0.58rem;
+    cursor: pointer;
+}
+
+.mobile-menu-button span {
+    display: block;
+    height: 2px;
+    background: #5f4a53;
+    border-radius: 999px;
+}
+
+.topbar-headings h2 {
+    margin: 0;
+    font-size: 1.95rem;
+    font-weight: 750;
+    letter-spacing: -0.01em;
+    color: #1f1519;
+}
+
+.topbar-headings p {
+    margin: 0.2rem 0 0;
+    color: #66545d;
+    font-size: 1rem;
+}
+
+.topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+}
+
+.topbar-bell {
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 1px solid #e9dde2;
+    border-radius: 50%;
+    background: #fff7fa;
+    color: #4f3e46;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.topbar-bell svg {
+    width: 1.2rem;
+    height: 1.2rem;
+}
+
+.topbar-bell:hover {
+    border-color: #efb8c7;
+    background: #ffe9ef;
+}
+
+.couple-page-content {
+    padding: 1rem 1.45rem 1.8rem;
+}
+
+.couple-sidebar-open {
+    overflow: hidden;
+}
+
+@media (max-width: 1024px) {
+    .couple-sidebar {
+        position: fixed;
+        left: -290px;
+        transition: left 0.24s ease;
+        box-shadow: 0 10px 42px rgba(37, 24, 30, 0.18);
+    }
+
+    .couple-sidebar.is-open {
+        left: 0;
+    }
+
+    .mobile-menu-button {
+        display: inline-flex;
+    }
+
+    .topbar-headings h2 {
+        font-size: 1.45rem;
+    }
+
+    .topbar-headings p {
+        font-size: 0.9rem;
+    }
+
+    .couple-page-content {
+        padding: 0.95rem;
+    }
+}

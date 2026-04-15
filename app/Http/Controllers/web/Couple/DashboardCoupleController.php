@@ -11,7 +11,7 @@ class DashboardCoupleController extends Controller
     public function __construct(private readonly CoupleDashboardService $coupleService) {}
 
     // Display couple dashboard with wedding date countdown, budget summary, and upcoming tasks
-    public function showCoupleDashboard()
+    public function showCoupleDashboard(): \Illuminate\Contracts\View\View
     {
         $couple = Auth::user()?->couple;
 
@@ -21,6 +21,6 @@ class DashboardCoupleController extends Controller
 
         $dashboardData = $this->coupleService->getSummary($couple);
 
-        return view('couple.dashboard-couple', compact('dashboardData'));
+        return view('couple.dashboard-couple', compact('dashboardData', 'couple'));
     }
 }

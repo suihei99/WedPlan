@@ -1,0 +1,416 @@
+.countdown-panel {
+    background: linear-gradient(160deg, #f39cb0 0%, #ed8ba2 100%);
+    border: 1px solid #eab1bf;
+    border-radius: 0.72rem;
+    box-shadow: 0 10px 22px rgba(82, 44, 58, 0.08);
+    color: #22171b;
+    margin-top: 0.3rem;
+    padding: 2rem 1.2rem 2.2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.countdown-panel::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(90deg, transparent 10%, rgba(255, 255, 255, 0.18) 45%, transparent 80%);
+    transform: translateX(-120%);
+    animation: countdown-gloss 9s ease-in-out infinite;
+}
+
+@keyframes countdown-gloss {
+    0% {
+        transform: translateX(-120%);
+    }
+    45% {
+        transform: translateX(130%);
+    }
+    100% {
+        transform: translateX(130%);
+    }
+}
+
+.countdown-panel h3 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 700;
+    font-style: italic;
+    color: #1f1318;
+}
+
+.countdown-date {
+    margin: 0.9rem 0 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    color: #37262e;
+    font-size: 1.45rem;
+    font-style: italic;
+}
+
+.countdown-date svg {
+    width: 1.4rem;
+    height: 1.4rem;
+}
+
+.countdown-grid {
+    margin-top: 2.1rem;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+    max-width: 640px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.countdown-unit {
+    position: relative;
+}
+
+.countdown-unit::before {
+    content: "";
+    width: 0.9rem;
+    height: 0.9rem;
+    border-radius: 50%;
+    background: #f66889;
+    position: absolute;
+    right: 0.8rem;
+    top: -0.45rem;
+    z-index: 2;
+}
+
+.countdown-value {
+    margin: 0;
+    min-height: 74px;
+    border-radius: 0.52rem;
+    background: #f8f5f6;
+    display: grid;
+    place-items: center;
+    font-size: 2.05rem;
+    font-weight: 500;
+    color: #2a1b22;
+    box-shadow: inset 0 0 0 1px #f0e8ea;
+}
+
+.countdown-label {
+    margin: 0.5rem 0 0;
+    font-size: 1.7rem;
+    color: #23171b;
+}
+
+.dashboard-metrics {
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.95rem;
+}
+
+.metric-card {
+    border-radius: 0.58rem;
+    border: 1px solid #ebdde2;
+    background: #fcfafb;
+    box-shadow: 0 8px 22px rgba(95, 68, 78, 0.06);
+    padding: 0.8rem;
+    transition: transform 0.24s ease, box-shadow 0.24s ease;
+}
+
+.metric-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px rgba(95, 68, 78, 0.12);
+}
+
+.metric-card-primary {
+    border-color: #f2a8bb;
+    background: linear-gradient(150deg, #f7a4b8 0%, #ee8da5 100%);
+    color: #ffffff;
+}
+
+.metric-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.metric-head svg {
+    width: 1.3rem;
+    height: 1.3rem;
+}
+
+.metric-icon {
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.metric-value {
+    margin: 0.6rem 0 0;
+    font-size: 2rem;
+    font-weight: 800;
+    color: #201419;
+}
+
+.metric-card-primary .metric-value {
+    color: #ffffff;
+}
+
+.metric-note {
+    margin: 0.3rem 0 0;
+    font-size: 1rem;
+    color: #6d5962;
+}
+
+.metric-card-primary .metric-note {
+    color: #ffeef3;
+}
+
+.metric-meter {
+    margin-top: 0.45rem;
+    border-radius: 0.48rem;
+    background: #f3d8df;
+    height: 10px;
+    overflow: hidden;
+}
+
+.metric-meter span {
+    display: block;
+    width: 0;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #ef7f9c 0%, #e15576 100%);
+    transition: width 0.7s ease;
+}
+
+.dashboard-secondary-grid {
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.95rem;
+}
+
+.panel-card {
+    border: 1px solid #ebdde2;
+    border-radius: 0.58rem;
+    background: #fcfafb;
+    box-shadow: 0 8px 22px rgba(95, 68, 78, 0.06);
+    padding: 0.8rem;
+}
+
+.panel-card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem;
+    margin-bottom: 0.7rem;
+}
+
+.panel-card-head h4 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: #21171b;
+}
+
+.panel-card-head a {
+    font-size: 1rem;
+    color: #e04f6d;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.panel-card-head a:hover {
+    text-decoration: underline;
+}
+
+.panel-card-list {
+    display: grid;
+    gap: 0.55rem;
+}
+
+.panel-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    border: 1px solid #efe5e8;
+    background: #fff8fa;
+    border-radius: 0.48rem;
+    padding: 0.6rem;
+}
+
+.panel-row p {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #2b1d24;
+}
+
+.panel-row small {
+    color: #7f6b74;
+    font-size: 0.9rem;
+}
+
+.panel-row-tag {
+    border-radius: 999px;
+    background: #ffe8ef;
+    color: #d4486a;
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 0.25rem 0.55rem;
+}
+
+.panel-row-budget {
+    align-items: center;
+}
+
+.panel-budget-copy {
+    flex: 1;
+}
+
+.panel-row-budget strong {
+    font-size: 0.96rem;
+    color: #2a1b22;
+}
+
+.panel-empty {
+    border: 1px dashed #e6d5db;
+    border-radius: 0.58rem;
+    background: #fff7f9;
+    padding: 0.8rem;
+    text-align: center;
+}
+
+.panel-empty p {
+    margin: 0;
+    color: #6f5a63;
+}
+
+.panel-empty a {
+    display: inline-block;
+    margin-top: 0.5rem;
+    color: #d94f70;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.panel-empty a:hover {
+    text-decoration: underline;
+}
+
+.quick-actions-panel {
+    margin-top: 1rem;
+    border: 1px solid #eadce1;
+    border-radius: 0.58rem;
+    padding: 0.85rem;
+    background: linear-gradient(140deg, #fff4f8 0%, #fbeef3 100%);
+}
+
+.quick-actions-panel h4 {
+    margin: 0 0 0.65rem;
+    font-size: 1.12rem;
+    color: #251920;
+}
+
+.quick-actions-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.55rem;
+}
+
+.quick-action-btn {
+    border: 1px solid #efc9d4;
+    border-radius: 0.55rem;
+    background: #fff;
+    text-decoration: none;
+    color: #34222b;
+    font-weight: 700;
+    font-size: 0.92rem;
+    text-align: center;
+    padding: 0.62rem;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.quick-action-btn:hover {
+    background: #ffe8ef;
+    transform: translateY(-1px);
+}
+
+.countdown-value.is-ticking {
+    animation: countdown-pop 0.26s ease;
+}
+
+@keyframes countdown-pop {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@media (max-width: 1280px) {
+    .countdown-panel h3 {
+        font-size: 1.7rem;
+    }
+
+    .countdown-date {
+        font-size: 1.2rem;
+    }
+
+    .countdown-value {
+        font-size: 1.6rem;
+        min-height: 62px;
+    }
+
+    .countdown-label {
+        font-size: 1.25rem;
+    }
+}
+
+@media (max-width: 980px) {
+    .countdown-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .dashboard-metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .dashboard-secondary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .quick-actions-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 640px) {
+    .countdown-panel {
+        padding: 1.1rem 0.8rem 1.3rem;
+    }
+
+    .countdown-panel h3 {
+        font-size: 1.25rem;
+    }
+
+    .countdown-date {
+        font-size: 1rem;
+    }
+
+    .countdown-label {
+        font-size: 1rem;
+    }
+
+    .dashboard-metrics {
+        grid-template-columns: 1fr;
+    }
+
+    .quick-actions-grid {
+        grid-template-columns: 1fr;
+    }
+}

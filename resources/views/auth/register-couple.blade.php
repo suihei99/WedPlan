@@ -124,40 +124,40 @@
 							</div>
 
 							<div class="field-group">
-								<label for="partner1_name" class="field-label">Partner 1 Name</label>
-								<div class="input-wrap @error('partner1_name') input-wrap-error @enderror">
+								<label for="partner_1_name" class="field-label">Partner 1 Name</label>
+								<div class="input-wrap @error('partner_1_name') input-wrap-error @enderror">
 									<span class="input-icon">
 										<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
 									</span>
-									<input id="partner1_name" type="text" name="partner1_name" class="field-input" value="{{ old('partner1_name') }}" placeholder="First partner name" required>
+									<input id="partner_1_name" type="text" name="partner_1_name" class="field-input" value="{{ old('partner_1_name') }}" placeholder="First partner name" required>
 								</div>
-								@error('partner1_name')
+								@error('partner_1_name')
 									<p class="field-error">{{ $message }}</p>
 								@enderror
 							</div>
 
 							<div class="field-group">
-								<label for="partner2_name" class="field-label">Partner 2 Name</label>
-								<div class="input-wrap @error('partner2_name') input-wrap-error @enderror">
+								<label for="partner_2_name" class="field-label">Partner 2 Name</label>
+								<div class="input-wrap @error('partner_2_name') input-wrap-error @enderror">
 									<span class="input-icon">
 										<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
 									</span>
-									<input id="partner2_name" type="text" name="partner2_name" class="field-input" value="{{ old('partner2_name') }}" placeholder="Second partner name" required>
+									<input id="partner_2_name" type="text" name="partner_2_name" class="field-input" value="{{ old('partner_2_name') }}" placeholder="Second partner name" required>
 								</div>
-								@error('partner2_name')
+								@error('partner_2_name')
 									<p class="field-error">{{ $message }}</p>
 								@enderror
 							</div>
 
 							<div class="field-group field-full">
-								<label for="wedding_location" class="field-label">Wedding Location</label>
-								<div class="input-wrap @error('wedding_location') input-wrap-error @enderror">
+								<label for="wedding_venue" class="field-label">Wedding Location</label>
+								<div class="input-wrap @error('wedding_venue') input-wrap-error @enderror">
 									<span class="input-icon">
 										<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 1 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg>
 									</span>
-									<input id="wedding_location" type="text" name="wedding_location" class="field-input" value="{{ old('wedding_location') }}" placeholder="Venue, city, district" required>
+									<input id="wedding_venue" type="text" name="wedding_venue" class="field-input" value="{{ old('wedding_venue') }}" placeholder="Venue, city, district" required>
 								</div>
-								@error('wedding_location')
+								@error('wedding_venue')
 									<p class="field-error">{{ $message }}</p>
 								@enderror
 							</div>
