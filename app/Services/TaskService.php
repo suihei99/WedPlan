@@ -2,10 +2,9 @@
 
 namespace App\Services;
 
-use App\Models\Task;
 use App\Models\Couple;
+use App\Models\Task;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
 
 class TaskService
 {
@@ -13,21 +12,19 @@ class TaskService
      * addTask(), updateTask(), deleteTask(), alertTask(), viewTask()
      * methods to manage task records for each couple.
      */
-
-    public function getAll(Couple $couple) : Collection
+    public function getAll(Couple $couple): Collection
     {
         return $couple->tasks()->byPriority()->get();
     }
 
-
     public function create(Couple $couple, array $data): Task
     {
-       return $couple->tasks()->create([
-          'task_name' => $data['task_name'],
-          'description' => $data['description'] ?? null,
-          'deadline' => $data['deadline'] ?? null,
-          'is_completed' => $data['is_completed'] ?? false,
-          'priority' => $data['priority'] ??  Task::PRIORITY_LOW,
+        return $couple->tasks()->create([
+            'task_name' => $data['task_name'],
+            'description' => $data['description'] ?? null,
+            'deadline' => $data['deadline'] ?? null,
+            'is_completed' => $data['is_completed'] ?? false,
+            'priority' => $data['priority'] ?? Task::PRIORITY_LOW,
         ]);
     }
 
@@ -47,21 +44,25 @@ class TaskService
     public function markDone(Task $task): Task
     {
         $task->update(['is_completed' => true]);
+
         return $task->fresh();
     }
 
     public function markUndone(Task $task): Task
     {
         $task->update(['is_completed' => false]);
+
         return $task->fresh();
     }
 
     public function getUpcomingTasks(Couple $couple): Collection
     {
         return $couple->tasks()
-            ->where('is_completed', '!=', true)
-            ->whereBetween('deadline', [now(), now()->addDays(3)])
+            ->where('is_completed', false)
+            ->orderByRaw('CASE WHEN deadline IS NULL THEN 1 ELSE 0 END')
+            ->orderBy('deadline')
             ->byPriority()
+            ->limit(5)
             ->get();
     }
 

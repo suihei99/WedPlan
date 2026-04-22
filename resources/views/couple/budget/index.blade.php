@@ -12,10 +12,11 @@
     @php
         $categories = collect($summary['categories'] ?? []);
         $totalBudgetLimit = (float) ($summary['total_budget_limit'] ?? 0);
+        $effectiveBudgetLimit = (float) ($summary['effective_budget_limit'] ?? $totalBudgetLimit);
         $totalAllocated = (float) ($summary['total_allocated'] ?? 0);
         $totalSpent = (float) ($summary['total_spent'] ?? 0);
-        $remainingBudget = (float) ($summary['remaining'] ?? max(0, $totalBudgetLimit - $totalSpent));
-        $overallUsage = $totalBudgetLimit > 0 ? min(100, ($totalSpent / $totalBudgetLimit) * 100) : 0;
+        $remainingBudget = (float) ($summary['remaining'] ?? max(0, $effectiveBudgetLimit - $totalSpent));
+        $overallUsage = $effectiveBudgetLimit > 0 ? min(100, ($totalSpent / $effectiveBudgetLimit) * 100) : 0;
         $categoryCount = $categories->count();
         $overspentCount = $categories->where('is_overspent', true)->count();
         $balancedCount = max(0, $categoryCount - $overspentCount);
@@ -55,7 +56,7 @@
         <section class="budget-stats">
             <article class="budget-stat-card">
                 <p class="budget-stat-label">Total Budget</p>
-                <p class="budget-stat-value">RM {{ number_format($totalBudgetLimit, 2) }}</p>
+                <p class="budget-stat-value">RM {{ number_format($effectiveBudgetLimit, 2) }}</p>
                 <p class="budget-stat-note">Overall limit set for the wedding.</p>
             </article>
             <article class="budget-stat-card">

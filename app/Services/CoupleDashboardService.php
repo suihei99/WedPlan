@@ -45,7 +45,7 @@ class CoupleDashboardService
 
         $progressPercentage = (int) round(($taskProgress + $guestProgress + $vendorProgress) / 3);
 
-        $totalBudget = (float) ($budgetSummary['total_budget_limit'] ?? 0);
+        $totalBudget = (float) ($budgetSummary['effective_budget_limit'] ?? ($budgetSummary['total_budget_limit'] ?? 0));
         $totalAllocated = (float) ($budgetSummary['total_allocated'] ?? 0);
         $totalSpent = (float) ($budgetSummary['total_spent'] ?? 0);
 
