@@ -18,6 +18,20 @@
 	@endphp
 
 	<div class="budget-page">
+		@if(session('success'))
+			<section class="budget-flash budget-flash-success" role="status">
+				<strong>Success</strong>
+				<span>{{ session('success') }}</span>
+			</section>
+		@endif
+
+		@if($errors->any())
+			<section class="budget-flash budget-flash-error" role="alert">
+				<strong>Please review the form</strong>
+				<span>{{ $errors->first() }}</span>
+			</section>
+		@endif
+
 		<section class="budget-hero">
 			<div class="budget-hero-top">
 				<div>
@@ -26,9 +40,6 @@
 					<p class="budget-subtitle">A focused view of this wedding budget bucket, with live totals and expense tracking.</p>
 				</div>
 				<div class="budget-actions">
-					@if(Route::has('couple.budget.expenses.create'))
-						<a href="{{ route('couple.budget.expenses.create', $budgetCategory) }}" class="budget-action">Add Expense</a>
-					@endif
 					@if(Route::has('couple.budget.index'))
 						<a href="{{ route('couple.budget.index') }}" class="budget-action-secondary">Back to Budget</a>
 					@endif
@@ -95,14 +106,42 @@
 			</article>
 
 			<article class="budget-side-card">
-				<h4>Actions</h4>
-				<p>Open the category expense list to manage payments and keep the budget current.</p>
+				<h4>Manage Category</h4>
+				<p>Update details, open expense records, or remove this category when no longer needed.</p>
+
+				<form class="budget-form" method="POST" action="{{ route('couple.budget.update', $budgetCategory) }}">
+					@csrf
+					@method('PUT')
+					<div>
+						<label for="category_name">Category Name</label>
+						<input id="category_name" name="category_name" type="text" value="{{ old('category_name', $budgetCategory->category_name) }}" required>
+						@error('category_name')
+							<p class="field-error">{{ $message }}</p>
+						@enderror
+					</div>
+					<div>
+						<label for="allocated_amount">Allocated Amount</label>
+						<input id="allocated_amount" name="allocated_amount" type="number" min="0" step="0.01" value="{{ old('allocated_amount', $budgetCategory->allocated_amount) }}" required>
+						@error('allocated_amount')
+							<p class="field-error">{{ $message }}</p>
+						@enderror
+					</div>
+					<button type="submit" class="budget-action">Update Category</button>
+				</form>
+
 				<div class="budget-side-list">
 					@if(Route::has('couple.budget.expenses'))
 						<a class="budget-card-link" href="{{ route('couple.budget.expenses', $budgetCategory) }}">View expenses</a>
 					@endif
 					@if(Route::has('couple.budget.expenses.create'))
 						<a class="budget-card-link" href="{{ route('couple.budget.expenses.create', $budgetCategory) }}">Add expense</a>
+					@endif
+					@if(Route::has('couple.budget.destroy'))
+						<form method="POST" action="{{ route('couple.budget.destroy', $budgetCategory) }}" onsubmit="return confirm('Delete this category and all related expenses?');">
+							@csrf
+							@method('DELETE')
+							<button type="submit" class="budget-card-link budget-card-link-danger">Delete category</button>
+						</form>
 					@endif
 				</div>
 			</article>
@@ -113,6 +152,3 @@
 @push('page-scripts')
 	@vite(['resources/js/couple/budget.js'])
 @endpush
-<h1>Budget Category Detail</h1>
-<p>Category: {{ $budgetCategory->category_name }}</p>
-<p>Allocated: {{ $budgetCategory->allocated_amount }}</p>

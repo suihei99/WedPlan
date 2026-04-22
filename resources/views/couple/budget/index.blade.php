@@ -22,6 +22,20 @@
     @endphp
 
     <div class="budget-page">
+        @if(session('success'))
+            <section class="budget-flash budget-flash-success" role="status">
+                <strong>Success</strong>
+                <span>{{ session('success') }}</span>
+            </section>
+        @endif
+
+        @if($errors->any())
+            <section class="budget-flash budget-flash-error" role="alert">
+                <strong>Please review the form</strong>
+                <span>{{ $errors->first() }}</span>
+            </section>
+        @endif
+
         <section class="budget-hero">
             <div class="budget-hero-top">
                 <div>
@@ -33,9 +47,6 @@
                 <div class="budget-actions">
                     @if(Route::has('couple.budget.create'))
                         <a href="{{ route('couple.budget.create') }}" class="budget-action">Add Category</a>
-                    @endif
-                    @if(Route::has('couple.budget.expenses.create') && $categories->isNotEmpty())
-                        <a href="{{ route('couple.budget.expenses.create', $categories->first()['id']) }}" class="budget-action-secondary">Add Expense</a>
                     @endif
                 </div>
             </div>
@@ -153,8 +164,8 @@
                             </div>
 
                             <div class="budget-card-links">
-                                @if(Route::has('couple.budget.expenses.create'))
-                                    <a class="budget-card-link" href="{{ route('couple.budget.expenses.create', $category['id']) }}">Add Expense</a>
+                                @if(Route::has('couple.budget.show'))
+                                    <a class="budget-card-link" href="{{ route('couple.budget.show', $category['id']) }}">Manage Category</a>
                                 @endif
                             </div>
                         </div>

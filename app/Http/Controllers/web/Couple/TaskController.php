@@ -19,14 +19,15 @@ class TaskController extends Controller
         $couple = $this->currentCouple();
         $tasks = $this->taskService->getAll($couple);
 
-        return view('couple.tasks.index', compact('tasks'));
+        return view('couple.tasks.index', compact('tasks', 'couple'));
     }
 
     public function displayAddTaskForm()
     {
+        $couple = $this->currentCouple();
         $priorities = [Task::PRIORITY_LOW, Task::PRIORITY_MEDIUM, Task::PRIORITY_HIGH];
 
-        return view('couple.tasks.create', compact('priorities'));
+        return view('couple.tasks.create', compact('priorities', 'couple'));
     }
 
     public function store(TaskRequest $request): RedirectResponse
@@ -40,8 +41,10 @@ class TaskController extends Controller
     public function show(Task $task)
     {
         $this->authorizeTask($task);
+        $couple = $this->currentCouple();
+        $priorities = [Task::PRIORITY_LOW, Task::PRIORITY_MEDIUM, Task::PRIORITY_HIGH];
 
-        return view('couple.tasks.show', compact('task'));
+        return view('couple.tasks.show', compact('task', 'couple', 'priorities'));
     }
 
     public function markComplete(Task $task): RedirectResponse

@@ -135,6 +135,4 @@
 @push('page-scripts')
 	@vite(['resources/js/couple/budget.js'])
 @endpush
-<h1>Category Expenses</h1>
-<p>Category: {{ $budgetCategory->category_name }}</p>
-<p>Total records: {{ $expenses->count() }}</p>
+
