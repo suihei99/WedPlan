@@ -7,6 +7,8 @@ use App\Http\Controllers\Api\v1\Couple\ApiExpenseController;
 use App\Http\Controllers\Api\v1\Couple\ApiGuestController;
 use App\Http\Controllers\Api\v1\Couple\ApiTaskController;
 use App\Http\Controllers\Api\v1\Setting\ApiSettingController;
+use App\Http\Controllers\Api\v1\Vendor\ApiBookingController;
+use App\Http\Controllers\Api\v1\Vendor\ApiDashboardController as VendorApiDashboardController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,11 +33,18 @@ Route::prefix('v1')->group(function () {
         // Logout route
         Route::post('auth/logout', [ApiAuthController::class, 'logout']);
 
-        // // Vendor
-        // Route::middleware('role:vendor')->prefix('vendor')->group(function () {
-        //     Route::get('profile', [VendorApiController::class, 'profile']);
-        //     Route::put('profile', [VendorApiController::class, 'updateProfile']);
-        // });
+        // Setting - all authenticated users
+        Route::get('/settings', [ApiSettingController::class, 'index']);
+        Route::put('/settings', [ApiSettingController::class, 'update']);
+
+        // Vendor
+        Route::middleware('role:vendor')->prefix('vendor')->group(function () {
+            Route::get('/dashboard', [VendorApiDashboardController::class, 'index']);
+            Route::get('/bookings', [ApiBookingController::class, 'index']);
+            Route::post('/bookings', [ApiBookingController::class, 'store']);
+            Route::put('/bookings/{booking}', [ApiBookingController::class, 'update']);
+            Route::delete('/bookings/{booking}', [ApiBookingController::class, 'destroy']);
+        });
 
         // // Couple
         Route::middleware('role:couple')->prefix('couple')->group(function () {

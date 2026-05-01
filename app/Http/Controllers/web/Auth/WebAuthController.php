@@ -7,6 +7,7 @@ use App\Http\Requests\Requests\Auth\LoginRequest;
 use App\Http\Requests\Requests\Auth\RegisterCoupleRequest;
 use App\Http\Requests\Requests\Auth\RegisterVendorRequest;
 use App\Models\User;
+use App\Models\Vendor;
 use App\Services\AuthService;
 use Illuminate\Support\Facades\Auth;
 
@@ -39,9 +40,21 @@ class WebAuthController extends Controller
     // Handle login & registration
     public function login(LoginRequest $request)
     {
+        $validated = $request->validated();
+
         $result = $this->authService->login($request->validated());
 
         if (! $result) {
+            $pendingVendor = User::query()
+                ->where('email', $validated['email'])
+                ->where('role', User::ROLE_VENDOR)
+                ->whereHas('vendor', fn ($query) => $query->where('status', '!=', Vendor::STATUS_APPROVED))
+                ->exists();
+
+            if ($pendingVendor) {
+                return back()->withErrors(['email' => 'Your vendor account is pending admin approval.'])->onlyInput('email');
+            }
+
             return back()->withErrors(['email' => 'These credentials do not match our records.'])->onlyInput('email');
         }
 
@@ -70,8 +83,7 @@ class WebAuthController extends Controller
     // Handle Registration for Vendors
     public function registerVendor(RegisterVendorRequest $request)
     {
-        $user = $this->authService->registerVendor($request->validated());
-        Auth::login($user);
+        $this->authService->registerVendor($request->validated());
 
         return redirect()->route('login')->with('info', 'Registration successful! Your account is pending approval. We will notify you once it has been reviewed.');
     }

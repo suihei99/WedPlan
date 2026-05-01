@@ -30,9 +30,30 @@ class RegisterVendorRequest extends FormRequest
             // vendor fields
             'business_name' => ['required', 'string', 'max:255'],
             'business_type' => ['required', 'string', 'max:255'],
-            'contact_number' => ['required', 'string', 'max:20'],
+            'contact_number' => ['required', 'string', 'max:20', 'regex:/^(?:\+60|60|0)[1-9]\d{7,9}$/'],
             'address' => ['required', 'string'],
-            'business_documents' => ['required', 'file', 'mimes:pdf,jpg,png', 'max:2048'], // Adjust file types and size as needed
+            'business_documents' => ['required', 'file', 'mimes:pdf,png', 'max:2048'],
+        ];
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $contactNumber = $this->input('contact_number');
+
+        if ($contactNumber !== null) {
+            $normalized = preg_replace('/[\s\-]/', '', (string) $contactNumber);
+
+            $this->merge([
+                'contact_number' => $normalized,
+            ]);
+        }
+    }
+
+    public function messages(): array
+    {
+        return [
+            'contact_number.regex' => 'Please enter a valid Malaysia number (e.g. +60123456789).',
+            'business_documents.mimes' => 'Business document must be a PDF or PNG file.',
         ];
     }
 }

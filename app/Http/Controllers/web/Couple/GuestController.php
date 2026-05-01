@@ -20,14 +20,15 @@ class GuestController extends Controller
         $couple = $this->currentCouple();
         $guests = $couple->guests()->latest()->get();
 
-        return view('couple.guests.index', compact('guests'));
+        return view('couple.guests.index', compact('guests', 'couple'));
     }
 
     public function displayAddGuestForm()
     {
+        $couple = $this->currentCouple();
         $rsvpStatuses = Guest::RSVP_STATUS;
 
-        return view('couple.guests.create', compact('rsvpStatuses'));
+        return view('couple.guests.create', compact('rsvpStatuses', 'couple'));
     }
 
     public function store(GuestRequest $request): RedirectResponse
@@ -41,8 +42,9 @@ class GuestController extends Controller
     public function show(Guest $guest)
     {
         $this->authorizeGuest($guest);
+        $couple = $this->currentCouple();
 
-        return view('couple.guests.show', compact('guest'));
+        return view('couple.guests.show', compact('guest', 'couple'));
     }
 
     public function update(GuestRequest $request, Guest $guest): RedirectResponse

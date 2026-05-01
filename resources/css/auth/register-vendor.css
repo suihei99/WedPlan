@@ -98,6 +98,35 @@
     padding-right: 2.1rem;
 }
 
+.field-select:focus {
+    cursor: pointer;
+}
+
+.field-select option {
+    color: #2d1b21;
+    background: #ffffff;
+}
+
+.field-select option:checked {
+    background: #f4dbe3;
+    color: #4a2030;
+}
+
+.toggle-pw {
+    color: #9e4f63;
+}
+
+.toggle-pw svg {
+    width: 18px;
+    height: 18px;
+    stroke-width: 2.25;
+}
+
+.toggle-pw:focus-visible {
+    outline: none;
+    color: #c93f61;
+}
+
 .field-helper {
     font-size: 0.72rem;
     color: #916772;

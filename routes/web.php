@@ -1,11 +1,15 @@
 <?php
 
+use App\Http\Controllers\web\Admin\ManageUserAdminController;
 use App\Http\Controllers\web\Auth\WebAuthController;
 use App\Http\Controllers\web\Couple\BudgetController;
 use App\Http\Controllers\web\Couple\DashboardCoupleController;
 use App\Http\Controllers\web\Couple\GuestController;
 use App\Http\Controllers\web\Couple\TaskController;
 use App\Http\Controllers\web\Setting\SettingController;
+use App\Http\Controllers\web\Vendor\DashboardVendorController;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -37,16 +41,43 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     })->name('dashboard');
 
     // Additional admin routes can be added here
+    Route::put('/vendors/{vendor}/approve', [ManageUserAdminController::class, 'approveVendor'])->name('vendors.approve');
+    Route::put('/vendors/{vendor}/reject', [ManageUserAdminController::class, 'rejectVendor'])->name('vendors.reject');
 });
 
 // Vendor routes
 Route::middleware(['auth', 'role:vendor'])->prefix('vendor')->name('vendor.')->group(function () {
     // Vendor dashboard
-    Route::get('/dashboard', function () {
-        return view('vendor.dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardVendorController::class, 'showDashboard'])->name('dashboard');
 
     // Additional vendor routes can be added here
+    Route::get('/services', function () {
+        $user = Auth::user();
+        abort_unless($user instanceof User, 401);
+
+        return view('vendor.service.index', ['vendor' => $user->vendor]);
+    })->name('service.index');
+
+    Route::get('/bookings', function () {
+        $user = Auth::user();
+        abort_unless($user instanceof User, 401);
+
+        return view('vendor.booking.index', ['vendor' => $user->vendor]);
+    })->name('booking.index');
+
+    Route::get('/notifications', function () {
+        $user = Auth::user();
+        abort_unless($user instanceof User, 401);
+
+        return view('vendor.notification.index', ['vendor' => $user->vendor]);
+    })->name('notification.index');
+
+    Route::get('/settings', function () {
+        $user = Auth::user();
+        abort_unless($user instanceof User, 401);
+
+        return view('vendor.settings.index', ['vendor' => $user->vendor]);
+    })->name('settings.index');
 });
 
 // Couple routes

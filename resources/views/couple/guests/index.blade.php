@@ -93,14 +93,14 @@
             @forelse($guestCollection as $guest)
                 @php
                     $rsvpStatus = strtolower($guest->rsvp_status ?? 'pending');
-                    $inviteStatus = $guest->invitation_sent_at ? 'invited' : 'pending';
+                    $inviteStatus = $guest->invite_code ? 'invited' : 'pending';
                     $statusLabel = match($rsvpStatus) {
                         'confirmed' => 'Confirmed',
                         'declined' => 'Declined',
                         'pending' => 'Pending Response',
                         default => 'Not Invited',
                     };
-                    $searchText = strtolower($guest->name ?? '' . ' ' . $guest->contact_number ?? '');
+                    $searchText = strtolower(($guest->name ?? '') . ' ' . ($guest->phone ?? ''));
                 @endphp
                 <article
                     class="guests-card"
@@ -113,7 +113,7 @@
                         <div class="guests-card-info">
                             <h3 class="guests-card-name">{{ $guest->name }}</h3>
                             <p class="guests-card-contact">
-                                📱 {{ $guest->contact_number ?? 'No contact' }}
+                                📱 {{ $guest->phone ?? 'No contact' }}
                             </p>
                         </div>
                         <span class="guests-card-status is-{{ $rsvpStatus }}">
@@ -124,16 +124,16 @@
 
                     <div class="guests-card-meta">
                         <div class="guests-card-meta-item">
-                            <span class="guests-card-meta-label">Plus Ones</span>
-                            <span class="guests-card-meta-value">{{ $guest->plus_one_count ?? 0 }}</span>
+                            <span class="guests-card-meta-label">Pax Count</span>
+                            <span class="guests-card-meta-value">{{ $guest->pax_count ?? 1 }}</span>
                         </div>
                         <div class="guests-card-meta-item">
-                            <span class="guests-card-meta-label">Diet</span>
-                            <span class="guests-card-meta-value">{{ $guest->dietary_preference ?? 'None' }}</span>
+                            <span class="guests-card-meta-label">Invite Code</span>
+                            <span class="guests-card-meta-value">{{ $guest->invite_code ?? 'N/A' }}</span>
                         </div>
                         <div class="guests-card-meta-item">
-                            <span class="guests-card-meta-label">Invited</span>
-                            <span class="guests-card-meta-value">{{ $guest->invitation_sent_at ? '✓' : '—' }}</span>
+                            <span class="guests-card-meta-label">QR Ready</span>
+                            <span class="guests-card-meta-value">{{ $guest->qr_code_string ? '✓' : '—' }}</span>
                         </div>
                     </div>
 
@@ -147,23 +147,9 @@
                                 Details
                             </a>
                         @endif
-                        @if(Route::has('couple.guests.show'))
-                            <a href="{{ route('couple.guests.show', $guest) }}" class="guests-card-link">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <circle cx="12" cy="12" r="1"/>
-                                    <path d="M12 8.89.64 4.27"/>
-                                    <path d="M12 8.89 23.36 4.27"/>
-                                    <path d="M12 15.11.64 19.73"/>
-                                    <path d="M12 15.11 23.36 19.73"/>
-                                    <path d="M12 15.11v-6.22"/>
-                                </svg>
-                                Invite
-                            </a>
-                        @endif
-                        @if(Route::has('couple.guests.update'))
-                            <form method="POST" action="{{ route('couple.guests.update', $guest) }}" style="display: inline;">
+                        @if(Route::has('couple.guests.checkin'))
+                            <form method="POST" action="{{ route('couple.guests.checkin', $guest) }}" style="display: inline;">
                                 @csrf
-                                @method('PUT')
                                 <button type="submit" class="guests-card-link" onclick="return confirm('Mark RSVP as confirmed?')">
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <polyline points="20 6 9 17 4 12"/>

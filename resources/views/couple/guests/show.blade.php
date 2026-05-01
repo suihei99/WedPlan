@@ -1,15 +1,30 @@
 @extends('couple.layout.layout-couple')
 
-@section('title', $guest->name . ' - Guest Details - WebPlan')
-@section('page-title', $guest->name)
-@section('page-subtitle', 'View guest details and send personalized invitation.')
+@section('title', 'Guest Detail - WebPlan')
+@section('page-title', 'Guest Detail')
+@section('page-subtitle', 'Update RSVP information, contact details, and remove guests when needed.')
 
 @push('page-styles')
     @vite(['resources/css/couple/guests.css'])
 @endpush
 
 @section('content')
-    <div class="guests-page">
+    @php
+        $status = strtolower($guest->rsvp_status ?? \App\Models\Guest::RSVP_PENDING);
+        $statusClass = $status === \App\Models\Guest::RSVP_CONFIRMED ? 'is-confirmed' : ($status === \App\Models\Guest::RSVP_DECLINED ? 'is-declined' : 'is-pending');
+        $rawPhone = preg_replace('/\D+/', '', (string) ($guest->phone ?? ''));
+        if (str_starts_with($rawPhone, '0')) {
+            $phoneForWhatsapp = '60' . substr($rawPhone, 1);
+        } else {
+            $phoneForWhatsapp = $rawPhone;
+        }
+
+        $coupleNames = ($couple->partner_1_name ?? 'Partner 1') . ' & ' . ($couple->partner_2_name ?? 'Partner 2');
+        $whatsAppMessage = rawurlencode("Hi {$guest->name},\n\nYou are invited to {$coupleNames}'s wedding.\nInvite code: " . ($guest->invite_code ?? 'N/A') . "\n\nPlease reply with your RSVP. Thank you.");
+        $whatsAppUrl = $phoneForWhatsapp !== '' ? "https://wa.me/{$phoneForWhatsapp}?text={$whatsAppMessage}" : null;
+    @endphp
+
+    <div class="guests-page guests-page-form">
         @if(session('success'))
             <section class="guests-flash guests-flash-success" role="status">
                 <strong>Success</strong>
@@ -17,259 +32,133 @@
             </section>
         @endif
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
-            <!-- Guest Information -->
-            <section style="background: #fff; border: 1px solid #efd7df; border-radius: 0.85rem; padding: 1.5rem;">
-                <h2 style="margin: 0 0 1rem; font-size: 1.1rem; color: #201419;">Guest Information</h2>
-
-                <div style="display: grid; gap: 1rem;">
-                    <!-- Name -->
-                    <div>
-                        <label style="display: block; font-size: 0.8rem; color: #876f79; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.3rem;">Full Name</label>
-                        <p style="margin: 0; font-size: 1rem; font-weight: 600; color: #201419;">{{ $guest->name }}</p>
-                    </div>
-
-                    <!-- Contact -->
-                    <div>
-                        <label style="display: block; font-size: 0.8rem; color: #876f79; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.3rem;">WhatsApp Contact</label>
-                        <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $guest->contact_number) }}" target="_blank" style="font-size: 1rem; color: #d54c6d; text-decoration: none; font-weight: 600;">
-                            📱 {{ $guest->contact_number }}
-                        </a>
-                    </div>
-
-                    <!-- Email -->
-                    @if($guest->email)
-                    <div>
-                        <label style="display: block; font-size: 0.8rem; color: #876f79; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.3rem;">Email</label>
-                        <a href="mailto:{{ $guest->email }}" style="font-size: 1rem; color: #d54c6d; text-decoration: none; font-weight: 600;">
-                            {{ $guest->email }}
-                        </a>
-                    </div>
-                    @endif
-
-                    <!-- Plus Ones -->
-                    <div>
-                        <label style="display: block; font-size: 0.8rem; color: #876f79; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.3rem;">Plus Ones</label>
-                        <p style="margin: 0; font-size: 1rem; font-weight: 600; color: #d54c6d;">{{ $guest->plus_one_count ?? 0 }}</p>
-                    </div>
-
-                    <!-- Dietary Preference -->
-                    <div>
-                        <label style="display: block; font-size: 0.8rem; color: #876f79; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.3rem;">Dietary Preference</label>
-                        <p style="margin: 0; font-size: 1rem; font-weight: 600; color: #201419;">{{ ucfirst($guest->dietary_preference ?? 'Not specified') }}</p>
-                    </div>
-
-                    <!-- RSVP Status -->
-                    <div>
-                        <label style="display: block; font-size: 0.8rem; color: #876f79; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.3rem;">RSVP Status</label>
-                        <div style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.35rem 0.65rem; background: #fff; border: 1px solid #efd7df; border-radius: 999px; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; color: #876f79;">
-                            <span>●</span>
-                            @php
-                                $rsvpStatus = strtolower($guest->rsvp_status ?? 'pending');
-                                $statusLabel = match($rsvpStatus) {
-                                    'confirmed' => 'Confirmed',
-                                    'declined' => 'Declined',
-                                    'pending' => 'Pending Response',
-                                    default => 'Not Invited',
-                                };
-                            @endphp
-                            {{ $statusLabel }}
-                        </div>
-                    </div>
-
-                    <!-- Invitation Sent -->
-                    <div>
-                        <label style="display: block; font-size: 0.8rem; color: #876f79; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.3rem;">Invitation Sent</label>
-                        <p style="margin: 0; font-size: 1rem; font-weight: 600; color: {{ $guest->invitation_sent_at ? '#28603a' : '#8b5f1c' }};">
-                            {{ $guest->invitation_sent_at ? '✓ ' . $guest->invitation_sent_at->format('M j, Y H:i') : '— Not sent yet' }}
-                        </p>
-                    </div>
-
-                    <!-- Notes -->
-                    @if($guest->notes)
-                    <div style="padding-top: 1rem; border-top: 1px solid #efd7df;">
-                        <label style="display: block; font-size: 0.8rem; color: #876f79; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.3rem;">Notes</label>
-                        <p style="margin: 0; font-size: 0.9rem; color: #715b64; line-height: 1.4;">{{ $guest->notes }}</p>
-                    </div>
-                    @endif
-                </div>
-
-                <!-- Action Buttons -->
-                <div style="display: flex; flex-direction: column; gap: 0.8rem; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #efd7df;">
-                    @if(Route::has('couple.guests.update'))
-                        <a href="{{ route('couple.guests.update', $guest) }}" style="display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; padding: 0.55rem 0.95rem; background: linear-gradient(135deg, #d54c6d 0%, #c23f5d 100%); color: #fff; border: none; border-radius: 0.7rem; font-size: 0.9rem; font-weight: 600; cursor: pointer; text-decoration: none; transition: all 0.2s ease;">
-                            ✏️ Edit Guest
-                        </a>
-                    @endif
-
-                    @if(!$guest->invitation_sent_at && Route::has('couple.guests.checkin'))
-                        <button type="button" id="sendInviteBtn" style="display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; padding: 0.55rem 0.95rem; background: linear-gradient(135deg, #25a329 0%, #1f8621 100%); color: #fff; border: none; border-radius: 0.7rem; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease;">
-                            📲 Send via WhatsApp
-                        </button>
-                    @elseif($guest->invitation_sent_at)
-                        <button type="button" id="sendInviteBtn" style="display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; padding: 0.55rem 0.95rem; background: linear-gradient(135deg, #25a329 0%, #1f8621 100%); color: #fff; border: none; border-radius: 0.7rem; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease;">
-                            📲 Send Again
-                        </button>
-                    @endif
-
-                    @if(Route::has('couple.guests.index'))
-                        <a href="{{ route('couple.guests.index') }}" style="display: inline-flex; align-items: center; justify-content: center; padding: 0.55rem 0.95rem; background: #fff; border: 1px solid #efd7df; border-radius: 0.7rem; color: #d54c6d; text-decoration: none; font-weight: 600; transition: all 0.2s ease;">
-                            ← Back to List
-                        </a>
-                    @endif
-                </div>
+        @if($errors->any())
+            <section class="guests-flash guests-flash-error" role="alert">
+                <strong>Please review the form</strong>
+                <span>{{ $errors->first() }}</span>
             </section>
+        @endif
 
-            <!-- Invite Card Preview -->
-            <section>
-                <div class="invite-card">
-                    <div class="invite-card-top">
-                        <div class="invite-card-icon">💒</div>
-                        <h2 class="invite-card-title">You're Invited!</h2>
-                        <p class="invite-card-subtitle">to the wedding of</p>
+        <section class="guests-hero">
+            <div>
+                <span class="guests-kicker">Guest Management</span>
+                <h1 class="guests-title">{{ $guest->name }}</h1>
+                <p class="guests-subtitle">Edit this guest record, manage RSVP state, and keep your list accurate for wedding day planning.</p>
+            </div>
+
+            <div class="guests-hero-stats">
+                <article>
+                    <span>Status</span>
+                    <strong>{{ ucfirst($status) }}</strong>
+                </article>
+                <article>
+                    <span>Pax</span>
+                    <strong>{{ (int) ($guest->pax_count ?? 1) }}</strong>
+                </article>
+                <article>
+                    <span>Invite Code</span>
+                    <strong>{{ $guest->invite_code ?? 'N/A' }}</strong>
+                </article>
+                <article>
+                    <span>Phone</span>
+                    <strong>{{ $guest->phone ?? 'N/A' }}</strong>
+                </article>
+            </div>
+        </section>
+
+        <section class="guests-layout-split">
+            <article class="guests-form-card">
+                <h2>Update Guest</h2>
+
+                <form method="POST" action="{{ route('couple.guests.update', $guest) }}" class="guests-form" novalidate>
+                    @csrf
+                    @method('PUT')
+
+                    <div class="guests-form-group">
+                        <label for="name" class="guests-form-label">Guest Name *</label>
+                        <input id="name" type="text" name="name" class="guests-form-input @error('name') is-invalid @enderror" value="{{ old('name', $guest->name) }}" required>
+                        @error('name')
+                            <small class="field-error">{{ $message }}</small>
+                        @enderror
                     </div>
 
-                    <div class="invite-card-qr" id="qrCodeContainer">
-                        <canvas id="qrCode"></canvas>
+                    <div class="guests-form-group">
+                        <label for="phone" class="guests-form-label">Malaysia Mobile Number</label>
+                        <input id="phone" type="tel" name="phone" class="guests-form-input @error('phone') is-invalid @enderror" value="{{ old('phone', $guest->phone) }}" inputmode="tel" placeholder="e.g., +60123456789">
+                        @error('phone')
+                            <small class="field-error">{{ $message }}</small>
+                        @enderror
                     </div>
 
-                    <div class="invite-card-details">
-                        <div class="invite-card-detail-row">
-                            <span class="invite-card-detail-label">Guest:</span>
-                            <span class="invite-card-detail-value">{{ $guest->name }}</span>
-                        </div>
-                        @php
-                            $couple = auth()->user()?->couple;
-                        @endphp
-                        @if($couple)
-                        <div class="invite-card-detail-row">
-                            <span class="invite-card-detail-label">Event:</span>
-                            <span class="invite-card-detail-value">
-                                {{ $couple->partner_1_name ?? 'Partner 1' }} & {{ $couple->partner_2_name ?? 'Partner 2' }}'s Wedding
-                            </span>
-                        </div>
-                        @if($couple->wedding_date)
-                        <div class="invite-card-detail-row">
-                            <span class="invite-card-detail-label">Date:</span>
-                            <span class="invite-card-detail-value">{{ \Carbon\Carbon::parse($couple->wedding_date)->format('F j, Y') }}</span>
-                        </div>
-                        @endif
-                        @if($couple->wedding_venue)
-                        <div class="invite-card-detail-row">
-                            <span class="invite-card-detail-label">Venue:</span>
-                            <span class="invite-card-detail-value">{{ $couple->wedding_venue }}</span>
-                        </div>
-                        @endif
-                        @endif
-                        <div class="invite-card-detail-row">
-                            <span class="invite-card-detail-label">Plus Ones:</span>
-                            <span class="invite-card-detail-value">{{ $guest->plus_one_count ?? 0 }}</span>
-                        </div>
-                        @if($guest->dietary_preference)
-                        <div class="invite-card-detail-row">
-                            <span class="invite-card-detail-label">Diet:</span>
-                            <span class="invite-card-detail-value">{{ ucfirst($guest->dietary_preference) }}</span>
-                        </div>
-                        @endif
+                    <div class="guests-form-group">
+                        <label for="pax_count" class="guests-form-label">Pax Count</label>
+                        <input id="pax_count" type="number" name="pax_count" class="guests-form-input @error('pax_count') is-invalid @enderror" value="{{ old('pax_count', $guest->pax_count ?? 1) }}" min="1">
+                        @error('pax_count')
+                            <small class="field-error">{{ $message }}</small>
+                        @enderror
                     </div>
 
-                    <div class="invite-card-actions">
-                        <button type="button" id="printCardBtn" class="invite-btn invite-btn-primary">
-                            🖨️ Print Card
-                        </button>
-                        <button type="button" id="downloadQrBtn" class="invite-btn invite-btn-secondary">
-                            ⬇️ Download QR
-                        </button>
+                    <div class="guests-form-group">
+                        <label for="rsvp_status" class="guests-form-label">RSVP Status</label>
+                        <select id="rsvp_status" name="rsvp_status" class="guests-form-select @error('rsvp_status') is-invalid @enderror">
+                            @foreach(\App\Models\Guest::RSVP_STATUS as $rsvp)
+                                <option value="{{ $rsvp }}" @selected(old('rsvp_status', $guest->rsvp_status) === $rsvp)>{{ ucfirst($rsvp) }}</option>
+                            @endforeach
+                        </select>
+                        @error('rsvp_status')
+                            <small class="field-error">{{ $message }}</small>
+                        @enderror
+                    </div>
+
+                    <div class="guests-form-actions">
+                        <button type="submit" class="guests-form-submit">Update Guest</button>
+
+                        @if(Route::has('couple.guests.index'))
+                            <a href="{{ route('couple.guests.index') }}" class="guests-secondary-btn">Back to List</a>
+                        @endif
+                    </div>
+                </form>
+            </article>
+
+            <aside class="guests-detail-card">
+                <h3>Guest Actions</h3>
+                <div class="guests-meta-list">
+                    <div class="guests-meta-item">
+                        <span>Current Status</span>
+                        <strong><span class="guests-status-pill {{ $statusClass }}">{{ ucfirst($status) }}</span></strong>
+                    </div>
+                    <div class="guests-meta-item">
+                        <span>Invite Code</span>
+                        <strong>{{ $guest->invite_code ?? 'Not generated' }}</strong>
+                    </div>
+                    <div class="guests-meta-item">
+                        <span>QR String</span>
+                        <strong>{{ $guest->qr_code_string ?? 'Not available' }}</strong>
                     </div>
                 </div>
-            </section>
-        </div>
 
-        <!-- Notes -->
-        <section style="background: #fef7fa; border: 1px solid #efd7df; border-radius: 0.85rem; padding: 1.2rem;">
-            <h3 style="margin: 0 0 0.6rem; font-size: 0.95rem; color: #201419;">📋 How It Works</h3>
-            <ul style="margin: 0; padding: 0 0 0 1.2rem; color: #715b64; font-size: 0.9rem; line-height: 1.6;">
-                <li>The QR code contains the invitation link unique to this guest</li>
-                <li>When scanned, guests can directly confirm their RSVP</li>
-                <li>Share the card via WhatsApp by clicking the button above</li>
-                <li>You can print the card for hand delivery or digital sharing</li>
-            </ul>
+                <div class="guests-side-actions">
+                    @if($whatsAppUrl)
+                        <a href="{{ $whatsAppUrl }}" target="_blank" rel="noopener" class="guests-whatsapp-btn guests-full-btn">Send via WhatsApp</a>
+                    @endif
+
+                    @if($status !== \App\Models\Guest::RSVP_CONFIRMED && Route::has('couple.guests.checkin'))
+                        <form method="POST" action="{{ route('couple.guests.checkin', $guest) }}">
+                            @csrf
+                            <button type="submit" class="guests-secondary-btn guests-full-btn">Mark Confirmed</button>
+                        </form>
+                    @endif
+
+                    @if(Route::has('couple.guests.destroy'))
+                        <form method="POST" action="{{ route('couple.guests.destroy', $guest) }}" onsubmit="return confirm('Delete this guest?');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="guests-danger-btn guests-full-btn">Delete Guest</button>
+                        </form>
+                    @endif
+                </div>
+            </aside>
         </section>
     </div>
 @endsection
-
-@push('page-scripts')
-<script>
-    // Include qrcode.js library
-    const script = document.createElement('script');
-    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcode.js/1.5.3/qrcode.min.js';
-    document.head.appendChild(script);
-
-    script.onload = function() {
-        generateQRCode();
-    };
-
-    function generateQRCode() {
-        // Generate invitation link - you may need to adjust this route
-        const guestId = {{ $guest->id }};
-        const inviteLink = `{{ url('/invite') }}/${guestId}`;
-
-        const canvas = document.getElementById('qrCode');
-        if (canvas) {
-            new QRCode(canvas, {
-                text: inviteLink,
-                width: 240,
-                height: 240,
-                colorDark: '#d54c6d',
-                colorLight: '#ffffff',
-                correctLevel: QRCode.CorrectLevel.H
-            });
-        }
-    }
-
-    // Send via WhatsApp
-    document.getElementById('sendInviteBtn')?.addEventListener('click', function() {
-        const guestName = "{{ $guest->name }}";
-        const contactNumber = "{{ preg_replace('/[^0-9]/', '', $guest->contact_number) }}";
-        const inviteLink = `{{ url('/invite') }}/{{ $guest->id }}`;
-        const couple = "{{ auth()->user()?->couple }}";
-
-        @php
-            $coupleName = auth()->user()?->couple?->partner_1_name . ' & ' . auth()->user()?->couple?->partner_2_name;
-        @endphp
-
-        const message = `Hi {{ $guest->name }},
-
-You're invited to {{ $coupleName }}'s wedding! 💒
-
-Please scan the QR code or click the link below to confirm your RSVP:
-${inviteLink}
-
-Can't wait to celebrate with you!`;
-
-        const encodedMessage = encodeURIComponent(message);
-        const whatsappUrl = `https://wa.me/${contactNumber}?text=${encodedMessage}`;
-
-        window.open(whatsappUrl, '_blank');
-    });
-
-    // Print Card
-    document.getElementById('printCardBtn')?.addEventListener('click', function() {
-        const printWindow = window.open('', '', 'width=800,height=600');
-        const inviteCard = document.querySelector('.invite-card');
-        printWindow.document.write(inviteCard.outerHTML);
-        printWindow.document.close();
-        setTimeout(() => printWindow.print(), 250);
-    });
-
-    // Download QR Code
-    document.getElementById('downloadQrBtn')?.addEventListener('click', function() {
-        const canvas = document.getElementById('qrCode');
-        const link = document.createElement('a');
-        link.href = canvas.toDataURL();
-        link.download = 'invite-{{ $guest->id }}-qr-code.png';
-        link.click();
-    });
-</script>
-@endpush
 

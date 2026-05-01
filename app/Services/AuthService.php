@@ -3,11 +3,15 @@
 namespace App\Services;
 
 use App\Models\User;
+use App\Models\Vendor;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class AuthService
 {
+    public function __construct(private readonly UserNotificationService $userNotificationService) {}
+
     /**
      * Login - Authenticate user and generate token (vendor, couple, admin)
      * Return user data and token on success, error message on failure
@@ -18,6 +22,14 @@ class AuthService
 
         if (! $user || ! Hash::check($credentials['password'], $user->password)) {
             return null; // Invalid credentials or inactive account
+        }
+
+        if ($user->isVendor()) {
+            $vendor = $user->vendor;
+
+            if (! $vendor || $vendor->status !== Vendor::STATUS_APPROVED) {
+                return null;
+            }
         }
 
         // Eager load related data based on role
@@ -59,6 +71,8 @@ class AuthService
                 'total_budget_limit' => $data['total_budget_limit'] ?? null,
             ]);
 
+            $this->userNotificationService->notifyRegistrationSuccess($user);
+
             return $user->load('couple'); // Return user with couple profile
         });
     }
@@ -70,6 +84,12 @@ class AuthService
     public function registerVendor(array $data): User
     {
         return DB::transaction(function () use ($data) {
+            $businessDocumentPath = null;
+
+            if (($data['business_documents'] ?? null) instanceof UploadedFile) {
+                $businessDocumentPath = $data['business_documents']->store('vendor-documents', 'public');
+            }
+
             $user = User::create([
                 'email' => $data['email'],
                 'password' => Hash::make($data['password']),
@@ -82,8 +102,10 @@ class AuthService
                 'contact_number' => $data['contact_number'] ?? null,
                 'address' => $data['address'] ?? null,
                 'status' => $data['status'] ?? 'pending', // Default to 'pending' if not provided, admin can later approve or reject the vendor
-                'business_documents' => $data['business_documents'] ?? null,
+                'business_documents' => $businessDocumentPath,
             ]);
+
+            $this->userNotificationService->notifyVendorPendingApproval($user);
 
             return $user->load('vendor'); // Return user with vendor profile
         });

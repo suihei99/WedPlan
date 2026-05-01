@@ -25,9 +25,28 @@ class GuestRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'phone' => ['nullable', 'string', 'max:20'],
+            'phone' => ['nullable', 'string', 'max:20', 'regex:/^(?:\+60|60|0)1\d{8,9}$/'],
             'pax_count' => ['nullable', 'integer', 'min:1'],
             'rsvp_status' => ['nullable', 'string', Rule::in(Guest::RSVP_STATUS)],
+        ];
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $phone = $this->input('phone');
+
+        if ($phone !== null) {
+            $normalizedPhone = preg_replace('/[\s\-]/', '', (string) $phone);
+            $this->merge([
+                'phone' => $normalizedPhone !== '' ? $normalizedPhone : null,
+            ]);
+        }
+    }
+
+    public function messages(): array
+    {
+        return [
+            'phone.regex' => 'Please enter a valid Malaysia mobile number (e.g. +60123456789).',
         ];
     }
 }

@@ -183,15 +183,15 @@
 							</div>
 
 							<div class="field-group field-full">
-								<label for="business_documents" class="field-label">Business Documents (PDF, JPG, PNG)</label>
+								<label for="business_documents" class="field-label">Business Documents (PDF, PNG)</label>
 								<label for="business_documents" class="upload-wrap @error('business_documents') upload-wrap-error @enderror">
 									<span class="upload-button">Upload File</span>
 									<span class="upload-meta" id="businessDocumentLabel">No file chosen</span>
-									<input id="business_documents" type="file" name="business_documents" class="upload-input" accept=".pdf,.jpg,.jpeg,.png" required>
+									<input id="business_documents" type="file" name="business_documents" class="upload-input" accept=".pdf,.png" required>
 								</label>
 								<ul class="upload-notes">
 									<li>Upload valid business proof such as SSM certificate, service portfolio, or operating license.</li>
-									<li>Maximum file size is 2MB and only PDF, JPG, PNG are supported.</li>
+									<li>Maximum file size is 2MB and only PDF or PNG files are supported.</li>
 								</ul>
 								@error('business_documents')
 									<p class="field-error">{{ $message }}</p>

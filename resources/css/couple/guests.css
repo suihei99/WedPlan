@@ -5,6 +5,10 @@
     gap: 1.5rem;
 }
 
+.guests-page-form {
+    gap: 1rem;
+}
+
 /* Flash Messages */
 .guests-flash {
     border-radius: 0.8rem;
@@ -522,6 +526,13 @@
     transition: all 0.2s ease;
 }
 
+.guests-form-input.is-invalid,
+.guests-form-select.is-invalid,
+.guests-form-textarea.is-invalid {
+    border-color: #d44663;
+    box-shadow: 0 0 0 3px rgba(212, 70, 99, 0.12);
+}
+
 .guests-form-input::placeholder,
 .guests-form-textarea::placeholder {
     color: #c0a5ae;
@@ -550,6 +561,143 @@
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
+}
+
+.guests-form-actions {
+    display: flex;
+    gap: 0.7rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.guests-secondary-btn,
+.guests-danger-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.7rem;
+    padding: 0.68rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.guests-secondary-btn {
+    background: #fff;
+    border: 1px solid #efd7df;
+    color: #d54c6d;
+}
+
+.guests-danger-btn {
+    background: #fff1f5;
+    border: 1px solid #efb8c5;
+    color: #bf2b4a;
+}
+
+.guests-whatsapp-btn {
+    background: #eaf8ef;
+    border: 1px solid #9dd8af;
+    color: #1f7a3e;
+}
+
+.guests-secondary-btn:hover,
+.guests-danger-btn:hover,
+.guests-whatsapp-btn:hover {
+    transform: translateY(-1px);
+}
+
+.guests-layout-split {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 0.95rem;
+}
+
+.guests-form-card,
+.guests-detail-card {
+    background: #fff;
+    border: 1px solid #efd7df;
+    border-radius: 0.9rem;
+    box-shadow: 0 10px 18px rgba(95, 68, 78, 0.05);
+    padding: 1rem;
+}
+
+.guests-form-card h2,
+.guests-detail-card h3 {
+    margin: 0;
+    font-size: 1.08rem;
+    color: #201419;
+}
+
+.guests-meta-list {
+    margin-top: 0.9rem;
+    display: grid;
+    gap: 0.6rem;
+}
+
+.guests-meta-item {
+    border: 1px solid #eedbe2;
+    border-radius: 0.75rem;
+    padding: 0.65rem 0.75rem;
+    background: #fff9fb;
+}
+
+.guests-meta-item span {
+    display: block;
+    color: #876f79;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.guests-meta-item strong {
+    display: inline-flex;
+    margin-top: 0.22rem;
+    color: #201419;
+    font-size: 0.95rem;
+    font-weight: 700;
+    word-break: break-all;
+}
+
+.guests-status-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    padding: 0.25rem 0.62rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.guests-status-pill.is-confirmed {
+    background: #edfdf0;
+    color: #28603a;
+}
+
+.guests-status-pill.is-pending {
+    background: #fef9f0;
+    color: #8b5f1c;
+}
+
+.guests-status-pill.is-declined {
+    background: #fff1f4;
+    color: #9f2943;
+}
+
+.guests-side-actions {
+    margin-top: 0.85rem;
+    display: grid;
+    gap: 0.55rem;
+}
+
+.guests-full-btn {
+    width: 100%;
+}
+
+.field-error {
+    color: #9f2943;
 }
 
 .guests-form-submit:hover {
@@ -622,5 +770,14 @@
 
     .guests-form {
         padding: 1rem;
+    }
+
+    .guests-layout-split {
+        grid-template-columns: 1fr;
+    }
+
+    .guests-form-actions {
+        flex-direction: column;
+        align-items: stretch;
     }
 }

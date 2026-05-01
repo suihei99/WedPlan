@@ -12,6 +12,12 @@ class Vendor extends Model
     // use HasFactory; // Uncomment if you want to use factories for testing
     use HasFactory;
 
+    public const STATUS_PENDING = 'pending';
+
+    public const STATUS_APPROVED = 'approved';
+
+    public const STATUS_REJECTED = 'rejected';
+
     // Define the fillable attributes for mass assignment
     protected $fillable = [
         'user_id',
@@ -21,6 +27,10 @@ class Vendor extends Model
         'status',
         'address',
         'business_documents',
+    ];
+
+    protected $appends = [
+        'business_document_url',
     ];
 
     protected function casts()
@@ -47,5 +57,14 @@ class Vendor extends Model
     public function bookings(): HasMany
     {
         return $this->hasMany(Booking::class, 'user_id', 'user_id');
+    }
+
+    public function getBusinessDocumentUrlAttribute(): ?string
+    {
+        if (! $this->business_documents) {
+            return null;
+        }
+
+        return asset('storage/'.ltrim($this->business_documents, '/'));
     }
 }

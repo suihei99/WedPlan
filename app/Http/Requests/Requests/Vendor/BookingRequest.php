@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Requests\Vendor;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class BookingRequest extends FormRequest
 {
@@ -11,7 +12,7 @@ class BookingRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +23,11 @@ class BookingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'couple_id' => ['required', 'integer', Rule::exists('users', 'id')->where('role', 'couple')],
+            'type_service' => ['required', 'string', 'max:255'],
+            'booking_date' => ['required', 'date'],
+            'status' => ['sometimes', 'boolean'],
+            'notes' => ['nullable', 'string', 'max:500'],
         ];
     }
 }
