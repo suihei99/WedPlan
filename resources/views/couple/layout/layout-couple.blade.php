@@ -14,7 +14,7 @@
                 <a href="{{ route('couple.dashboard') }}" class="sidebar-logo-link">
                     <img src="{{ asset('assets/icons/WebPlan_logo.webp') }}" alt="WebPlan logo" class="sidebar-logo-image">
                     <div class="sidebar-logo-copy">
-                        <h1>WebPlan</h1>
+                        <h1>WedPlan</h1>
                         <p>Wedding Planner</p>
                     </div>
                 </a>

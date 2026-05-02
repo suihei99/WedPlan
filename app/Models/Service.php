@@ -2,16 +2,27 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Service extends Model
 {
-    // use HasFactory; // Uncomment if you want to use factories for testing
     use HasFactory;
 
-    // Define the fillable attributes for mass assignment
+    public const SERVICE_TYPES = [
+        'Venue',
+        'Catering',
+        'Photography',
+        'Makeup Artist',
+        'Wedding Planner',
+        'Bridal Wear',
+        'Decor & Styling',
+        'Entertainment',
+        'Transportation',
+        'Other',
+    ];
+
     protected $fillable = [
         'user_id',
         'service_name',
@@ -21,8 +32,7 @@ class Service extends Model
         'image_url',
     ];
 
-    // cast attributes to appropriate data types
-    protected function casts()
+    protected function casts(): array
     {
         return [
             'price_estimate' => 'decimal:2',
@@ -31,10 +41,13 @@ class Service extends Model
         ];
     }
 
-    // Define the relationship with the User model
-    public function vendor() : BelongsTo
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function vendor(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
     }
-
 }

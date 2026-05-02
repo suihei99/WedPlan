@@ -8,6 +8,7 @@ use App\Http\Controllers\web\Couple\GuestController;
 use App\Http\Controllers\web\Couple\TaskController;
 use App\Http\Controllers\web\Setting\SettingController;
 use App\Http\Controllers\web\Vendor\DashboardVendorController;
+use App\Http\Controllers\web\Vendor\ServiceVendorController;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -51,12 +52,13 @@ Route::middleware(['auth', 'role:vendor'])->prefix('vendor')->name('vendor.')->g
     Route::get('/dashboard', [DashboardVendorController::class, 'showDashboard'])->name('dashboard');
 
     // Additional vendor routes can be added here
-    Route::get('/services', function () {
-        $user = Auth::user();
-        abort_unless($user instanceof User, 401);
-
-        return view('vendor.service.index', ['vendor' => $user->vendor]);
-    })->name('service.index');
+    Route::get('/services', [ServiceVendorController::class, 'index'])->name('service.index');
+    Route::get('/services/create', [ServiceVendorController::class, 'create'])->name('service.create');
+    Route::post('/services', [ServiceVendorController::class, 'store'])->name('service.store');
+    Route::get('/services/{service}', [ServiceVendorController::class, 'show'])->name('service.show');
+    Route::get('/services/{service}/edit', [ServiceVendorController::class, 'edit'])->name('service.edit');
+    Route::put('/services/{service}', [ServiceVendorController::class, 'update'])->name('service.update');
+    Route::delete('/services/{service}', [ServiceVendorController::class, 'destroy'])->name('service.destroy');
 
     Route::get('/bookings', function () {
         $user = Auth::user();

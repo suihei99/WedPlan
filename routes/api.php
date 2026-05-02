@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\v1\Couple\ApiTaskController;
 use App\Http\Controllers\Api\v1\Setting\ApiSettingController;
 use App\Http\Controllers\Api\v1\Vendor\ApiBookingController;
 use App\Http\Controllers\Api\v1\Vendor\ApiDashboardController as VendorApiDashboardController;
+use App\Http\Controllers\Api\v1\Vendor\ApiServiceController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -40,6 +41,11 @@ Route::prefix('v1')->group(function () {
         // Vendor
         Route::middleware('role:vendor')->prefix('vendor')->group(function () {
             Route::get('/dashboard', [VendorApiDashboardController::class, 'index']);
+            Route::get('/services', [ApiServiceController::class, 'index']);
+            Route::post('/services', [ApiServiceController::class, 'store']);
+            Route::get('/services/{service}', [ApiServiceController::class, 'show']);
+            Route::put('/services/{service}', [ApiServiceController::class, 'update']);
+            Route::delete('/services/{service}', [ApiServiceController::class, 'destroy']);
             Route::get('/bookings', [ApiBookingController::class, 'index']);
             Route::post('/bookings', [ApiBookingController::class, 'store']);
             Route::put('/bookings/{booking}', [ApiBookingController::class, 'update']);
