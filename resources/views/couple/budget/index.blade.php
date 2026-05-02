@@ -101,16 +101,10 @@
                 <button type="button" class="budget-filter-button" data-budget-filter="over">Over Budget</button>
             </div>
 
-            @if(Route::has('couple.budget.limit'))
-                <form class="budget-form" method="POST" action="{{ route('couple.budget.limit') }}">
-                    @csrf
-                    @method('PUT')
-                    <div>
-                        <label for="total_budget_limit">Update Budget Limit</label>
-                        <input id="total_budget_limit" name="total_budget_limit" type="number" min="0" step="0.01" value="{{ old('total_budget_limit', $totalBudgetLimit > 0 ? $totalBudgetLimit : '') }}" placeholder="Enter new total budget limit">
-                    </div>
-                    <button type="submit" class="budget-action">Save Limit</button>
-                </form>
+            @if(Route::has('couple.budget.print'))
+                <a href="{{ route('couple.budget.print') }}" class="budget-action" target="_blank" rel="noopener">
+                    Print PDF
+                </a>
             @endif
         </section>
 

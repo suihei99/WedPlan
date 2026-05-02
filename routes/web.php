@@ -80,6 +80,7 @@ Route::middleware(['auth', 'role:couple'])->prefix('couple')->name('couple.')->g
 
     // Budget management
     Route::get('/budget', [BudgetController::class, 'index'])->name('budget.index');
+    Route::get('/budget/print', [BudgetController::class, 'printReport'])->name('budget.print');
     Route::get('/budget/create', [BudgetController::class, 'displayAddCategoryForm'])->name('budget.create');
     Route::post('/budget/create/added', [BudgetController::class, 'store'])->name('budget.store');
     Route::get('/budget/{budgetCategory}', [BudgetController::class, 'show'])->name('budget.show');

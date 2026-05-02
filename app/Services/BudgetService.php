@@ -35,6 +35,44 @@ class BudgetService
         ];
     }
 
+    public function getPrintableReport(Couple $couple): array
+    {
+        $categories = $couple->budgetCategories()
+            ->with(['expenses' => function ($query) {
+                $query->orderByDesc('date_paid')->orderByDesc('id');
+            }])
+            ->get();
+
+        $rows = $categories->map(function (BudgetCategory $category) {
+            $expenses = $category->expenses;
+            $categorySpent = (float) $expenses->sum('amount');
+            $allocatedAmount = (float) $category->allocated_amount;
+
+            return [
+                'id' => $category->id,
+                'category_name' => $category->category_name,
+                'allocated_amount' => $allocatedAmount,
+                'spent_amount' => $categorySpent,
+                'remaining_amount' => max(0, $allocatedAmount - $categorySpent),
+                'is_overspent' => $categorySpent > $allocatedAmount,
+                'expenses' => $expenses->map(function ($expense) {
+                    return [
+                        'expense_name' => $expense->expense_name,
+                        'amount' => (float) $expense->amount,
+                        'date_paid' => optional($expense->date_paid)->format('Y-m-d'),
+                        'payment_method' => $expense->payment_method,
+                        'description' => $expense->description,
+                    ];
+                })->values()->all(),
+            ];
+        })->values();
+
+        return [
+            'generated_at' => now()->format('Y-m-d H:i'),
+            'categories' => $rows->all(),
+        ];
+    }
+
     // Method to create a new budget category for a couple
     public function createCategory(Couple $couple, array $data): BudgetCategory
     {
