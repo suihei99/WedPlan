@@ -338,7 +338,11 @@
 .booking-guide-card,
 .booking-detail-card {
     padding: 1rem;
-    margin: 1rem;
+}
+
+.booking-guide-card {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
 }
 
 .booking-empty-state {

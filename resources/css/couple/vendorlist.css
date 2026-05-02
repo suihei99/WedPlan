@@ -1,0 +1,676 @@
+/* Vendor List Page Styling */
+
+.vendorlist-page {
+    display: grid;
+    gap: 1.5rem;
+}
+
+/* Hero Section */
+.vendorlist-hero {
+    background: linear-gradient(145deg, #fef7fa 0%, #ffeaef 100%);
+    border: 1px solid #f0d9e2;
+    border-radius: 1.1rem;
+    box-shadow: 0 12px 26px rgba(224, 79, 109, 0.08);
+    padding: 1.3rem;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1.5rem;
+}
+
+.vendorlist-hero > div:first-child {
+    flex: 1;
+}
+
+.vendorlist-kicker {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #d54c6d;
+    background: #fff;
+    border: 1px solid #f1c8d3;
+    border-radius: 999px;
+    padding: 0.35rem 0.75rem;
+}
+
+.vendorlist-title {
+    margin: 0.65rem 0 0;
+    font-size: 1.85rem;
+    font-weight: 800;
+    color: #201419;
+}
+
+.vendorlist-subtitle {
+    margin: 0.35rem 0 0;
+    color: #715b64;
+    max-width: 65ch;
+    line-height: 1.4;
+}
+
+/* Toolbar */
+.vendorlist-toolbar {
+    display: flex;
+    gap: 1rem;
+    align-items: stretch;
+}
+
+.vendorlist-toolbar-search {
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: white;
+    border: 1px solid #e8d5dd;
+    border-radius: 0.75rem;
+    padding: 0 0.75rem;
+    gap: 0.6rem;
+}
+
+.vendorlist-toolbar-search svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    color: #b0859c;
+}
+
+.vendorlist-search-form {
+    flex: 1;
+    display: flex;
+}
+
+.vendorlist-toolbar-search input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    outline: none;
+    padding: 0.6rem 0;
+    font-size: 0.92rem;
+    color: #201419;
+}
+
+.vendorlist-toolbar-search input::placeholder {
+    color: #b0859c;
+}
+
+.vendorlist-toolbar-filters {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.vendorlist-filter-form {
+    flex: 1;
+    min-width: 160px;
+}
+
+.vendorlist-filter-select {
+    width: 100%;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid #e8d5dd;
+    border-radius: 0.75rem;
+    background: white;
+    color: #201419;
+    font-size: 0.92rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.vendorlist-filter-select:hover {
+    border-color: #d54c6d;
+}
+
+.vendorlist-filter-select:focus {
+    outline: none;
+    border-color: #d54c6d;
+    box-shadow: 0 0 0 3px rgba(213, 76, 109, 0.1);
+}
+
+/* Services Grid */
+.vendorlist-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.25rem;
+}
+
+.vendorlist-card {
+    background: white;
+    border: 1px solid #e8d5dd;
+    border-radius: 0.9rem;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.vendorlist-card:hover {
+    border-color: #d54c6d;
+    box-shadow: 0 8px 24px rgba(224, 79, 109, 0.15);
+    transform: translateY(-4px);
+}
+
+.vendorlist-card-link {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
+}
+
+.vendorlist-card-image {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4/3;
+    background: #f5eff2;
+    overflow: hidden;
+}
+
+.vendorlist-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.vendorlist-card:hover .vendorlist-card-image img {
+    transform: scale(1.05);
+}
+
+.vendorlist-card-image.image-failed {
+    background: linear-gradient(135deg, #fef0f5 0%, #f5eff2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #d4a5b4;
+}
+
+.vendorlist-card-image.image-failed svg {
+    width: 48px;
+    height: 48px;
+}
+
+.vendorlist-card-image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #fef0f5 0%, #f5eff2 100%);
+    color: #d4a5b4;
+}
+
+.vendorlist-card-image-placeholder svg {
+    width: 48px;
+    height: 48px;
+}
+
+.vendorlist-card-badge {
+    position: absolute;
+    top: 0.6rem;
+    right: 0.6rem;
+    background: rgba(213, 76, 109, 0.95);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.35rem 0.65rem;
+    border-radius: 0.5rem;
+    backdrop-filter: blur(8px);
+}
+
+.vendorlist-card-content {
+    padding: 1rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.vendorlist-card-service-name {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #201419;
+    margin: 0;
+    line-height: 1.3;
+}
+
+.vendorlist-card-vendor-name {
+    font-size: 0.85rem;
+    color: #9a7a86;
+    margin: 0;
+    font-weight: 600;
+}
+
+.vendorlist-card-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin: 0.3rem 0;
+}
+
+.vendorlist-card-location {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.4rem;
+    font-size: 0.8rem;
+    color: #715b64;
+    line-height: 1.3;
+}
+
+.vendorlist-card-location svg {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    color: #d54c6d;
+}
+
+.vendorlist-card-price {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #d54c6d;
+    margin: 0.3rem 0 0;
+}
+
+.vendorlist-card-price-label {
+    font-size: 0.75rem;
+    color: #9a7a86;
+    font-weight: 500;
+}
+
+.vendorlist-card-footer {
+    padding: 0 1rem 1rem;
+    display: flex;
+    gap: 0.5rem;
+}
+
+.vendorlist-card-contact-btn {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    background: linear-gradient(135deg, #ffb3c7 0%, #ff99b4 100%);
+    color: white;
+    border: none;
+    border-radius: 0.6rem;
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.vendorlist-card-contact-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(224, 79, 109, 0.25);
+}
+
+.vendorlist-card-contact-btn:active {
+    transform: translateY(0);
+}
+
+.vendorlist-card-contact-btn-disabled,
+.vendorlist-card-contact-btn:disabled {
+    background: #efdde3;
+    color: #9b7f8a;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
+/* Empty State */
+.vendorlist-empty {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 2rem;
+    text-align: center;
+    background: linear-gradient(135deg, #fef7fa 0%, #ffeaef 100%);
+    border: 2px dashed #d4a5b4;
+    border-radius: 1rem;
+}
+
+.vendorlist-empty svg {
+    width: 48px;
+    height: 48px;
+    color: #b0859c;
+    margin-bottom: 1rem;
+}
+
+.vendorlist-empty h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #201419;
+    margin: 0 0 0.5rem;
+}
+
+.vendorlist-empty p {
+    color: #715b64;
+    font-size: 0.9rem;
+    margin: 0;
+    max-width: 40ch;
+}
+
+/* Pagination */
+.vendorlist-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.vendorlist-pagination-prev,
+.vendorlist-pagination-next {
+    width: 36px;
+    height: 36px;
+    border: 1px solid #e8d5dd;
+    background: white;
+    border-radius: 0.6rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    color: #d54c6d;
+}
+
+.vendorlist-pagination-prev:hover:not(:disabled),
+.vendorlist-pagination-next:hover:not(:disabled) {
+    border-color: #d54c6d;
+    background: linear-gradient(135deg, #ffb3c7 0%, #ff99b4 100%);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(224, 79, 109, 0.2);
+}
+
+.vendorlist-pagination-prev:disabled,
+.vendorlist-pagination-next:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.vendorlist-pagination-prev svg,
+.vendorlist-pagination-next svg {
+    width: 18px;
+    height: 18px;
+}
+
+.vendorlist-pagination-info {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.9rem;
+    color: #9a7a86;
+    font-weight: 600;
+}
+
+.vendorlist-pagination-separator {
+    color: #d4a5b4;
+}
+
+/* Detail Page */
+.vendorlist-detail-page {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.vendorlist-back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #d54c6d;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    width: fit-content;
+}
+
+.vendorlist-back-link:hover {
+    gap: 0.75rem;
+    text-decoration: underline;
+}
+
+.vendorlist-back-link svg {
+    width: 16px;
+    height: 16px;
+}
+
+.vendorlist-detail {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: start;
+}
+
+.vendorlist-detail-image {
+    width: 100%;
+    aspect-ratio: 1;
+    background: #f5eff2;
+    border-radius: 1rem;
+    overflow: hidden;
+}
+
+.vendorlist-detail-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.vendorlist-detail-image.image-failed {
+    background: linear-gradient(135deg, #fef0f5 0%, #f5eff2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #d4a5b4;
+}
+
+.vendorlist-detail-image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #fef0f5 0%, #f5eff2 100%);
+    color: #d4a5b4;
+}
+
+.vendorlist-detail-image-placeholder svg {
+    width: 80px;
+    height: 80px;
+}
+
+.vendorlist-detail-content {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.vendorlist-detail-header {
+    background: linear-gradient(145deg, #fef7fa 0%, #ffeaef 100%);
+    border: 1px solid #f0d9e2;
+    border-radius: 1rem;
+    padding: 1.25rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1.5rem;
+}
+
+.vendorlist-detail-badge {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #d54c6d;
+    background: white;
+    border: 1px solid #f1c8d3;
+    border-radius: 999px;
+    padding: 0.35rem 0.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.vendorlist-detail-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #201419;
+    margin: 0;
+    line-height: 1.3;
+}
+
+.vendorlist-detail-vendor {
+    font-size: 0.95rem;
+    color: #9a7a86;
+    margin: 0.5rem 0 0;
+    font-weight: 600;
+}
+
+.vendorlist-detail-price {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.3rem;
+}
+
+.vendorlist-detail-price-label {
+    font-size: 0.8rem;
+    color: #9a7a86;
+    font-weight: 500;
+}
+
+.vendorlist-detail-price-value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #d54c6d;
+}
+
+.vendorlist-detail-section {
+    display: grid;
+    gap: 0.8rem;
+}
+
+.vendorlist-detail-section h2 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #201419;
+    margin: 0;
+}
+
+.vendorlist-detail-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.vendorlist-detail-info-item {
+    background: white;
+    border: 1px solid #e8d5dd;
+    border-radius: 0.75rem;
+    padding: 0.9rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.vendorlist-detail-info-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #9a7a86;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.vendorlist-detail-info-value {
+    font-size: 0.95rem;
+    color: #201419;
+    font-weight: 600;
+}
+
+.vendorlist-detail-description {
+    color: #5a4a54;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.vendorlist-detail-contact {
+    margin-top: 1rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e8d5dd;
+}
+
+.vendorlist-detail-contact-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    background: linear-gradient(135deg, #ffb3c7 0%, #ff99b4 100%);
+    color: white;
+    border: none;
+    border-radius: 0.75rem;
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+}
+
+.vendorlist-detail-contact-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(224, 79, 109, 0.3);
+}
+
+.vendorlist-detail-contact-btn:active {
+    transform: translateY(0);
+}
+
+.vendorlist-detail-contact-btn svg {
+    width: 20px;
+    height: 20px;
+}
+
+.vendorlist-detail-contact-btn-disabled,
+.vendorlist-detail-contact-btn:disabled {
+    background: #efdde3;
+    color: #9b7f8a;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .vendorlist-toolbar {
+        flex-direction: column;
+    }
+
+    .vendorlist-toolbar-filters {
+        flex-direction: column;
+    }
+
+    .vendorlist-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+
+    .vendorlist-detail {
+        grid-template-columns: 1fr;
+    }
+
+    .vendorlist-detail-header {
+        flex-direction: column;
+    }
+
+    .vendorlist-detail-price {
+        align-items: flex-start;
+    }
+
+    .vendorlist-detail-info-grid {
+        grid-template-columns: 1fr;
+    }
+}

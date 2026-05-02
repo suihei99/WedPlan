@@ -42,7 +42,7 @@
                     $menuItems = [
                         ['icon' => 'home', 'label' => 'Dashboard', 'route' => 'couple.dashboard', 'current' => 'couple.dashboard'],
                         ['icon' => 'wallet', 'label' => 'Budget', 'route' => 'couple.budget.index', 'current' => 'couple.budget.*'],
-                        ['icon' => 'store', 'label' => 'Vendors', 'route' => null, 'current' => null],
+                        ['icon' => 'store', 'label' => 'Vendors', 'route' => 'couple.vendorlist.index', 'current' => 'couple.vendorlist.*'],
                         ['icon' => 'users', 'label' => 'Guest', 'route' => 'couple.guests.index', 'current' => 'couple.guests.*'],
                         ['icon' => 'checklist', 'label' => 'Tasklist', 'route' => 'couple.tasks.index', 'current' => 'couple.tasks.*'],
                         ['icon' => 'sparkles', 'label' => 'AI Estimate Budget', 'route' => null, 'current' => null],

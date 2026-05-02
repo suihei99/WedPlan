@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\v1\Couple\ApiTaskController;
 use App\Http\Controllers\Api\v1\Setting\ApiSettingController;
 use App\Http\Controllers\Api\v1\Vendor\ApiBookingController;
 use App\Http\Controllers\Api\v1\Vendor\ApiDashboardController as VendorApiDashboardController;
+use App\Http\Controllers\Api\v1\Vendor\ApiNotificationController;
 use App\Http\Controllers\Api\v1\Vendor\ApiServiceController;
 use Illuminate\Support\Facades\Route;
 
@@ -47,6 +48,10 @@ Route::prefix('v1')->group(function () {
             Route::put('/services/{service}', [ApiServiceController::class, 'update']);
             Route::delete('/services/{service}', [ApiServiceController::class, 'destroy']);
             Route::apiResource('bookings', ApiBookingController::class);
+            Route::get('/notifications', [ApiNotificationController::class, 'index']);
+            Route::get('/notifications/{notification}', [ApiNotificationController::class, 'show']);
+            Route::put('/notifications/{notification}/read', [ApiNotificationController::class, 'markAsRead']);
+            Route::delete('/notifications/{notification}', [ApiNotificationController::class, 'destroy']);
         });
 
         // // Couple

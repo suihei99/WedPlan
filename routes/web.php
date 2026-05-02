@@ -6,6 +6,8 @@ use App\Http\Controllers\web\Couple\BudgetController;
 use App\Http\Controllers\web\Couple\DashboardCoupleController;
 use App\Http\Controllers\web\Couple\GuestController;
 use App\Http\Controllers\web\Couple\TaskController;
+use App\Http\Controllers\web\Couple\VendorListController;
+use App\Http\Controllers\web\Notification\NotificationController;
 use App\Http\Controllers\web\Setting\SettingController;
 use App\Http\Controllers\web\Vendor\BookingVendorController;
 use App\Http\Controllers\web\Vendor\DashboardVendorController;
@@ -61,12 +63,10 @@ Route::middleware(['auth', 'role:vendor'])->prefix('vendor')->name('vendor.')->g
 
     Route::resource('bookings', BookingVendorController::class)->names('booking');
 
-    Route::get('/notifications', function () {
-        $user = Auth::user();
-        abort_unless($user instanceof User, 401);
-
-        return view('vendor.notification.index', ['vendor' => $user->vendor]);
-    })->name('notification.index');
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notification.index');
+    Route::get('/notifications/{notification}', [NotificationController::class, 'show'])->name('notification.show');
+    Route::put('/notifications/{notification}/read', [NotificationController::class, 'markAsRead'])->name('notification.mark-read');
+    Route::delete('/notifications/{notification}', [NotificationController::class, 'destroy'])->name('notification.destroy');
 
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
     Route::put('/settings/profile', [SettingController::class, 'updateProfile'])->name('settings.profile.update');
@@ -115,6 +115,10 @@ Route::middleware(['auth', 'role:couple'])->prefix('couple')->name('couple.')->g
     Route::put('/tasks/{task}/complete', [TaskController::class, 'markComplete'])->name('tasks.complete');
     Route::put('/tasks/{task}', [TaskController::class, 'update'])->name('tasks.update');
     Route::delete('/tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
+
+    // Vendor list routes (browse approved vendors and services)
+    Route::get('/vendors', [VendorListController::class, 'index'])->name('vendorlist.index');
+    Route::get('/vendors/{service}', [VendorListController::class, 'show'])->name('vendorlist.show');
 
     // Ai Budget Estimation route
     // Route::get('/ai/budget-estimation', [AiBudgetController::class, 'budgetEstimation'])->name('ai.budget-estimation');

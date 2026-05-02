@@ -79,6 +79,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(Service::class);
     }
+
+    public function notifications(): HasMany
+    {
+        return $this->hasMany(UserNotification::class);
+    }
+
     // Admin has no specific relationship, as they are just users with admin role and can manage both couples and vendors
 
     // Role check helper methods
