@@ -67,9 +67,9 @@
 					</div>
 					<span class="metric-icon">💰</span>
 				</div>
-				<p class="metric-value">RM {{ number_format($dashboardData['budget']['total_budget_limit'] ?? 0, 0) }}</p>
+				<p class="metric-value">RM {{ number_format($dashboardData['budget']['effective_budget_limit'] ?? ($dashboardData['total_budget'] ?? 0), 0) }}</p>
 				<p class="metric-note">
-					RM {{ number_format($dashboardData['budget']['remaining'] ?? 0, 0) }} remaining
+					RM {{ number_format($dashboardData['budget']['remaining'] ?? ($dashboardData['budget_remaining'] ?? 0), 0) }} remaining
 				</p>
 			</article>
 
@@ -131,8 +131,8 @@
 					<div style="display: grid; gap: 0.6rem;">
 						@foreach($dashboardData['upcoming_tasks'] as $task)
 							<div style="padding: 0.6rem; background: #fef7fa; border-radius: 0.6rem; border-left: 3px solid #d54c6d;">
-								<p style="margin: 0; font-size: 0.9rem; font-weight: 600; color: #201419;">{{ $task['task_name'] ?? 'Task' }}</p>
-								<p style="margin: 0.2rem 0 0; font-size: 0.8rem; color: #876f79;">📅 {{ $task['deadline'] ?? 'No date' }}</p>
+								<p style="margin: 0; font-size: 0.9rem; font-weight: 600; color: #201419;">{{ $task['title'] ?? ($task['task_name'] ?? 'Task') }}</p>
+								<p style="margin: 0.2rem 0 0; font-size: 0.8rem; color: #876f79;">📅 {{ $task['due_date'] ?? ($task['deadline'] ?? 'No date') }}</p>
 							</div>
 						@endforeach
 					</div>
