@@ -74,12 +74,9 @@ Route::middleware(['auth', 'role:vendor'])->prefix('vendor')->name('vendor.')->g
         return view('vendor.notification.index', ['vendor' => $user->vendor]);
     })->name('notification.index');
 
-    Route::get('/settings', function () {
-        $user = Auth::user();
-        abort_unless($user instanceof User, 401);
-
-        return view('vendor.settings.index', ['vendor' => $user->vendor]);
-    })->name('settings.index');
+    Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+    Route::put('/settings/profile', [SettingController::class, 'updateProfile'])->name('settings.profile.update');
+    Route::put('/settings/password', [SettingController::class, 'updatePassword'])->name('settings.password.update');
 });
 
 // Couple routes

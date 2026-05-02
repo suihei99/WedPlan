@@ -6,6 +6,7 @@ use App\Mail\UserAlertMail;
 use App\Models\Booking;
 use App\Models\User;
 use App\Models\UserNotification;
+use App\Models\Vendor;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
@@ -40,6 +41,19 @@ class UserNotificationService
         );
     }
 
+    public function notifyAdminsVendorDocumentationUpdated(User $vendorUser, Vendor $vendor): void
+    {
+        $admins = User::query()->admins()->get();
+
+        foreach ($admins as $admin) {
+            $this->send(
+                $admin,
+                'Vendor Documentation Updated',
+                'Vendor '.$vendor->business_name.' has updated business documentation and needs review.'
+            );
+        }
+    }
+
     public function notifyTaskOverdue(User $coupleUser, int $overdueTaskCount): void
     {
         $this->send(
@@ -69,7 +83,7 @@ class UserNotificationService
         );
     }
 
-    private function send(User $user, string $title, string $message): void
+    private function send(object $user, string $title, string $message): void
     {
         UserNotification::create([
             'user_id' => $user->id,
