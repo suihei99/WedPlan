@@ -46,10 +46,7 @@ Route::prefix('v1')->group(function () {
             Route::get('/services/{service}', [ApiServiceController::class, 'show']);
             Route::put('/services/{service}', [ApiServiceController::class, 'update']);
             Route::delete('/services/{service}', [ApiServiceController::class, 'destroy']);
-            Route::get('/bookings', [ApiBookingController::class, 'index']);
-            Route::post('/bookings', [ApiBookingController::class, 'store']);
-            Route::put('/bookings/{booking}', [ApiBookingController::class, 'update']);
-            Route::delete('/bookings/{booking}', [ApiBookingController::class, 'destroy']);
+            Route::apiResource('bookings', ApiBookingController::class);
         });
 
         // // Couple

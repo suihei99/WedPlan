@@ -7,6 +7,7 @@ use App\Models\Booking;
 use App\Models\User;
 use App\Models\UserNotification;
 use App\Models\Vendor;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
@@ -74,11 +75,26 @@ class UserNotificationService
 
     public function notifyCoupleBookingUpdate(User $coupleUser, Booking $booking, string $action): void
     {
-        $bookingDate = $booking->booking_date ? (string) $booking->booking_date : 'N/A';
+        $this->sendBookingNotification($coupleUser, $booking, 'Booking Update', $action);
+    }
+
+    public function notifyCoupleBookingCreated(User $coupleUser, Booking $booking): void
+    {
+        $this->sendBookingNotification($coupleUser, $booking, 'Booking Created', 'created');
+    }
+
+    public function notifyCoupleBookingDeleted(User $coupleUser, Booking $booking): void
+    {
+        $this->sendBookingNotification($coupleUser, $booking, 'Booking Deleted', 'deleted');
+    }
+
+    private function sendBookingNotification(User $coupleUser, Booking $booking, string $title, string $action): void
+    {
+        $bookingDate = $booking->booking_date ? Carbon::parse((string) $booking->booking_date)->format('d M Y') : 'N/A';
 
         $this->send(
             $coupleUser,
-            'Booking Update',
+            $title,
             'A vendor has '.$action.' your booking for '.$booking->type_service.' on '.$bookingDate.'.'
         );
     }

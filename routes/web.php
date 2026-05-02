@@ -7,10 +7,9 @@ use App\Http\Controllers\web\Couple\DashboardCoupleController;
 use App\Http\Controllers\web\Couple\GuestController;
 use App\Http\Controllers\web\Couple\TaskController;
 use App\Http\Controllers\web\Setting\SettingController;
+use App\Http\Controllers\web\Vendor\BookingVendorController;
 use App\Http\Controllers\web\Vendor\DashboardVendorController;
 use App\Http\Controllers\web\Vendor\ServiceVendorController;
-use App\Models\User;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -60,12 +59,7 @@ Route::middleware(['auth', 'role:vendor'])->prefix('vendor')->name('vendor.')->g
     Route::put('/services/{service}', [ServiceVendorController::class, 'update'])->name('service.update');
     Route::delete('/services/{service}', [ServiceVendorController::class, 'destroy'])->name('service.destroy');
 
-    Route::get('/bookings', function () {
-        $user = Auth::user();
-        abort_unless($user instanceof User, 401);
-
-        return view('vendor.booking.index', ['vendor' => $user->vendor]);
-    })->name('booking.index');
+    Route::resource('bookings', BookingVendorController::class)->names('booking');
 
     Route::get('/notifications', function () {
         $user = Auth::user();
