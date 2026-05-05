@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\web\Admin\DashboardAdminController;
 use App\Http\Controllers\web\Admin\ManageUserAdminController;
 use App\Http\Controllers\web\Auth\WebAuthController;
 use App\Http\Controllers\web\Couple\BudgetController;
@@ -37,14 +38,19 @@ Route::post('/logout', [WebAuthController::class, 'logout'])->middleware('auth')
 
 // Admin routes
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
-    // Admin dashboard
-    Route::get('/dashboard', function () {
-        return view('admin.dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardAdminController::class, 'showDashboard'])->name('dashboard');
 
-    // Additional admin routes can be added here
+    Route::get('/vendors', [ManageUserAdminController::class, 'vendorsIndex'])->name('vendors.index');
+    Route::get('/vendors/{vendor}', [ManageUserAdminController::class, 'showVendor'])->name('vendors.show');
     Route::put('/vendors/{vendor}/approve', [ManageUserAdminController::class, 'approveVendor'])->name('vendors.approve');
     Route::put('/vendors/{vendor}/reject', [ManageUserAdminController::class, 'rejectVendor'])->name('vendors.reject');
+
+    Route::get('/users', [ManageUserAdminController::class, 'usersIndex'])->name('users.index');
+    Route::get('/users/{user}', [ManageUserAdminController::class, 'showUser'])->name('users.show');
+    Route::put('/users/{user}/status', [ManageUserAdminController::class, 'toggleUserStatus'])->name('users.status');
+
+    Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+    Route::put('/settings/password', [SettingController::class, 'updatePassword'])->name('settings.password.update');
 });
 
 // Vendor routes

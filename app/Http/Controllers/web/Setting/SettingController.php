@@ -23,6 +23,10 @@ class SettingController extends Controller
         $user = Auth::user();
         abort_unless($user instanceof User, 401);
 
+        if ($user->role === User::ROLE_ADMIN) {
+            return view('admin.setting.index', compact('user'));
+        }
+
         if ($user->role === User::ROLE_VENDOR) {
             $vendor = $user->vendor;
 
