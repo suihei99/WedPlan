@@ -3,9 +3,7 @@
 namespace App\Http\Controllers\web\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Booking;
 use App\Models\Couple;
-use App\Models\Task;
 use App\Models\User;
 use App\Models\Vendor;
 use Illuminate\View\View;
@@ -17,14 +15,11 @@ class DashboardAdminController extends Controller
         $stats = [
             'couples' => User::couples()->count(),
             'vendors' => User::vendors()->count(),
-            'admins' => User::admins()->count(),
-            'active_users' => User::query()->where('is_active', true)->count(),
-            'inactive_users' => User::query()->where('is_active', false)->count(),
+            'active_users' => User::query()->whereIn('role', [User::ROLE_COUPLE, User::ROLE_VENDOR])->where('is_active', true)->count(),
+            'inactive_users' => User::query()->whereIn('role', [User::ROLE_COUPLE, User::ROLE_VENDOR])->where('is_active', false)->count(),
             'pending_vendors' => Vendor::query()->where('status', Vendor::STATUS_PENDING)->count(),
             'approved_vendors' => Vendor::query()->where('status', Vendor::STATUS_APPROVED)->count(),
             'rejected_vendors' => Vendor::query()->where('status', Vendor::STATUS_REJECTED)->count(),
-            'bookings' => Booking::query()->count(),
-            'tasks' => Task::query()->count(),
             'upcoming_weddings' => Couple::query()->whereNotNull('wedding_date')->count(),
         ];
 
@@ -37,6 +32,7 @@ class DashboardAdminController extends Controller
 
         $recentUsers = User::query()
             ->with(['couple', 'vendor'])
+            ->whereIn('role', [User::ROLE_COUPLE, User::ROLE_VENDOR])
             ->latest()
             ->limit(8)
             ->get();

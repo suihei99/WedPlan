@@ -41,16 +41,16 @@ class ManageUserAdminController extends Controller
     {
         $users = User::query()
             ->with(['couple', 'vendor'])
+            ->whereIn('role', [User::ROLE_COUPLE, User::ROLE_VENDOR])
             ->latest()
             ->paginate(12);
 
         $summary = [
-            'total' => User::query()->count(),
-            'admins' => User::admins()->count(),
+            'total' => User::query()->whereIn('role', [User::ROLE_COUPLE, User::ROLE_VENDOR])->count(),
             'couples' => User::couples()->count(),
             'vendors' => User::vendors()->count(),
-            'active' => User::query()->where('is_active', true)->count(),
-            'inactive' => User::query()->where('is_active', false)->count(),
+            'active' => User::query()->whereIn('role', [User::ROLE_COUPLE, User::ROLE_VENDOR])->where('is_active', true)->count(),
+            'inactive' => User::query()->whereIn('role', [User::ROLE_COUPLE, User::ROLE_VENDOR])->where('is_active', false)->count(),
         ];
 
         return view('admin.manage_user.index', compact('users', 'summary'));

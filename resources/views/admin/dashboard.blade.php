@@ -2,7 +2,7 @@
 
 @section('title', 'Admin Dashboard - WebPlan')
 @section('page-title', 'Admin Dashboard')
-@section('page-subtitle', 'Track couples, vendors, bookings, and approvals from one control center.')
+@section('page-subtitle', 'Manage couples and vendors with approvals and status monitoring.')
 
 @section('content')
 	@php
@@ -13,8 +13,6 @@
 			['label' => 'Approved Vendors', 'value' => $stats['approved_vendors'], 'note' => 'Verified vendors visible to couples.'],
 			['label' => 'Active Users', 'value' => $stats['active_users'], 'note' => 'Accounts currently allowed to sign in.'],
 			['label' => 'Inactive Users', 'value' => $stats['inactive_users'], 'note' => 'Accounts blocked until reactivated.'],
-			['label' => 'Bookings', 'value' => $stats['bookings'], 'note' => 'Vendor booking requests across the platform.'],
-			['label' => 'Wedding Tasks', 'value' => $stats['tasks'], 'note' => 'Planning tasks created by couples.'],
 		];
 	@endphp
 
@@ -22,8 +20,8 @@
 		<section class="admin-hero-card">
 			<div>
 				<span class="admin-kicker">Wedding Planner Control Center</span>
-				<h1>Keep couples, vendors, and bookings moving.</h1>
-				<p>Monitor approvals, user activity, and wedding progress with a clean workspace built for fast decisions.</p>
+				<h1>Manage couples and vendors effortlessly.</h1>
+				<p>Review vendor applications, activate accounts, and monitor wedding profiles with a clean workspace built for fast decisions.</p>
 
 				<div class="admin-hero-actions">
 					<a href="{{ route('admin.vendors.index') }}" class="admin-primary-btn">Review Vendors</a>
@@ -40,10 +38,6 @@
 				<div class="admin-summary-tile">
 					<span>Rejected vendors</span>
 					<strong>{{ $stats['rejected_vendors'] }}</strong>
-				</div>
-				<div class="admin-summary-tile">
-					<span>Admin accounts</span>
-					<strong>{{ $stats['admins'] }}</strong>
 				</div>
 			</div>
 		</section>
