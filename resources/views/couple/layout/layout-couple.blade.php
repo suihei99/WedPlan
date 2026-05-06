@@ -45,7 +45,7 @@
                         ['icon' => 'store', 'label' => 'Vendors', 'route' => 'couple.vendorlist.index', 'current' => 'couple.vendorlist.*'],
                         ['icon' => 'users', 'label' => 'Guest', 'route' => 'couple.guests.index', 'current' => 'couple.guests.*'],
                         ['icon' => 'checklist', 'label' => 'Tasklist', 'route' => 'couple.tasks.index', 'current' => 'couple.tasks.*'],
-                        ['icon' => 'sparkles', 'label' => 'AI Estimate Budget', 'route' => null, 'current' => null],
+                        ['icon' => 'sparkles', 'label' => 'AI Estimate Budget', 'route' => 'couple.ai.budget-estimation', 'current' => 'couple.ai.*'],
                         ['icon' => 'settings', 'label' => 'Settings', 'route' => 'couple.settings.index', 'current' => 'couple.settings.*'],
                     ];
                 @endphp

@@ -4,36 +4,120 @@ namespace App\Http\Controllers\web\Couple;
 
 use App\Http\Controllers\Controller;
 use App\Services\AiBudgetService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use App\Http\Requests\Requests\Couple\AiBudgetRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class AiBudgetController extends Controller
 {
     public function __construct(private readonly AiBudgetService $aiService)
     {}
 
-    public function index()
+    /**
+     * Display the AI budget estimation chat interface
+     */
+    public function index(): \Illuminate\View\View
     {
-        return view('couple.ai_budget.index');
+        $couple = Auth::user()->couple;
+        return view('couple.ai_budget.index', compact('couple'));
     }
 
-    // public function generate(AiBudgetRequest $request)
-    // {
-    //     $validated = $request->validated();
-
-    //     try {
-    //         $budgetPlan = $this->aiService->generateBudgetPlan($validated);
-    //         return response()->json(['success' => true, 'data' => $budgetPlan]);
-    //     } catch (\Exception $e) {
-    //         return response()->json(['success' => false, 'message' => 'Failed to generate budget plan. Please try again.']);
-    //     }
-    // }
-
-    public function estimate(Request $request)
+    /**
+     * Get initial budget estimation based on guest count and budget range
+     */
+    public function estimateInitial(Request $request): JsonResponse
     {
-        $couple = auth()->couple;
-        $suggestion = $this->aiService->estimateBudget($couple);
+        $validated = $request->validate([
+            'guest_count' => 'required|integer|min:1|max:10000',
+            'budget_range' => 'required|string|in:RM 10000 - RM 20000,RM 2500 - RM 40000,RM 50000 And Above,None Of Above',
+        ]);
 
-        return view('couple.ai_budget.result', compact('suggestion'));
+        try {
+            $couple = Auth::user()->couple;
+
+            if (!$couple) {
+                return response()->json(['error' => 'Couple not found'], 404);
+            }
+
+            $estimation = $this->aiService->estimateBudget(
+                $couple,
+                $validated['guest_count'],
+                $validated['budget_range']
+            );
+
+            if (trim($estimation) === '') {
+                return response()->json([
+                    'success' => false,
+                    'error' => 'Chat is currently unavailable. The assistant is offline.',
+                    'offline' => true,
+                ], 503);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => $estimation,
+            ]);
+        } catch (\Exception $e) {
+            Log::error('AI Budget Estimation Error', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'error' => 'Failed to generate budget estimation. Please try again.',
+            ], 500);
+        }
+    }
+
+    /**
+     * Send a chat message and get AI response
+     */
+    public function chat(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'message' => 'required|string|max:2000',
+            'guest_count' => 'required|integer|min:1|max:10000',
+            'budget_range' => 'required|string',
+        ]);
+
+        try {
+            $couple = Auth::user()->couple;
+
+            if (!$couple) {
+                return response()->json(['error' => 'Couple not found'], 404);
+            }
+
+            $response = $this->aiService->chatMessage(
+                $validated['message'],
+                $couple,
+                $validated['guest_count'],
+                $validated['budget_range']
+            );
+
+            if (trim($response) === '') {
+                return response()->json([
+                    'success' => false,
+                    'error' => 'Chat is currently unavailable. The assistant is offline.',
+                    'offline' => true,
+                ], 503);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => $response,
+            ]);
+        } catch (\Exception $e) {
+            Log::error('AI Chat Error', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'error' => 'Failed to process your message. Please try again.',
+            ], 500);
+        }
     }
 }

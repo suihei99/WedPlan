@@ -3,6 +3,7 @@
 use App\Http\Controllers\web\Admin\DashboardAdminController;
 use App\Http\Controllers\web\Admin\ManageUserAdminController;
 use App\Http\Controllers\web\Auth\WebAuthController;
+use App\Http\Controllers\web\Couple\AiBudgetController;
 use App\Http\Controllers\web\Couple\BudgetController;
 use App\Http\Controllers\web\Couple\DashboardCoupleController;
 use App\Http\Controllers\web\Couple\GuestController;
@@ -130,9 +131,10 @@ Route::middleware(['auth', 'role:couple'])->prefix('couple')->name('couple.')->g
     Route::get('/vendors', [VendorListController::class, 'index'])->name('vendorlist.index');
     Route::get('/vendors/{service}', [VendorListController::class, 'show'])->name('vendorlist.show');
 
-    // Ai Budget Estimation route
-    // Route::get('/ai/budget-estimation', [AiBudgetController::class, 'budgetEstimation'])->name('ai.budget-estimation');
-    // Route::post('/ai/budget-estimation', [AiBudgetController::class, 'generateEstimation'])->name('ai.budget-estimation.generate');
+    // AI Budget Estimation routes
+    Route::get('/ai/budget-estimation', [AiBudgetController::class, 'index'])->name('ai.budget-estimation');
+    Route::post('/ai/budget-estimation/estimate', [AiBudgetController::class, 'estimateInitial'])->name('ai.budget-estimation.estimate');
+    Route::post('/ai/budget-estimation/chat', [AiBudgetController::class, 'chat'])->name('ai.budget-estimation.chat');
 
     // Setting : update profile, change password,  etc. can be added here
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
