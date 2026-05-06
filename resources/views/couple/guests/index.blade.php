@@ -176,9 +176,9 @@
 
         @if($guestCollection->count() > 0)
             <footer class="guests-pagination" data-guests-pagination>
-                <button type="button" data-guest-page-prev aria-label="Previous page">←</button>
+                <button type="button" data-guest-page-prev aria-label="Previous page">&#8249;</button>
                 <span data-guest-page-current>1</span>
-                <button type="button" data-guest-page-next aria-label="Next page">→</button>
+                <button type="button" data-guest-page-next aria-label="Next page">&#8250;</button>
             </footer>
         @endif
     </div>
