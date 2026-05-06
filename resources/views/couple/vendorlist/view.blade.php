@@ -11,6 +11,7 @@
 @section('content')
     @php
         $normalizedContact = preg_replace('/\D+/', '', (string) ($vendor->contact_number ?? ''));
+        $bookingCount = count($bookingDates ?? []);
 
         if (str_starts_with($normalizedContact, '0')) {
             $normalizedContact = '60' . substr($normalizedContact, 1);
@@ -21,7 +22,7 @@
         $whatsAppLink = $isMalaysiaWhatsapp ? "https://wa.me/{$normalizedContact}?text={$whatsAppMessage}" : null;
     @endphp
 
-    <div class="vendorlist-detail-page">
+    <div class="vendorlist-detail-page" data-vendorlist-detail-page data-booking-dates='@json($bookingDates ?? [])'>
         <!-- Back Link -->
         <a href="{{ route('couple.vendorlist.index') }}" class="vendorlist-back-link">
             <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -88,6 +89,38 @@
                         <p class="vendorlist-detail-description">{{ $service->description }}</p>
                     </section>
                 @endif
+
+                <section class="vendorlist-booking-panel">
+                    <div class="vendorlist-booking-head">
+                        <div>
+                            <span class="vendorlist-booking-kicker">Availability</span>
+                            <h2>Booking Calendar</h2>
+                            <p>Only booked dates are visible here, synced from the vendor booking schedule.</p>
+                        </div>
+
+                        <div class="vendorlist-booking-legend">
+                            <span><i class="vendorlist-booking-dot is-booked" aria-hidden="true"></i> Booked</span>
+                            <span><strong>{{ $bookingCount }}</strong> Dates</span>
+                        </div>
+                    </div>
+
+                    <div class="vendorlist-booking-calendar">
+                        <div class="vendorlist-booking-controls">
+                            <button type="button" data-vendor-booking-prev aria-label="Previous month">&#9664;</button>
+                            <p data-vendor-booking-label>Month Year</p>
+                            <button type="button" data-vendor-booking-next aria-label="Next month">&#9654;</button>
+                        </div>
+
+                        <div class="vendorlist-booking-grid" data-vendor-booking-grid aria-label="Booked dates calendar"></div>
+
+                        @if($bookingCount === 0)
+                            <div class="vendorlist-booking-empty">
+                                <h3>No booked dates yet</h3>
+                                <p>The vendor has not added any bookings for this service type.</p>
+                            </div>
+                        @endif
+                    </div>
+                </section>
 
                 <!-- Contact Section -->
                 <section class="vendorlist-detail-section vendorlist-detail-contact">

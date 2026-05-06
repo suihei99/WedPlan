@@ -598,6 +598,186 @@
     margin: 0;
 }
 
+.vendorlist-booking-panel {
+    background: linear-gradient(145deg, #fef7fa 0%, #ffedf2 100%);
+    border: 1px solid #f0d9e2;
+    border-radius: 1rem;
+    padding: 1.15rem;
+    display: grid;
+    gap: 1rem;
+    box-shadow: 0 12px 24px rgba(224, 79, 109, 0.08);
+}
+
+.vendorlist-booking-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.vendorlist-booking-head h2 {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: #201419;
+    margin: 0.4rem 0 0;
+}
+
+.vendorlist-booking-head p {
+    margin: 0.35rem 0 0;
+    color: #715b64;
+    line-height: 1.5;
+    max-width: 56ch;
+}
+
+.vendorlist-booking-kicker {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #d54c6d;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid #f1c8d3;
+    border-radius: 999px;
+    padding: 0.35rem 0.72rem;
+}
+
+.vendorlist-booking-legend {
+    display: grid;
+    gap: 0.45rem;
+    justify-items: end;
+    color: #5b4650;
+    font-size: 0.86rem;
+    font-weight: 600;
+}
+
+.vendorlist-booking-legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.42rem;
+}
+
+.vendorlist-booking-legend strong {
+    font-size: 1rem;
+    color: #1f1519;
+}
+
+.vendorlist-booking-dot {
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+    display: inline-flex;
+    flex-shrink: 0;
+}
+
+.vendorlist-booking-dot.is-booked {
+    background: #f4708a;
+}
+
+.vendorlist-booking-calendar {
+    display: grid;
+    gap: 0.8rem;
+}
+
+.vendorlist-booking-controls {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+.vendorlist-booking-controls button {
+    width: 2rem;
+    height: 2rem;
+    border: 0;
+    border-radius: 0.55rem;
+    background: #ffe8ef;
+    color: #d84f71;
+    cursor: pointer;
+}
+
+.vendorlist-booking-controls p {
+    margin: 0;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #45303a;
+    min-width: 120px;
+    text-align: center;
+}
+
+.vendorlist-booking-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 0.3rem;
+}
+
+.vendorlist-booking-weekday,
+.vendorlist-booking-cell {
+    min-height: 2.35rem;
+    border-radius: 0.55rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+}
+
+.vendorlist-booking-weekday {
+    font-weight: 700;
+    color: #6b5760;
+}
+
+.vendorlist-booking-cell {
+    color: #32232b;
+    background: #fff9fb;
+    position: relative;
+    flex-direction: column;
+    gap: 0.18rem;
+    font-weight: 600;
+}
+
+.vendorlist-booking-cell.is-muted {
+    color: #c0aab2;
+}
+
+.vendorlist-booking-cell.is-booked {
+    background: linear-gradient(135deg, #ffd7e2 0%, #ffb8cb 100%);
+    color: #1f1519;
+    box-shadow: inset 0 0 0 1px rgba(213, 76, 109, 0.18);
+}
+
+.vendorlist-booking-cell-label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.14rem 0.42rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.92);
+    color: #d54c6d;
+    font-size: 0.68rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.vendorlist-booking-empty {
+    border: 1px dashed #d4a5b4;
+    border-radius: 0.85rem;
+    background: rgba(255, 255, 255, 0.68);
+    padding: 1rem;
+    text-align: center;
+}
+
+.vendorlist-booking-empty h3 {
+    margin: 0;
+    font-size: 1rem;
+    color: #1f1519;
+}
+
+.vendorlist-booking-empty p {
+    margin: 0.4rem 0 0;
+    color: #715b64;
+    line-height: 1.5;
+}
+
 .vendorlist-detail-contact {
     margin-top: 1rem;
     padding-top: 1.5rem;
@@ -672,5 +852,13 @@
 
     .vendorlist-detail-info-grid {
         grid-template-columns: 1fr;
+    }
+
+    .vendorlist-booking-head {
+        flex-direction: column;
+    }
+
+    .vendorlist-booking-legend {
+        justify-items: start;
     }
 }

@@ -7,6 +7,7 @@ use App\Models\Couple;
 use App\Models\Service;
 use App\Models\Vendor;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class VendorListController extends Controller
@@ -53,7 +54,16 @@ class VendorListController extends Controller
             abort(404);
         }
 
-        return view('couple.vendorlist.view', compact('service', 'vendor', 'couple'));
+        $bookingDates = $vendor->bookings()
+            ->where('type_service', $service->type_service)
+            ->whereNotNull('booking_date')
+            ->orderBy('booking_date')
+            ->pluck('booking_date')
+            ->map(fn ($bookingDate): string => Carbon::parse((string) $bookingDate)->format('Y-m-d'))
+            ->values()
+            ->all();
+
+        return view('couple.vendorlist.view', compact('service', 'vendor', 'couple', 'bookingDates'));
     }
 
     private function currentCouple(): Couple
