@@ -28,6 +28,14 @@ class GuestController extends Controller
         return view('couple.guests.index', compact('guests', 'couple'));
     }
 
+    public function printReport()
+    {
+        $couple = $this->currentCouple();
+        $report = $this->guestService->getPrintableReport($couple);
+
+        return view('couple.guests.print', compact('couple', 'report'));
+    }
+
     public function displayAddGuestForm()
     {
         $couple = $this->currentCouple();

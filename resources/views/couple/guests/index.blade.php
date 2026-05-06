@@ -79,7 +79,20 @@
                     <option value="declined">Declined</option>
                 </select>
 
-                @if(Route::has('couple.guests.create'))
+                @if(Route::has('couple.guests.print'))
+                    <div style="display: inline-flex; gap: 0.5rem; justify-content: flex-end;">
+                        <a href="{{ route('couple.guests.print') }}" class="guests-add-btn" target="_blank" rel="noopener">
+                            Print PDF
+                        </a>
+
+                        @if(Route::has('couple.guests.create'))
+                            <a href="{{ route('couple.guests.create') }}" class="guests-add-btn">
+                                <span>+</span>
+                                Add Guest
+                            </a>
+                        @endif
+                    </div>
+                @elseif(Route::has('couple.guests.create'))
                     <a href="{{ route('couple.guests.create') }}" class="guests-add-btn">
                         <span>+</span>
                         Add Guest

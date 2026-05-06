@@ -76,6 +76,27 @@ class GuestService
         ];
     }
 
+    public function getPrintableReport(Couple $couple): array
+    {
+        $guests = $couple->guests()->latest()->get();
+
+        return [
+            'generated_at' => now()->format('Y-m-d H:i'),
+            'total_guests' => $guests->count(),
+            'confirmed_guests' => $guests->where('rsvp_status', Guest::RSVP_CONFIRMED)->count(),
+            'pending_guests' => $guests->where('rsvp_status', Guest::RSVP_PENDING)->count(),
+            'declined_guests' => $guests->where('rsvp_status', Guest::RSVP_DECLINED)->count(),
+            'guests' => $guests->map(fn (Guest $guest): array => [
+                'name' => $guest->name,
+                'phone' => $guest->phone,
+                'pax_count' => (int) ($guest->pax_count ?? 1),
+                'invite_code' => $guest->invite_code,
+                'rsvp_status' => $guest->rsvp_status,
+                'qr_ready' => (bool) $guest->qr_code_string,
+            ])->values()->all(),
+        ];
+    }
+
     public function delete(Guest $guest): void
     {
         $guest->delete();

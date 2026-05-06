@@ -108,6 +108,7 @@ Route::middleware(['auth', 'role:couple'])->prefix('couple')->name('couple.')->g
 
     // Guest management routes can be added here
     Route::get('/guests', [GuestController::class, 'showGuests'])->name('guests.index');
+    Route::get('/guests/print', [GuestController::class, 'printReport'])->name('guests.print');
     Route::get('/guests/create', [GuestController::class, 'displayAddGuestForm'])->name('guests.create');
     Route::post('/guests/create/added', [GuestController::class, 'store'])->name('guests.store');
     Route::get('/guests/{guest}', [GuestController::class, 'show'])->name('guests.show');
