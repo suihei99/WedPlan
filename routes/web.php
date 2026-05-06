@@ -19,6 +19,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/guest/qr/{code}', [GuestController::class, 'qr'])->name('guest.qr');
+
 Route::middleware('guest')->group(function () {
     // Authentication routes
     Route::get('/login', [WebAuthController::class, 'showLoginForm'])->name('login');

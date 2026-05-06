@@ -588,14 +588,31 @@
 }
 
 .guests-whatsapp-btn {
-    background: #eaf8ef;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    border-radius: 0.75rem;
+    font-size: 0.92rem;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    padding: 0.68rem 1rem;
     border: 1px solid #9dd8af;
+    background: #fff;
     color: #1f7a3e;
 }
 
-.guests-secondary-btn:hover,
-.guests-danger-btn:hover,
 .guests-whatsapp-btn:hover {
+    background: #eaf8ef;
+    box-shadow: 0 6px 16px rgba(157, 216, 175, 0.18);
+    transform: translateY(-1px);
+    border-color: #7fc48f;
+}
+
+.guests-secondary-btn:hover,
+.guests-danger-btn:hover {
     transform: translateY(-1px);
 }
 

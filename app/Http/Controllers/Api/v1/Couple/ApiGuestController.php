@@ -15,6 +15,17 @@ class ApiGuestController extends Controller
 {
     public function __construct(private readonly GuestService $guestService) {}
 
+    public function qr(string $code): JsonResponse
+    {
+        return response()->json([
+            'data' => [
+                'invite_code' => $code,
+                'checkin_url' => $this->guestService->getGuestCheckinUrl($code),
+                'qr_image_url' => $this->guestService->getGuestQrImageUrl($code),
+            ],
+        ]);
+    }
+
     public function index(): JsonResponse
     {
         $couple = Auth::user()?->couple;

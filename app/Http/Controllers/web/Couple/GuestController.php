@@ -15,6 +15,11 @@ class GuestController extends Controller
 {
     public function __construct(private readonly GuestService $guestService) {}
 
+    public function qr(string $code): RedirectResponse
+    {
+        return redirect()->away($this->guestService->getGuestQrImageUrl($code));
+    }
+
     public function showGuests()
     {
         $couple = $this->currentCouple();
