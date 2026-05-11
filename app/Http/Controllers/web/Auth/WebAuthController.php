@@ -3,13 +3,19 @@
 namespace App\Http\Controllers\web\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Requests\Auth\ForgotPasswordRequest;
 use App\Http\Requests\Requests\Auth\LoginRequest;
 use App\Http\Requests\Requests\Auth\RegisterCoupleRequest;
 use App\Http\Requests\Requests\Auth\RegisterVendorRequest;
+use App\Http\Requests\Requests\Auth\ResetPasswordRequest;
 use App\Models\User;
 use App\Models\Vendor;
 use App\Services\AuthService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
+use Illuminate\View\View;
 
 class WebAuthController extends Controller
 {
@@ -35,6 +41,45 @@ class WebAuthController extends Controller
     public function showForgotPasswordForm()
     {
         return view('auth.forgot-password');
+    }
+
+    public function showResetPasswordForm(string $token): View
+    {
+        return view('auth.reset-password', ['token' => $token]);
+    }
+
+    public function sendResetLinkEmail(ForgotPasswordRequest $request): RedirectResponse
+    {
+        $status = Password::sendResetLink($request->only('email'));
+
+        if ($status !== Password::RESET_LINK_SENT) {
+            return redirect()->route('password.request')
+                ->withInput($request->only('email'))
+                ->withErrors(['email' => __($status)]);
+        }
+
+        return redirect()->route('password.request')->with('status', __($status));
+    }
+
+    public function resetPassword(ResetPasswordRequest $request): RedirectResponse
+    {
+        $status = Password::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function (User $user, string $password): void {
+                $user->forceFill([
+                    'password' => $password,
+                    'remember_token' => Str::random(60),
+                ])->save();
+            }
+        );
+
+        if ($status !== Password::PASSWORD_RESET) {
+            return back()
+                ->withInput($request->only('email'))
+                ->withErrors(['email' => __($status)]);
+        }
+
+        return redirect()->route('login')->with('status', __($status));
     }
 
     // Handle login & registration

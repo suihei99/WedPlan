@@ -48,7 +48,7 @@
                         <p>Tell me your guest count and budget range, and I’ll calculate a helpful estimate.</p>
                         <div class="ai-chat-quickstart">
                             <button type="button" class="ai-quick-chip" data-guest="120" data-budget="RM 10000 - RM 20000">120 guests</button>
-                            <button type="button" class="ai-quick-chip" data-guest="200" data-budget="RM 2500 - RM 40000">200 guests</button>
+                            <button type="button" class="ai-quick-chip" data-guest="200" data-budget="RM 25000 - RM 40000">200 guests</button>
                             <button type="button" class="ai-quick-chip" data-guest="300" data-budget="RM 50000 And Above">300 guests</button>
                             <button type="button" class="ai-quick-chip" data-guest="80" data-budget="None Of Above">Not sure yet</button>
                         </div>
@@ -72,7 +72,7 @@
                                     <button type="button" class="budget-option-btn" data-budget="RM 10000 - RM 20000">
                                         <span class="budget-range">RM 10,000 - RM 20,000</span>
                                     </button>
-                                    <button type="button" class="budget-option-btn" data-budget="RM 2500 - RM 40000">
+                                    <button type="button" class="budget-option-btn" data-budget="RM 25000 - RM 40000">
                                         <span class="budget-range">RM 25,000 - RM 40,000</span>
                                     </button>
                                     <button type="button" class="budget-option-btn" data-budget="RM 50000 And Above">
@@ -136,6 +136,8 @@
         let selectedBudgetRange = null;
         let currentGuestCount = null;
         let isOnline = true;
+        let isRequesting = false;
+        let lastRequestTime = 0;
 
         const chatAvatar = document.getElementById('chatAvatar');
         const chatStatusText = document.getElementById('chatStatusText');
@@ -201,7 +203,14 @@
                 return;
             }
 
+            if (isRequesting) {
+                alert('Please wait for the current request to complete');
+                return;
+            }
+
             currentGuestCount = guestCount;
+            isRequesting = true;
+            this.disabled = true;
 
             // Show loading state
             document.getElementById('initialQuestion').style.display = 'none';
@@ -220,7 +229,7 @@
                     })
                 });
 
-                const data = await response.json();
+                const data = await parseApiResponse(response);
 
                 document.getElementById('loadingState').style.display = 'none';
 
@@ -240,6 +249,10 @@
                 document.getElementById('loadingState').style.display = 'none';
                 setAssistantStatus(false);
                 addErrorMessage('Something went wrong. Please try again.');
+            } finally {
+                isRequesting = false;
+                this.disabled = false;
+                lastRequestTime = Date.now();
             }
         });
 
@@ -252,10 +265,20 @@
         });
 
         async function sendMessage() {
+            if (isRequesting) {
+                return;
+            }
+
             const messageInput = document.getElementById('messageInput');
             const message = messageInput.value.trim();
 
             if (!message) return;
+
+            const now = Date.now();
+            if (now - lastRequestTime < 2000) {
+                addErrorMessage('Please wait a moment before sending another message');
+                return;
+            }
 
             // Add user message to chat
             addUserMessage(message);
@@ -263,6 +286,8 @@
 
             // Show loading indicator
             addLoadingMessage();
+            isRequesting = true;
+            document.getElementById('sendBtn').disabled = true;
 
             try {
                 const response = await fetch('{{ route("couple.ai.budget-estimation.chat") }}', {
@@ -278,7 +303,7 @@
                     })
                 });
 
-                const data = await response.json();
+                const data = await parseApiResponse(response);
 
                 // Remove loading message
                 removeLoadingMessage();
@@ -297,6 +322,11 @@
                 removeLoadingMessage();
                 setAssistantStatus(false);
                 addErrorMessage('Something went wrong. Please try again.');
+            } finally {
+                isRequesting = false;
+                document.getElementById('sendBtn').disabled = false;
+                messageInput.focus();
+                lastRequestTime = Date.now();
             }
         }
 
@@ -363,6 +393,25 @@
                     return escapeHtml(line);
                 })
                 .join('<br>');
+        }
+
+        async function parseApiResponse(response) {
+            const contentType = response.headers.get('content-type') || '';
+
+            if (contentType.includes('application/json')) {
+                return await response.json();
+            }
+
+            const text = await response.text();
+
+            return {
+                success: false,
+                offline: response.status === 419,
+                error: response.status === 419
+                    ? 'Session expired or CSRF token missing. Please refresh the page and try again.'
+                    : 'Server returned an unexpected response.',
+                raw: text,
+            };
         }
     </script>
 @endpush

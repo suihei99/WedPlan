@@ -27,6 +27,9 @@ Route::middleware('guest')->group(function () {
     Route::get('/login', [WebAuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [WebAuthController::class, 'login']);
     Route::get('/forgot-password', [WebAuthController::class, 'showForgotPasswordForm'])->name('password.request');
+    Route::post('/forgot-password', [WebAuthController::class, 'sendResetLinkEmail'])->name('password.email');
+    Route::get('/reset-password/{token}', [WebAuthController::class, 'showResetPasswordForm'])->name('password.reset');
+    Route::post('/reset-password', [WebAuthController::class, 'resetPassword'])->name('password.update');
 
     // Registration routes
     Route::get('/register/couple', [WebAuthController::class, 'showRegisterCoupleForm'])->name('register.couple');

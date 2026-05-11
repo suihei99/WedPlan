@@ -353,6 +353,20 @@
     margin-bottom: 1.25rem;
 }
 
+.alert-success {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #eefaf2;
+    border: 1px solid #ccefd6;
+    border-left: 3px solid #2f8f57;
+    border-radius: 10px;
+    padding: 0.6rem 0.9rem;
+    font-size: 0.82rem;
+    color: #246b43;
+    margin-bottom: 1.25rem;
+}
+
 /* ============================================================
    FORM FIELDS
    ============================================================ */
@@ -489,7 +503,7 @@
     cursor: pointer;
     transition: background-position 0.4s ease, box-shadow 0.3s, transform 0.15s;
     box-shadow: 0 4px 18px rgba(224,79,109,0.35);
-    margin-bottom: 0;
+    margin-bottom: 0.5rem;
     font-family: var(--font-sans);
 }
 

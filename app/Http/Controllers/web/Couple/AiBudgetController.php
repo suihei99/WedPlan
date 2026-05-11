@@ -11,8 +11,7 @@ use Illuminate\Support\Facades\Log;
 
 class AiBudgetController extends Controller
 {
-    public function __construct(private readonly AiBudgetService $aiService)
-    {}
+    public function __construct(private readonly AiBudgetService $aiService) {}
 
     /**
      * Display the AI budget estimation chat interface
@@ -20,6 +19,7 @@ class AiBudgetController extends Controller
     public function index(): \Illuminate\View\View
     {
         $couple = Auth::user()->couple;
+
         return view('couple.ai_budget.index', compact('couple'));
     }
 
@@ -30,13 +30,13 @@ class AiBudgetController extends Controller
     {
         $validated = $request->validate([
             'guest_count' => 'required|integer|min:1|max:10000',
-            'budget_range' => 'required|string|in:RM 10000 - RM 20000,RM 2500 - RM 40000,RM 50000 And Above,None Of Above',
+            'budget_range' => 'required|string|in:RM 10000 - RM 20000,RM 25000 - RM 40000,RM 2500 - RM 40000,RM 50000 And Above,None Of Above',
         ]);
 
         try {
             $couple = Auth::user()->couple;
 
-            if (!$couple) {
+            if (! $couple) {
                 return response()->json(['error' => 'Couple not found'], 404);
             }
 
@@ -45,6 +45,14 @@ class AiBudgetController extends Controller
                 $validated['guest_count'],
                 $validated['budget_range']
             );
+
+            if ($estimation === 'RATE_LIMIT_EXCEEDED') {
+                return response()->json([
+                    'success' => false,
+                    'error' => 'You have sent too many requests in a short period. Please wait a moment before trying again.',
+                    'rate_limited' => true,
+                ], 429);
+            }
 
             if (trim($estimation) === '') {
                 return response()->json([
@@ -58,7 +66,7 @@ class AiBudgetController extends Controller
                 'success' => true,
                 'message' => $estimation,
             ]);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             Log::error('AI Budget Estimation Error', [
                 'message' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
@@ -66,7 +74,7 @@ class AiBudgetController extends Controller
 
             return response()->json([
                 'success' => false,
-                'error' => 'Failed to generate budget estimation. Please try again.',
+                'error' => config('app.debug') ? $e->getMessage() : 'Failed to generate budget estimation. Please try again.',
             ], 500);
         }
     }
@@ -85,7 +93,7 @@ class AiBudgetController extends Controller
         try {
             $couple = Auth::user()->couple;
 
-            if (!$couple) {
+            if (! $couple) {
                 return response()->json(['error' => 'Couple not found'], 404);
             }
 
@@ -108,7 +116,7 @@ class AiBudgetController extends Controller
                 'success' => true,
                 'message' => $response,
             ]);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             Log::error('AI Chat Error', [
                 'message' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
@@ -116,7 +124,7 @@ class AiBudgetController extends Controller
 
             return response()->json([
                 'success' => false,
-                'error' => 'Failed to process your message. Please try again.',
+                'error' => config('app.debug') ? $e->getMessage() : 'Failed to process your message. Please try again.',
             ], 500);
         }
     }
