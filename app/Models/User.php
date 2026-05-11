@@ -40,6 +40,14 @@ class User extends Authenticatable
     ];
 
     /**
+     * Send the password reset notification using our branded notification.
+     */
+    public function sendPasswordResetNotification($token): void
+    {
+        $this->notify(new \App\Notifications\BrandedResetPasswordNotification($token));
+    }
+
+    /**
      * The attributes that should be hidden for serialization.
      *
      * @var list<string>

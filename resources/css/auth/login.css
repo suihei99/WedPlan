@@ -367,6 +367,28 @@
     margin-bottom: 1.25rem;
 }
 
+/* Primary / Secondary buttons for reset flow */
+.submit-btn-primary {
+    background: linear-gradient(135deg, #f4708a 0%, #e04f6d 100%);
+    color: #fff;
+    border: none;
+    padding: 0.8rem 1.05rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(224,79,109,0.15);
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+.submit-btn-primary:hover { transform: translateY(-3px); box-shadow: 0 18px 40px rgba(224,79,109,0.18); }
+
+.submit-btn-secondary {
+    background: transparent;
+    color: #6b3d4d;
+    border: 1.5px solid rgba(224,79,109,0.12);
+    padding: 0.65rem 0.9rem;
+    border-radius: 12px;
+    transition: background 0.12s ease, color 0.12s ease;
+}
+.submit-btn-secondary:hover { background: rgba(244,112,138,0.06); color: #e04f6d; }
+
 /* ============================================================
    FORM FIELDS
    ============================================================ */

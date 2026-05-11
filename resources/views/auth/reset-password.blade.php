@@ -40,29 +40,7 @@
                     @csrf
 
                     <input type="hidden" name="token" value="{{ $token }}">
-
-                    <div class="field-group">
-                        <label for="email" class="field-label">Email Address</label>
-                        <div class="input-wrap @error('email') input-wrap-error @enderror">
-                            <span class="input-icon">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                            </span>
-                            <input
-                                id="email"
-                                type="email"
-                                name="email"
-                                class="field-input"
-                                value="{{ old('email', request('email')) }}"
-                                placeholder="your@email.com"
-                                required
-                                autocomplete="email"
-                                autofocus
-                            >
-                        </div>
-                        @error('email')
-                            <p class="field-error">{{ $message }}</p>
-                        @enderror
-                    </div>
+                    <input type="hidden" name="email" value="{{ request('email') }}">
 
                     <div class="field-group">
                         <label for="password" class="field-label">New Password</label>
@@ -115,12 +93,13 @@
                     </div>
 
                     <div class="reset-actions">
-                        <button type="submit" class="submit-btn">
+                        <button type="submit" class="submit-btn submit-btn-primary" aria-label="Reset password">
                             <span class="submit-btn-text">Reset Password</span>
                             <svg class="submit-btn-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
                         </button>
 
-                        <a href="{{ route('login') }}" class="submit-btn reset-back-btn">
+                        <a href="{{ route('login') }}" class="submit-btn submit-btn-secondary reset-back-btn" aria-label="Back to login">
+                            <svg class="submit-btn-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
                             <span class="submit-btn-text">Back to Login</span>
                         </a>
                     </div>

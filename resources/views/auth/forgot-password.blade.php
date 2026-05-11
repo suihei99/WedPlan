@@ -71,12 +71,13 @@
                     </div>
 
                     <div class="reset-actions">
-                        <button type="submit" class="submit-btn">
+                        <button type="submit" class="submit-btn submit-btn-primary" aria-label="Send reset link">
                             <span class="submit-btn-text">Send Reset Link</span>
                             <svg class="submit-btn-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
                         </button>
 
-                        <a href="{{ route('login') }}" class="submit-btn reset-back-btn">
+                        <a href="{{ route('login') }}" class="submit-btn submit-btn-secondary reset-back-btn" aria-label="Back to login">
+                            <svg class="submit-btn-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
                             <span class="submit-btn-text">Back to Login</span>
                         </a>
                     </div>

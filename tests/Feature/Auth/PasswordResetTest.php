@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\User;
-use Illuminate\Auth\Notifications\ResetPassword;
+use App\Notifications\BrandedResetPasswordNotification;
 use Illuminate\Auth\Passwords\PasswordBroker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
@@ -25,7 +25,7 @@ it('sends a password reset link email', function () {
         ->assertRedirect(route('password.request'))
         ->assertSessionHas('status');
 
-    Notification::assertSentTo($user, ResetPassword::class);
+    Notification::assertSentTo($user, BrandedResetPasswordNotification::class);
 });
 
 it('resets the password with a valid token', function () {
