@@ -304,3 +304,214 @@
         padding: 0.95rem;
     }
 }
+
+/* Notification styles */
+.notification-container {
+    position: relative;
+}
+
+.notification-badge {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background: #e04f6d;
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 600;
+    padding: 2px 5px;
+    border-radius: 50%;
+    min-width: 18px;
+    text-align: center;
+    border: 2px solid #fff;
+}
+
+.notification-dropdown-wrapper {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 0.5rem;
+    width: 380px;
+    max-height: 500px;
+    background: #fff;
+    border: 1px solid #e4dade;
+    border-radius: 12px;
+    box-shadow: 0 12px 32px rgba(37, 24, 30, 0.12);
+    z-index: 50;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.notification-dropdown {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.notification-header {
+    padding: 1rem 1.2rem;
+    border-bottom: 1px solid #f1e6ec;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.notification-header h3 {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--wedding-ink);
+}
+
+.mark-all-read {
+    background: none;
+    border: none;
+    color: var(--wedding-rose-deep);
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 0;
+    transition: color 0.2s ease;
+}
+
+.mark-all-read:hover {
+    color: #c63d5f;
+}
+
+.notification-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0;
+}
+
+.notification-item {
+    padding: 1rem 1.2rem;
+    border-bottom: 1px solid #f7f2f4;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.notification-item:hover {
+    background: #faf7f8;
+}
+
+.notification-item.unread {
+    background: #fef5f7;
+}
+
+.notification-content {
+    flex: 1;
+    display: flex;
+    gap: 0.8rem;
+}
+
+.notification-badge {
+    position: relative;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #f0eaec;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--wedding-rose);
+    flex-shrink: 0;
+}
+
+.notification-text {
+    flex: 1;
+    min-width: 0;
+}
+
+.notification-title {
+    margin: 0 0 0.2rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--wedding-ink);
+}
+
+.notification-message {
+    margin: 0 0 0.4rem;
+    font-size: 0.85rem;
+    color: var(--wedding-muted);
+    line-height: 1.4;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.notification-time {
+    font-size: 0.75rem;
+    color: #9d8a92;
+}
+
+.notification-close {
+    background: none;
+    border: none;
+    padding: 0.3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #e4c4d0;
+    transition: color 0.2s ease;
+    flex-shrink: 0;
+}
+
+.notification-close:hover {
+    color: var(--wedding-rose);
+}
+
+.notification-close svg {
+    width: 8px;
+    height: 8px;
+}
+
+.notification-empty {
+    padding: 2.5rem 1.2rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    color: var(--wedding-muted);
+}
+
+.notification-empty svg {
+    color: #d1c0c7;
+}
+
+.notification-empty p {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.notification-footer {
+    padding: 0.8rem 1.2rem;
+    border-top: 1px solid #f1e6ec;
+    text-align: center;
+}
+
+.view-all-link {
+    color: var(--wedding-rose-deep);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.view-all-link:hover {
+    color: #c63d5f;
+    text-decoration: underline;
+}
+
+@media (max-width: 640px) {
+    .notification-dropdown-wrapper {
+        width: calc(100vw - 2rem);
+        right: auto;
+        left: -190px;
+    }
+}

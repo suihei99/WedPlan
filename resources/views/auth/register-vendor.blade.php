@@ -5,6 +5,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>Register As Vendor - {{ config('app.name', 'WedPlan') }}</title>
 
+		<link rel="icon" type="image/webp" href="{{ asset('assets/icons/WebPlan_logo.webp') }}">
 		<link rel="preconnect" href="https://fonts.bunny.net">
 		<link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600|playfair-display:400,500,600,700i" rel="stylesheet" />
 

@@ -143,4 +143,10 @@ Route::middleware(['auth', 'role:couple'])->prefix('couple')->name('couple.')->g
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
     Route::put('/settings/profile', [SettingController::class, 'updateProfile'])->name('settings.profile.update');
     Route::put('/settings/password', [SettingController::class, 'updatePassword'])->name('settings.password.update');
+
+    // Notification routes
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::get('/notifications/{notification}', [NotificationController::class, 'show'])->name('notifications.show');
+    Route::put('/notifications/{notification}/read', [NotificationController::class, 'markAsReadAjax'])->name('notifications.mark-read');
+    Route::delete('/notifications/{notification}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
 });

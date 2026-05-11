@@ -4,6 +4,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>@yield('title', 'Vendor Dashboard - WebPlan')</title>
+	<link rel="icon" type="image/webp" href="{{ asset('assets/icons/WebPlan_logo.webp') }}">
 	@vite(['resources/css/app.css', 'resources/css/vendor/layout-vendor.css'])
 	@stack('page-styles')
 </head>

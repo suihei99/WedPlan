@@ -188,6 +188,7 @@
     background: #fff;
     color: #281b20;
     font-size: 0.92rem;
+    line-height: 1.35;
     outline: none;
     transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
 }
@@ -196,6 +197,22 @@
 .booking-toolbar-field select {
     min-height: 2.8rem;
     padding: 0.78rem 0.9rem;
+}
+
+.booking-field-input {
+    min-height: 2.95rem;
+    padding: 0.88rem 0.95rem;
+}
+
+.booking-input-wrap .booking-field-input {
+    border: 0;
+    border-radius: 0;
+    min-height: 2.9rem;
+    padding: 0.82rem 0.95rem 0.82rem 0;
+}
+
+.booking-input-wrap .booking-select {
+    padding-right: 2.4rem;
 }
 
 .booking-toolbar-field input:focus,
@@ -406,6 +423,48 @@
     justify-content: center;
 }
 
+.booking-form-shell {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 300px;
+    gap: 1rem;
+}
+
+.booking-form-hero-copy,
+.booking-form-hero-panel,
+.booking-side-panel {
+    display: grid;
+    align-content: start;
+}
+
+.booking-form-hero-panel {
+    gap: 0.7rem;
+}
+
+.booking-form-hero-panel h3,
+.booking-form-title {
+    margin: 0;
+    color: #1f1519;
+    font-family: var(--font-display);
+}
+
+.booking-form-title {
+    font-size: 1.2rem;
+}
+
+.booking-form-helper {
+    margin: 0;
+    color: #6e565f;
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+.booking-back-link {
+    min-height: 2.45rem;
+    padding: 0.62rem 0.9rem;
+    font-size: 0.84rem;
+    width: fit-content;
+}
+
 .booking-form-panel {
     padding: 1rem;
 }
@@ -484,9 +543,9 @@
 }
 
 .booking-textarea {
-    min-height: 110px;
+    min-height: 120px;
     resize: vertical;
-    padding: 0.82rem 0.9rem;
+    padding: 0.95rem 1rem;
 }
 
 .booking-field-error {
@@ -549,6 +608,7 @@
     .booking-hero,
     .booking-form-hero,
     .booking-detail-hero,
+    .booking-form-shell,
     .booking-list-shell,
     .booking-detail-grid {
         grid-template-columns: 1fr;
@@ -575,6 +635,10 @@
     .booking-form-hero,
     .booking-detail-hero {
         flex-direction: column;
+    }
+
+    .booking-back-link {
+        width: auto;
     }
 
     .booking-hero h1,

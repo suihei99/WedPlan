@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'WedPlan - Wedding Planning')</title>
+    <link rel="icon" type="image/webp" href="{{ asset('assets/icons/WebPlan_logo.webp') }}">
     @vite(['resources/css/app.css', 'resources/css/couple/layout-couple.css'])
     @stack('page-styles')
 </head>
@@ -100,13 +101,29 @@
                 </div>
 
                 <div class="topbar-actions">
-                    <button type="button" class="topbar-bell" aria-label="Notifications">
-                        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                            <path d="M15 17H9C7.343 17 6 15.657 6 14V10C6 6.686 8.686 4 12 4C15.314 4 18 6.686 18 10V14C18 15.657 16.657 17 15 17Z" stroke="currentColor" stroke-width="1.8"/>
-                            <path d="M4 17H20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-                            <path d="M10 20C10.355 20.622 11.078 21 12 21C12.922 21 13.645 20.622 14 20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-                        </svg>
-                    </button>
+                    <div class="notification-container" data-notification-container>
+                        @php
+                            $unreadNotifications = auth()->user()->notifications()->where('is_read', false)->latest()->take(5)->get();
+                            $unreadCount = auth()->user()->notifications()->where('is_read', false)->count();
+                        @endphp
+                        <button type="button" class="topbar-bell" aria-label="Notifications" data-notification-toggle>
+                            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                <path d="M15 17H9C7.343 17 6 15.657 6 14V10C6 6.686 8.686 4 12 4C15.314 4 18 6.686 18 10V14C18 15.657 16.657 17 15 17Z" stroke="currentColor" stroke-width="1.8"/>
+                                <path d="M4 17H20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                                <path d="M10 20C10.355 20.622 11.078 21 12 21C12.922 21 13.645 20.622 14 20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                            </svg>
+                            @if($unreadCount > 0)
+                                <span class="notification-badge" data-unread-count>{{ $unreadCount }}</span>
+                            @endif
+                        </button>
+
+                        <div class="notification-dropdown-wrapper" data-notification-dropdown-wrapper style="display: none;">
+                            @include('couple.layout.partials.notification-dropdown', [
+                                'notifications' => $unreadNotifications,
+                                'unreadCount' => $unreadCount
+                            ])
+                        </div>
+                    </div>
                 </div>
             </header>
 

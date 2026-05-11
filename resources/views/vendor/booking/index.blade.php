@@ -5,7 +5,7 @@
 @section('page-subtitle', 'Manage booking requests, confirmations, and updates in one place.')
 
 @push('page-styles')
-    @vite(['resources/css/vendor/dashboard.css', 'resources/css/vendor/booking.css'])
+    @vite(['resources/css/vendor/dashboard.css', 'resources/css/vendor/service.css', 'resources/css/vendor/booking.css'])
 @endpush
 
 @section('content')
@@ -15,35 +15,36 @@
         $bookingStatusOptions = $statusOptions ?? [];
     @endphp
 
-    <div class="booking-page" data-booking-page>
-        <section class="booking-hero">
-            <div class="booking-hero-copy">
-                <span class="booking-kicker">Booking Manager</span>
-                <h1>Track Every Booking With A Clear, Elegant Workflow</h1>
-                <p>Review couple requests, update booking status, and keep your calendar, messages, and notifications aligned.</p>
-                <div class="booking-hero-actions">
-                    <a href="{{ route('vendor.booking.create') }}" class="booking-button">Add Booking</a>
-                    <a href="{{ route('vendor.dashboard') }}" class="booking-button-secondary">Back To Dashboard</a>
+    <div class="vendor-service-page booking-page" data-booking-page>
+        <section class="vendor-service-hero booking-hero">
+            <div>
+                <span class="vendor-service-kicker">Booking Manager</span>
+                <h1 class="vendor-service-title">Track every booking with a clear, elegant workflow.</h1>
+                <p class="vendor-service-subtitle">Review couple requests, update booking status, and keep your calendar, messages, and notifications aligned.</p>
+
+                <div class="vendor-service-cta-row">
+                    <a href="{{ route('vendor.booking.create') }}" class="vendor-service-button">Add Booking</a>
+                    <a href="{{ route('vendor.dashboard') }}" class="vendor-service-button-secondary">Back To Dashboard</a>
                 </div>
             </div>
 
-            <div class="booking-metrics">
-                <article class="booking-metric">
+            <div class="vendor-service-metrics booking-metrics">
+                <article class="vendor-service-metric booking-metric">
                     <span>Total</span>
                     <strong>{{ $summaryData['total_bookings'] ?? 0 }}</strong>
                     <p>Booking records managed by your vendor account.</p>
                 </article>
-                <article class="booking-metric">
+                <article class="vendor-service-metric booking-metric">
                     <span>Confirmed</span>
                     <strong>{{ $summaryData['confirmed_bookings'] ?? 0 }}</strong>
                     <p>Bookings that are marked ready and confirmed.</p>
                 </article>
-                <article class="booking-metric">
+                <article class="vendor-service-metric booking-metric">
                     <span>Pending</span>
                     <strong>{{ $summaryData['pending_bookings'] ?? 0 }}</strong>
                     <p>Requests waiting for a follow-up or approval.</p>
                 </article>
-                <article class="booking-metric">
+                <article class="vendor-service-metric booking-metric">
                     <span>Upcoming</span>
                     <strong>{{ $summaryData['upcoming_bookings'] ?? 0 }}</strong>
                     <p>Scheduled bookings coming on or after today.</p>
