@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests\Requests\Couple;
 
-use Illuminate\Foundation\Http\FormRequest;
 use App\Models\Expense;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class ExpenseRequest extends FormRequest
@@ -30,6 +30,7 @@ class ExpenseRequest extends FormRequest
             'date_paid' => ['nullable', 'date'],
             'description' => ['nullable', 'string'],
             'payment_method' => ['nullable', Rule::in(Expense::METHOD)],
+            'receipt' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'],
         ];
     }
 }

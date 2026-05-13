@@ -43,7 +43,7 @@
 		<section class="budget-layout-split">
 			<article class="budget-side-card">
 				<h4>New Expense Form</h4>
-				<form class="budget-form" method="POST" action="{{ route('couple.budget.expenses.add', $budgetCategory) }}">
+				<form class="budget-form" method="POST" action="{{ route('couple.budget.expenses.add', $budgetCategory) }}" enctype="multipart/form-data">
 					@csrf
 
 					<input type="hidden" name="budget_category_id" value="{{ $budgetCategory->id }}">
@@ -89,6 +89,15 @@
 						<label for="description">Description</label>
 						<textarea id="description" name="description" rows="4" class="budget-form-textarea" placeholder="Optional note about this expense...">{{ old('description') }}</textarea>
 						@error('description')
+							<p class="field-error">{{ $message }}</p>
+						@enderror
+					</div>
+
+					<div>
+						<label for="receipt">Receipt</label>
+						<input id="receipt" name="receipt" type="file" accept=".pdf,.png,.jpg,.jpeg,application/pdf,image/png,image/jpeg">
+						<small class="field-hint">Upload a PDF, PNG, JPG, or JPEG receipt up to 5 MB.</small>
+						@error('receipt')
 							<p class="field-error">{{ $message }}</p>
 						@enderror
 					</div>

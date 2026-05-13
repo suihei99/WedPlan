@@ -78,6 +78,8 @@
 						$expenseDate = is_array($expense) ? ($expense['date_paid'] ?? null) : $expense->date_paid;
 						$expenseDescription = is_array($expense) ? ($expense['description'] ?? null) : $expense->description;
 						$paymentMethod = is_array($expense) ? ($expense['payment_method'] ?? null) : $expense->payment_method;
+						$receiptPath = is_array($expense) ? ($expense['receipt_url'] ?? null) : $expense->receipt_url;
+						$receiptUrl = $receiptPath ? asset('storage/' . $receiptPath) : null;
 					@endphp
 					<article class="budget-card">
 						<div class="budget-card-head">
@@ -101,6 +103,12 @@
 								<span>{{ $expenseDate ? \Illuminate\Support\Carbon::parse($expenseDate)->format('d M Y') : 'No date recorded' }}</span>
 								<span>{{ $expenseDescription ?? 'No description' }}</span>
 							</div>
+							@if($receiptUrl)
+								<div class="budget-card-progress-meta">
+									<span>Receipt attached</span>
+									<a href="{{ $receiptUrl }}" target="_blank" rel="noopener">Open receipt</a>
+								</div>
+							@endif
 						</div>
 
 						<div class="budget-card-foot">

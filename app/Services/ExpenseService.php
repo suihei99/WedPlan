@@ -5,8 +5,10 @@ namespace App\Services;
 use App\Models\BudgetCategory;
 use App\Models\Couple;
 use App\Models\Expense;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 
 class ExpenseService
 {
@@ -29,6 +31,7 @@ class ExpenseService
             'amount' => $data['amount'],
             'date_paid' => $data['date_paid'] ?? null,
             'description' => $data['description'] ?? null,
+            'receipt_url' => $this->storeReceipt($data['receipt'] ?? null),
             'payment_method' => $data['payment_method'] ?? null,
         ]);
 
@@ -39,11 +42,14 @@ class ExpenseService
 
     public function update(Expense $expense, array $data): Expense
     {
+        $receiptUrl = $this->storeReceipt($data['receipt'] ?? null, $expense->receipt_url);
+
         $expense->update([
             'expense_name' => $data['expense_name'],
             'amount' => $data['amount'],
             'date_paid' => $data['date_paid'] ?? null,
             'description' => $data['description'] ?? null,
+            'receipt_url' => $receiptUrl,
             'payment_method' => $data['payment_method'] ?? null,
         ]);
 
@@ -54,7 +60,32 @@ class ExpenseService
 
     public function delete(Expense $expense): void
     {
+        $this->deleteStoredReceipt($expense->receipt_url);
         $expense->delete();
+    }
+
+    private function storeReceipt(mixed $receipt, ?string $existingReceipt = null): ?string
+    {
+        if ($receipt instanceof UploadedFile) {
+            $this->deleteStoredReceipt($existingReceipt);
+
+            return $receipt->store('expense-receipts', 'public');
+        }
+
+        if (is_string($receipt) && $receipt !== '') {
+            return $receipt;
+        }
+
+        return $existingReceipt;
+    }
+
+    private function deleteStoredReceipt(?string $receiptPath): void
+    {
+        if (! $receiptPath) {
+            return;
+        }
+
+        Storage::disk('public')->delete($receiptPath);
     }
 
     private function notifyIfCoupleBudgetOverLimit(int $userId): void

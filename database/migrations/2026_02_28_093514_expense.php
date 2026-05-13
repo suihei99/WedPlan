@@ -18,6 +18,7 @@ return new class extends Migration
             $table->decimal('amount', 10, 2); // Amount of the expense
             $table->date('date_paid')->nullable(); // Date when the expense was paid
             $table->text('description')->nullable(); // Additional notes about the expense
+            $table->string('receipt_url')->nullable(); // URL to the receipt image or document
             $table->string('payment_method')->nullable(); // Payment method (e.g., credit card, cash, etc.)
             $table->timestamps();
         });

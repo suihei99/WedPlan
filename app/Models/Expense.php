@@ -18,6 +18,7 @@ class Expense extends Model
         'amount',
         'date_paid',
         'description',
+        'receipt_url',
         'payment_method',
     ];
 

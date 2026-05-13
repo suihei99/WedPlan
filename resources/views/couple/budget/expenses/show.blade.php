@@ -12,6 +12,7 @@
 	@php
 		$expenseAmount = (float) $expense->amount;
 		$paidOn = $expense->date_paid ? \Illuminate\Support\Carbon::parse($expense->date_paid)->format('d M Y') : 'No date recorded';
+		$receiptUrl = $expense->receipt_url ? asset('storage/' . $expense->receipt_url) : null;
 	@endphp
 
 	<div class="budget-page">
@@ -67,7 +68,7 @@
 		<section class="budget-layout-split">
 			<article class="budget-side-card">
 				<h4>Edit Expense</h4>
-				<form class="budget-form" method="POST" action="{{ route('couple.budget.expenses.update', [$budgetCategory, $expense]) }}">
+					<form class="budget-form" method="POST" action="{{ route('couple.budget.expenses.update', [$budgetCategory, $expense]) }}" enctype="multipart/form-data">
 					@csrf
 					@method('PUT')
 
@@ -117,6 +118,22 @@
 							<p class="field-error">{{ $message }}</p>
 						@enderror
 					</div>
+
+						<div>
+							<label for="receipt">Receipt</label>
+							<input id="receipt" name="receipt" type="file" accept=".pdf,.png,.jpg,.jpeg,application/pdf,image/png,image/jpeg">
+							<small class="field-hint">Leave empty to keep the current receipt.</small>
+							@error('receipt')
+								<p class="field-error">{{ $message }}</p>
+							@enderror
+						</div>
+
+						@if($receiptUrl)
+							<div>
+								<label>Current Receipt</label>
+								<p><a href="{{ $receiptUrl }}" target="_blank" rel="noopener">View uploaded receipt</a></p>
+							</div>
+						@endif
 
 					<button type="submit" class="budget-action">Update Expense</button>
 				</form>
