@@ -394,6 +394,18 @@
     flex-wrap: wrap;
 }
 
+.budget-card-progress-meta a,
+.budget-receipt-link {
+    color: #cf4768;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.budget-card-progress-meta a:hover,
+.budget-receipt-link:hover {
+    text-decoration: underline;
+}
+
 .budget-card-link {
     display: inline-flex;
     align-items: center;
@@ -417,6 +429,118 @@
     color: #b72f4d;
     background: #fff6f8;
     cursor: pointer;
+}
+
+.budget-receipt-modal {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1200;
+    padding: 1rem;
+}
+
+.budget-receipt-modal[aria-hidden="false"] {
+    display: flex;
+}
+
+.budget-receipt-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(24, 14, 18, 0.68);
+    backdrop-filter: blur(3px);
+}
+
+.budget-receipt-modal-panel {
+    position: relative;
+    z-index: 1;
+    width: min(96vw, 980px);
+    height: min(92vh, 860px);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: 0 28px 64px rgba(33, 20, 26, 0.38);
+}
+
+.budget-receipt-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.9rem 1rem;
+    border-bottom: 1px solid #eadce1;
+    background: linear-gradient(180deg, #fff8fa 0%, #fff 100%);
+}
+
+.budget-receipt-modal-title {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 800;
+    color: #201419;
+}
+
+.budget-receipt-modal-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+}
+
+.budget-receipt-modal-body {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    background: #f9f4f6;
+}
+
+.budget-receipt-modal-frame,
+.budget-receipt-modal-image {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+}
+
+.budget-receipt-modal-image {
+    object-fit: contain;
+    background: #111;
+}
+
+.budget-receipt-modal-close {
+    appearance: none;
+    border: 1px solid #e7ccd4;
+    background: #fff;
+    color: #b43c59;
+    border-radius: 999px;
+    width: 2.25rem;
+    height: 2.25rem;
+    display: inline-grid;
+    place-items: center;
+    cursor: pointer;
+    font-size: 1.1rem;
+    line-height: 1;
+}
+
+.budget-receipt-modal-close:hover {
+    background: #ffeef3;
+}
+
+@media (max-width: 640px) {
+    .budget-receipt-modal {
+        padding: 0;
+    }
+
+    .budget-receipt-modal-panel {
+        width: 100%;
+        height: 100%;
+        border-radius: 0;
+    }
+
+    .budget-receipt-modal-header {
+        padding: 0.8rem 0.9rem;
+    }
 }
 
 .budget-card-link-danger:hover {

@@ -36,7 +36,99 @@ function setupFilters() {
     applyFilter('all');
 }
 
+function setupReceiptPreview() {
+    const triggerSelector = '[data-receipt-preview]';
+    const modal = document.querySelector('[data-receipt-modal]');
+
+    if (!modal) {
+        return;
+    }
+
+    const previewFrame = modal.querySelector('[data-receipt-frame]');
+    const previewImage = modal.querySelector('[data-receipt-image]');
+    const previewTitle = modal.querySelector('[data-receipt-title]');
+    const previewDownload = modal.querySelector('[data-receipt-download]');
+    const closeTargets = modal.querySelectorAll('[data-receipt-close]');
+
+    const openModal = (url, label, type) => {
+        if (!url) {
+            return;
+        }
+
+        if (previewTitle) {
+            previewTitle.textContent = label || 'Receipt preview';
+        }
+
+        if (previewDownload) {
+            previewDownload.href = url;
+        }
+
+        if (type === 'image') {
+            if (previewImage) {
+                previewImage.src = url;
+                previewImage.hidden = false;
+            }
+
+            if (previewFrame) {
+                previewFrame.src = '';
+                previewFrame.hidden = true;
+            }
+        } else {
+            if (previewFrame) {
+                previewFrame.src = url;
+                previewFrame.hidden = false;
+            }
+
+            if (previewImage) {
+                previewImage.src = '';
+                previewImage.hidden = true;
+            }
+        }
+
+        modal.setAttribute('aria-hidden', 'false');
+        document.documentElement.style.overflow = 'hidden';
+    };
+
+    const closeModal = () => {
+        modal.setAttribute('aria-hidden', 'true');
+
+        if (previewFrame) {
+            previewFrame.src = '';
+        }
+
+        if (previewImage) {
+            previewImage.src = '';
+        }
+
+        document.documentElement.style.overflow = '';
+    };
+
+    document.querySelectorAll(triggerSelector).forEach((trigger) => {
+        trigger.addEventListener('click', (event) => {
+            const url = trigger.getAttribute('data-receipt-url');
+
+            if (!url) {
+                return;
+            }
+
+            event.preventDefault();
+            openModal(url, trigger.getAttribute('data-receipt-label'), trigger.getAttribute('data-receipt-type'));
+        });
+    });
+
+    closeTargets.forEach((target) => {
+        target.addEventListener('click', closeModal);
+    });
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+            closeModal();
+        }
+    });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     animateProgressBars();
     setupFilters();
+    setupReceiptPreview();
 });

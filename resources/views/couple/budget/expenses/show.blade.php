@@ -13,6 +13,7 @@
 		$expenseAmount = (float) $expense->amount;
 		$paidOn = $expense->date_paid ? \Illuminate\Support\Carbon::parse($expense->date_paid)->format('d M Y') : 'No date recorded';
 		$receiptUrl = $expense->receipt_url ? asset('storage/' . $expense->receipt_url) : null;
+		$receiptType = $expense->receipt_url && \Illuminate\Support\Str::endsWith(strtolower($expense->receipt_url), ['.png', '.jpg', '.jpeg']) ? 'image' : 'document';
 	@endphp
 
 	<div class="budget-page">
@@ -131,7 +132,16 @@
 						@if($receiptUrl)
 							<div>
 								<label>Current Receipt</label>
-								<p><a href="{{ $receiptUrl }}" target="_blank" rel="noopener">View uploaded receipt</a></p>
+								<p>
+									<a
+										href="{{ $receiptUrl }}"
+										class="budget-receipt-link"
+										data-receipt-preview
+										data-receipt-url="{{ $receiptUrl }}"
+										data-receipt-label="{{ $expense->expense_name }} receipt"
+										data-receipt-type="{{ $receiptType }}"
+									>View uploaded receipt</a>
+								</p>
 							</div>
 						@endif
 
@@ -162,6 +172,23 @@
 				</div>
 			</article>
 		</section>
+	</div>
+
+	<div class="budget-receipt-modal" data-receipt-modal aria-hidden="true">
+		<div class="budget-receipt-modal-backdrop" data-receipt-close></div>
+		<div class="budget-receipt-modal-panel" role="dialog" aria-modal="true" aria-label="Receipt preview">
+			<div class="budget-receipt-modal-header">
+				<h2 class="budget-receipt-modal-title" data-receipt-title>Receipt preview</h2>
+				<div class="budget-receipt-modal-actions">
+					<a href="#" target="_blank" rel="noopener" class="budget-receipt-link" data-receipt-download>Open in new tab</a>
+					<button type="button" class="budget-receipt-modal-close" data-receipt-close aria-label="Close receipt preview">×</button>
+				</div>
+			</div>
+			<div class="budget-receipt-modal-body">
+				<iframe class="budget-receipt-modal-frame" data-receipt-frame hidden></iframe>
+				<img class="budget-receipt-modal-image" data-receipt-image hidden alt="Receipt preview">
+			</div>
+		</div>
 	</div>
 @endsection
 

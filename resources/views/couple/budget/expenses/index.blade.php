@@ -80,6 +80,7 @@
 						$paymentMethod = is_array($expense) ? ($expense['payment_method'] ?? null) : $expense->payment_method;
 						$receiptPath = is_array($expense) ? ($expense['receipt_url'] ?? null) : $expense->receipt_url;
 						$receiptUrl = $receiptPath ? asset('storage/' . $receiptPath) : null;
+						$receiptType = $receiptPath && \Illuminate\Support\Str::endsWith(strtolower($receiptPath), ['.png', '.jpg', '.jpeg']) ? 'image' : 'document';
 					@endphp
 					<article class="budget-card">
 						<div class="budget-card-head">
@@ -106,7 +107,14 @@
 							@if($receiptUrl)
 								<div class="budget-card-progress-meta">
 									<span>Receipt attached</span>
-									<a href="{{ $receiptUrl }}" target="_blank" rel="noopener">Open receipt</a>
+									<a
+										href="{{ $receiptUrl }}"
+										class="budget-receipt-link"
+										data-receipt-preview
+										data-receipt-url="{{ $receiptUrl }}"
+										data-receipt-label="{{ $expenseName }} receipt"
+										data-receipt-type="{{ $receiptType }}"
+									>Open receipt</a>
 								</div>
 							@endif
 						</div>
@@ -137,6 +145,23 @@
 				@endif
 			</section>
 		@endif
+	</div>
+
+	<div class="budget-receipt-modal" data-receipt-modal aria-hidden="true">
+		<div class="budget-receipt-modal-backdrop" data-receipt-close></div>
+		<div class="budget-receipt-modal-panel" role="dialog" aria-modal="true" aria-label="Receipt preview">
+			<div class="budget-receipt-modal-header">
+				<h2 class="budget-receipt-modal-title" data-receipt-title>Receipt preview</h2>
+				<div class="budget-receipt-modal-actions">
+					<a href="#" target="_blank" rel="noopener" class="budget-receipt-link" data-receipt-download>Open in new tab</a>
+					<button type="button" class="budget-receipt-modal-close" data-receipt-close aria-label="Close receipt preview">×</button>
+				</div>
+			</div>
+			<div class="budget-receipt-modal-body">
+				<iframe class="budget-receipt-modal-frame" data-receipt-frame hidden></iframe>
+				<img class="budget-receipt-modal-image" data-receipt-image hidden alt="Receipt preview">
+			</div>
+		</div>
 	</div>
 @endsection
 

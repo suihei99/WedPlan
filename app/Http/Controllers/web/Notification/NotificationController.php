@@ -48,6 +48,12 @@ class NotificationController extends Controller
 
         $notification->update(['is_read' => true]);
 
+        if ($user->isCouple()) {
+            return view('couple.notification.show', [
+                'notification' => $notification,
+            ]);
+        }
+
         return view('vendor.notification.show', [
             'notification' => $notification,
             'vendor' => $user->vendor,
