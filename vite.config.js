@@ -23,12 +23,15 @@ export default defineConfig({
                 'resources/js/couple/dashboard.js',
                 'resources/css/couple/budget.css',
                 'resources/js/couple/budget.js',
+                'resources/css/couple/guests.css',
+                'resources/js/couple/guests.js',
                 'resources/css/couple/ai-budget.css',
                 'resources/js/couple/ai-budget.js',
                 'resources/css/couple/settings.css',
                 'resources/js/couple/settings.js',
                 'resources/css/couple/tasks.css',
                 'resources/js/couple/tasks.js',
+                'resources/css/couple/notification.css',
                 'resources/css/couple/vendorlist.css',
                 'resources/js/couple/vendorlist.js',
 
@@ -45,6 +48,8 @@ export default defineConfig({
                 'resources/js/vendor/booking.js',
                 'resources/css/vendor/notification.css',
                 'resources/js/vendor/notification.js',
+                'resources/css/notification/vendor-notification.css',
+                'resources/js/notification/vendor-notification.js',
 
                 // Admin
                 'resources/css/admin/admin.css',
