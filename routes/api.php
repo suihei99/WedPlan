@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\v1\Auth\ApiAuthController;
 use App\Http\Controllers\Api\v1\Couple\ApiBudgetController;
+use App\Http\Controllers\Api\v1\Couple\ApiAiBudgetController;
 use App\Http\Controllers\Api\v1\Couple\ApiDashboardController;
 use App\Http\Controllers\Api\v1\Couple\ApiExpenseController;
 use App\Http\Controllers\Api\v1\Couple\ApiGuestController;
@@ -92,7 +93,9 @@ Route::prefix('v1')->group(function () {
             Route::put('/tasks/{task}/complete', [ApiTaskController::class, 'markComplete']);
             Route::delete('/tasks/{task}', [ApiTaskController::class, 'destroy']);
 
-            // AI Budgeting API routes can be added here in the future
+            // AI Budgeting API routes
+            Route::post('/ai-budget/estimate', [ApiAiBudgetController::class, 'estimateInitial']);
+            Route::post('/ai-budget/chat', [ApiAiBudgetController::class, 'chat']);
 
             // Setting - Couple
             Route::get('/settings', [ApiSettingController::class, 'index']);
