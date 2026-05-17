@@ -17,12 +17,24 @@ class ApiGuestController extends Controller
 
     public function qr(string $code): JsonResponse
     {
+        return $this->invitation($code);
+    }
+
+    public function invitation(string $code): JsonResponse
+    {
+        $invitation = $this->guestService->getInvitationDetails($code);
+
+        if (! $invitation) {
+            return response()->json([
+                'message' => 'Invitation not found.',
+            ], 404);
+        }
+
         return response()->json([
-            'data' => [
-                'invite_code' => $code,
+            'data' => array_merge($invitation, [
                 'checkin_url' => $this->guestService->getGuestCheckinUrl($code),
                 'qr_image_url' => $this->guestService->getGuestQrImageUrl($code),
-            ],
+            ]),
         ]);
     }
 

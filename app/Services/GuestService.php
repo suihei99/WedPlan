@@ -53,6 +53,46 @@ class GuestService
         return 'https://api.qrserver.com/v1/create-qr-code/?size=400x400&data='.rawurlencode($checkinUrl);
     }
 
+    public function getInvitationDetails(string $inviteCode): ?array
+    {
+        $normalizedInviteCode = strtoupper(trim($inviteCode));
+
+        $guest = Guest::query()
+            ->with('user.couple')
+            ->where('invite_code', $normalizedInviteCode)
+            ->first();
+
+        if (! $guest) {
+            return null;
+        }
+
+        $couple = $guest->user?->couple;
+
+        if (! $couple) {
+            return null;
+        }
+
+        $weddingDate = $couple->wedding_date?->format('Y-m-d');
+        $weddingTime = $couple->wedding_time ? substr((string) $couple->wedding_time, 0, 5) : null;
+
+        return [
+            'invite_code' => $guest->invite_code,
+            'guest_name' => $guest->name,
+            'pax_count' => (int) ($guest->pax_count ?? 1),
+            'rsvp_status' => $guest->rsvp_status,
+            'couple' => [
+                'partner_1_name' => $couple->partner_1_name,
+                'partner_2_name' => $couple->partner_2_name,
+                'display_name' => trim(($couple->partner_1_name ?? '').' & '.($couple->partner_2_name ?? '')),
+            ],
+            'wedding' => [
+                'venue' => $couple->wedding_venue,
+                'date' => $weddingDate,
+                'time' => $weddingTime,
+            ],
+        ];
+    }
+
     public function validationCheckIn(Couple $couple, string $inviteCode): ?Guest
     {
         $guest = $couple->guests()->where('invite_code', $inviteCode)->first();

@@ -234,6 +234,62 @@ Request body:
 
 `DELETE /api/v1/couple/guests/{guest}`
 
+### Public Invitation & QR Endpoints
+
+These public endpoints are used by guests (mobile app or web) to view an invitation card and scan/enter codes.
+
+- `GET /api/v1/guest/qr/{code}`
+  - Legacy QR endpoint. Returns the invitation payload (same shape as `/guest/invitation/{code}`) and the generated `qr_image_url` so the app can show or download the QR image.
+
+- `GET /api/v1/guest/invitation/{code}`
+  - Preferred for manual code entry. Returns a full invitation payload with guest, couple and wedding details.
+
+Example request:
+
+```
+GET /api/v1/guest/invitation/INV12345
+Accept: application/json
+```
+
+Successful response (200):
+
+```json
+{
+  "data": {
+    "invite_code": "INV12345",
+    "guest_name": "Charlie Guest",
+    "pax_count": 3,
+    "rsvp_status": "pending",
+    "couple": {
+      "partner_1_name": "Adam",
+      "partner_2_name": "Bella",
+      "display_name": "Adam & Bella"
+    },
+    "wedding": {
+      "venue": "Grand Ballroom",
+      "date": "2026-12-25",
+      "time": "18:30"
+    },
+    "checkin_url": "https://your-domain.com/guest/checkin/INV12345",
+    "qr_image_url": "https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=..."
+  }
+}
+```
+
+Not found response (404):
+
+```json
+{
+  "message": "Invitation not found."
+}
+```
+
+Integration notes:
+
+- Use `/guest/invitation/{code}` for manual code entry to get structured invitation data for the UI.
+- Both endpoints are public and do not require authentication so they can be used by mobile guests who don't have accounts.
+- For check-in actions (confirming attendance), use the authenticated couple endpoints: `POST /api/v1/couple/guests/{guest}/check-in` or the couple-managed guest APIs.
+
 ### Tasks
 
 `GET /api/v1/couple/tasks`

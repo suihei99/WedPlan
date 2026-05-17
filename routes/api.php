@@ -1,8 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\v1\Auth\ApiAuthController;
-use App\Http\Controllers\Api\v1\Couple\ApiBudgetController;
 use App\Http\Controllers\Api\v1\Couple\ApiAiBudgetController;
+use App\Http\Controllers\Api\v1\Couple\ApiBudgetController;
 use App\Http\Controllers\Api\v1\Couple\ApiDashboardController;
 use App\Http\Controllers\Api\v1\Couple\ApiExpenseController;
 use App\Http\Controllers\Api\v1\Couple\ApiGuestController;
@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Route;
 // Public routes
 Route::prefix('v1')->group(function () {
     Route::get('/guest/qr/{code}', [ApiGuestController::class, 'qr']);
+    Route::get('/guest/invitation/{code}', [ApiGuestController::class, 'invitation']);
 
     // Authentication routes
     Route::prefix('auth')->group(function () {
