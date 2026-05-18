@@ -290,6 +290,75 @@ Integration notes:
 - Both endpoints are public and do not require authentication so they can be used by mobile guests who don't have accounts.
 - For check-in actions (confirming attendance), use the authenticated couple endpoints: `POST /api/v1/couple/guests/{guest}/check-in` or the couple-managed guest APIs.
 
+### Public Guest RSVP Endpoint
+
+This endpoint allows guests to respond to their invitation (accept, reject, or keep as pending) **without authentication**. Guests use their invite code to update their RSVP status directly.
+
+- `PUT /api/v1/guest/rsvp/{code}`
+  - Allows a guest to accept or decline their invitation using only the invite code.
+  - No authentication required.
+
+Example request:
+
+```
+PUT /api/v1/guest/rsvp/INV12345
+Content-Type: application/json
+
+{
+  "rsvp_status": "confirmed"
+}
+```
+
+Successful response (200):
+
+```json
+{
+  "message": "RSVP updated successfully.",
+  "data": {
+    "id": 1,
+    "user_id": 5,
+    "name": "Charlie Guest",
+    "phone": "+60111222333",
+    "pax_count": 3,
+    "rsvp_status": "confirmed",
+    "invite_code": "INV12345",
+    "qr_code_string": "INVITE:INV12345",
+    "created_at": "2026-05-17T10:30:00.000000Z",
+    "updated_at": "2026-05-17T10:35:00.000000Z"
+  }
+}
+```
+
+Not found response (404):
+
+```json
+{
+  "message": "Invitation not found."
+}
+```
+
+Validation error response (422):
+
+```json
+{
+  "message": "The rsvp_status field is required. (and 1 more error)",
+  "errors": {
+    "rsvp_status": [
+      "The rsvp_status field must be one of: pending, confirmed, declined."
+    ]
+  }
+}
+```
+
+Usage notes:
+
+- Valid `rsvp_status` values: `pending`, `confirmed`, `declined`
+- This is the **guest-facing endpoint** for updating their RSVP.
+- Couples can also manage guest RSVPs via the authenticated endpoints (e.g., `PUT /api/v1/couple/guests/{guest}/rsvp`), which is useful for the couple's web/mobile dashboard.
+- Mobile app workflow:
+  1. Guest scans QR or enters code → `GET /api/v1/guest/invitation/{code}` (shows invitation details)
+  2. Guest selects accept/decline → `PUT /api/v1/guest/rsvp/{code}` (records their response)
+
 ### Tasks
 
 `GET /api/v1/couple/tasks`

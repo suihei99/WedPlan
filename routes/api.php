@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('v1')->group(function () {
     Route::get('/guest/qr/{code}', [ApiGuestController::class, 'qr']);
     Route::get('/guest/invitation/{code}', [ApiGuestController::class, 'invitation']);
+    Route::put('/guest/rsvp/{code}', [ApiGuestController::class, 'publicUpdateRsvp']);
 
     // Authentication routes
     Route::prefix('auth')->group(function () {

@@ -93,6 +93,27 @@ class GuestService
         ];
     }
 
+    public function updateRsvpByInviteCode(string $inviteCode, string $status): ?Guest
+    {
+        if (! in_array($status, Guest::RSVP_STATUS, true)) {
+            throw new \InvalidArgumentException('Invalid RSVP status');
+        }
+
+        $normalizedInviteCode = strtoupper(trim($inviteCode));
+
+        $guest = Guest::query()
+            ->where('invite_code', $normalizedInviteCode)
+            ->first();
+
+        if (! $guest) {
+            return null;
+        }
+
+        $guest->update(['rsvp_status' => $status]);
+
+        return $guest->fresh();
+    }
+
     public function validationCheckIn(Couple $couple, string $inviteCode): ?Guest
     {
         $guest = $couple->guests()->where('invite_code', $inviteCode)->first();

@@ -38,6 +38,26 @@ class ApiGuestController extends Controller
         ]);
     }
 
+    public function publicUpdateRsvp(Request $request, string $code): JsonResponse
+    {
+        $validated = $request->validate([
+            'rsvp_status' => ['required', 'string', Rule::in(Guest::RSVP_STATUS)],
+        ]);
+
+        $guest = $this->guestService->updateRsvpByInviteCode($code, $validated['rsvp_status']);
+
+        if (! $guest) {
+            return response()->json([
+                'message' => 'Invitation not found.',
+            ], 404);
+        }
+
+        return response()->json([
+            'message' => 'RSVP updated successfully.',
+            'data' => $guest,
+        ]);
+    }
+
     public function index(): JsonResponse
     {
         $couple = Auth::user()?->couple;
