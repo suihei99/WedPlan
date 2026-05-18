@@ -81,9 +81,9 @@
                     </div>
                     <span class="metric-icon">👥</span>
                 </div>
-                <p class="metric-value">{{ $dashboardData['guests_summary']['total'] ?? 0 }}</p>
+                <p class="metric-value">{{ $dashboardData['guests_total'] ?? ($dashboardData['guests_summary']['total'] ?? 0) }}</p>
                 <p class="metric-note">
-                    {{ $dashboardData['guests_summary']['confirmed'] ?? 0 }} confirmed
+                    {{ $dashboardData['guests_confirmed'] ?? ($dashboardData['guests_summary']['confirmed'] ?? 0) }} confirmed
                 </p>
             </article>
 

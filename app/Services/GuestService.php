@@ -13,6 +13,7 @@ class GuestService
      * updateRSVP(), validateCheckIn(),viewGuestList()
      * methods to manage guest records, including generating unique invite codes and QR code strings for each guest.
      */
+    public function __construct(private readonly UserNotificationService $userNotificationService) {}
 
     // Method to add a new guest to a couple
     public function create(Couple $couple, array $data): Guest
@@ -38,7 +39,14 @@ class GuestService
 
         $guest->update(['rsvp_status' => $status]);
 
-        return $guest->fresh();
+        $guest = $guest->fresh();
+
+        // Notify couple (owner of the guest) if available
+        if ($guest->user instanceof \App\Models\User) {
+            $this->userNotificationService->notifyGuestRsvp($guest->user, $guest, $status);
+        }
+
+        return $guest;
     }
 
     public function getGuestCheckinUrl(string $inviteCode): string
@@ -111,7 +119,13 @@ class GuestService
 
         $guest->update(['rsvp_status' => $status]);
 
-        return $guest->fresh();
+        $guest = $guest->fresh();
+
+        if ($guest->user instanceof \App\Models\User) {
+            $this->userNotificationService->notifyGuestRsvp($guest->user, $guest, $status);
+        }
+
+        return $guest;
     }
 
     public function validationCheckIn(Couple $couple, string $inviteCode): ?Guest

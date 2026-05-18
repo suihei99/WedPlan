@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Mail\UserAlertMail;
 use App\Models\Booking;
+use App\Models\Guest;
 use App\Models\User;
 use App\Models\UserNotification;
 use App\Models\Vendor;
@@ -86,6 +87,21 @@ class UserNotificationService
     public function notifyCoupleBookingDeleted(User $coupleUser, Booking $booking): void
     {
         $this->sendBookingNotification($coupleUser, $booking, 'Booking Deleted', 'deleted');
+    }
+
+    public function notifyGuestRsvp(User $coupleUser, Guest $guest, string $status): void
+    {
+        $statusText = match ($status) {
+            Guest::RSVP_CONFIRMED => 'confirmed their attendance',
+            Guest::RSVP_DECLINED => 'declined the invitation',
+            default => 'updated their RSVP status',
+        };
+
+        $this->send(
+            $coupleUser,
+            'Guest RSVP Update: '.($guest->name ?? 'Guest'),
+            ($guest->name ?? 'A guest').' has '.$statusText.'.'
+        );
     }
 
     private function sendBookingNotification(User $coupleUser, Booking $booking, string $title, string $action): void

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Requests\Auth\LoginRequest;
 use App\Http\Requests\Requests\Auth\RegisterCoupleRequest;
 use App\Http\Requests\Requests\Auth\RegisterVendorRequest;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Models\Vendor;
 use App\Services\AuthService;
@@ -43,11 +44,10 @@ class ApiAuthController extends Controller
             'message' => 'Login successful',
             'role' => $result['role'],
             'token' => $result['token'],
-            'user' => $result['user']],
-            200);
+            'user' => new UserResource($result['user']),
+        ], 200);
     }
 
-    // Handle Registration for Couples
     public function registerCouple(RegisterCoupleRequest $request): JsonResponse
     {
         $user = $this->authService->registerCouple($request->validated());
@@ -56,7 +56,7 @@ class ApiAuthController extends Controller
             'message' => 'Registration successful',
             'role' => $user->role,
             'token' => $user->createToken('auth_token')->plainTextToken,
-            'user' => $user,
+            'user' => new UserResource($user),
         ], 201);
     }
 
