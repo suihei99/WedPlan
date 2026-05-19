@@ -26,6 +26,8 @@ Accept: application/json
 Content-Type: application/json
 ```
 
+Note: Authentication responses (for example after `POST /auth/login` or `POST /auth/register/couple`) include a `user` object that already contains the related profile data. If the returned `role` is `couple`, the `user` payload will include a `couple` object (partner names, wedding details). If the `role` is `vendor`, the `user` payload will include a `vendor` object (business details). Mobile clients can rely on this single `user` payload to access profile information without calling a separate profile endpoint.
+
 ## Common Response Pattern
 
 ### GET Requests (Retrieve Data)
@@ -273,6 +275,7 @@ Successful response (201):
 ```
 
 Note: Vendor account will be inactive until admin approves the registration.
+`business_documents` is stored on the public disk under `vendor-documents/` and is accessible through `/storage/...`.
 
 ### Login
 
@@ -389,9 +392,10 @@ Successful response (200):
 {
   "data": {
     "id": 1,
-    "user_id": 1,
-    "notification_enabled": true,
-    "email_alerts": true,
+    "email": "vendor@example.com",
+    "role": "vendor",
+    "profile_photo_path": "profile-photos/avatar.jpg",
+    "profile_photo_url": "http://localhost/storage/profile-photos/avatar.jpg",
     "created_at": "2026-05-18T10:00:00.000000Z",
     "updated_at": "2026-05-18T10:00:00.000000Z"
   }
@@ -408,10 +412,15 @@ Request body:
 
 ```json
 {
-  "notification_enabled": false,
-  "email_alerts": true
+  "email": "new-email@example.com",
+  "profile_photo": "multipart file"
 }
 ```
+
+Notes:
+
+- `profile_photo` is only accepted for vendor accounts.
+- The uploaded file is stored on the public disk under `profile-photos/`.
 
 Successful response (200):
 
@@ -420,9 +429,10 @@ Successful response (200):
   "message": "Settings updated successfully.",
   "data": {
     "id": 1,
-    "user_id": 1,
-    "notification_enabled": false,
-    "email_alerts": true,
+    "email": "new-email@example.com",
+    "role": "vendor",
+    "profile_photo_path": "profile-photos/avatar.jpg",
+    "profile_photo_url": "http://localhost/storage/profile-photos/avatar.jpg",
     "created_at": "2026-05-18T10:00:00.000000Z",
     "updated_at": "2026-05-18T10:05:00.000000Z"
   }
@@ -576,6 +586,64 @@ Successful response (200):
 ```json
 {
   "message": "Budget category deleted successfully."
+}
+```
+
+### Vendor List (for couples)
+
+Get all vendor services available to couples (approved vendors only):
+
+`GET /api/v1/couple/vendors`
+
+Query params:
+- `search` (optional) filter by business name
+- `type_service` (optional) filter by service type
+- `per_page` (optional) number of items per page (default 9)
+
+Successful response (200):
+
+```json
+{
+  "data": {
+    "current_page": 1,
+    "data": [
+      {
+        "id": 1,
+        "service_name": "Photography Package",
+        "type_service": "Photography",
+        "price_estimate": 4500,
+        "description": "Full day wedding coverage",
+        "image_url": "services/photo_1.jpg",
+        "image_url_resolved": "https://your-domain.com/storage/services/photo_1.jpg",
+        "user": {
+          "id": 2,
+          "email": "vendor@example.com",
+          "vendor": {
+            "business_name": "Photography Plus",
+            "business_type": "photography",
+            "contact_number": "+60123456789"
+          }
+        }
+      }
+    ],
+    "last_page": 10
+  }
+}
+```
+
+Get vendor service details:
+
+`GET /api/v1/couple/vendors/{service}`
+
+Successful response (200):
+
+```json
+{
+  "data": {
+    "service": { /* service object */ },
+    "vendor": { /* vendor object */ },
+    "booking_dates": ["2026-09-10"]
+  }
 }
 ```
 
@@ -977,6 +1045,7 @@ Successful response (200):
       "price_estimate": 4500,
       "description": "Full day wedding coverage",
       "image_url": "services/photo_1.jpg",
+      "image_url_resolved": "http://localhost/storage/services/photo_1.jpg",
       "created_at": "2026-05-18T10:00:00.000000Z",
       "updated_at": "2026-05-18T10:00:00.000000Z"
     }
@@ -1001,6 +1070,8 @@ Request body (can include file upload):
 
 Optional: Include `image_url` as a multipart file (`jpg`, `jpeg`, `png`)
 
+The uploaded file is stored on the public disk under `services/` and returned as `image_url_resolved`.
+
 Successful response (201):
 
 ```json
@@ -1013,6 +1084,7 @@ Successful response (201):
     "price_estimate": 4500,
     "description": "Full day wedding coverage",
     "image_url": null,
+    "image_url_resolved": null,
     "created_at": "2026-05-18T10:00:00.000000Z",
     "updated_at": "2026-05-18T10:00:00.000000Z"
   }
@@ -1288,6 +1360,8 @@ curl -X POST https://your-domain.com/api/v1/auth/register/vendor \
 - Delete the token on logout
 
 ### Role-Based Routing
+
+Note: The login/register response includes a `user` object with profile details. In Flutter access `response['user']['couple']` or `response['user']['vendor']` depending on `response['role']`.
 
 Use the returned `role` from login/registration to route users:
 

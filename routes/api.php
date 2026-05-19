@@ -99,6 +99,10 @@ Route::prefix('v1')->group(function () {
             Route::post('/ai-budget/estimate', [ApiAiBudgetController::class, 'estimateInitial']);
             Route::post('/ai-budget/chat', [ApiAiBudgetController::class, 'chat']);
 
+            // Vendor list (public to couples)
+            Route::get('/vendors', [\App\Http\Controllers\Api\v1\Couple\ApiVendorListController::class, 'index']);
+            Route::get('/vendors/{service}', [\App\Http\Controllers\Api\v1\Couple\ApiVendorListController::class, 'show']);
+
             // Setting - Couple
             Route::get('/settings', [ApiSettingController::class, 'index']);
             Route::put('/settings', [ApiSettingController::class, 'update']);

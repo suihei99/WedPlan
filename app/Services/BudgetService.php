@@ -30,6 +30,7 @@ class BudgetService
                     'total_spent' => $category->total_spent, // accessor to calculate total spent in this category
                     'remaining_budget' => $category->remaining_budget, // accessor to calculate remaining budget
                     'is_overspent' => $category->is_overspent,
+                    'overspent_amount' => $category->overspent_amount,
                 ];
             }),
         ];
@@ -55,6 +56,7 @@ class BudgetService
                 'spent_amount' => $categorySpent,
                 'remaining_amount' => max(0, $allocatedAmount - $categorySpent),
                 'is_overspent' => $categorySpent > $allocatedAmount,
+                'overspent_amount' => $categorySpent > $allocatedAmount ? round($categorySpent - $allocatedAmount, 2) : 0.0,
                 'expenses' => $expenses->map(function ($expense) {
                     return [
                         'expense_name' => $expense->expense_name,

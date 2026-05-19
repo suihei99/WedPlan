@@ -67,7 +67,7 @@ class ApiAuthController extends Controller
 
         return response()->json([
             'message' => 'Registration successful. Pending admin approval.',
-            'user' => $user,
+            'user' => new UserResource($user),
         ], 201);
     }
 

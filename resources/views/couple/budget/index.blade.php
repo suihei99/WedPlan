@@ -115,6 +115,7 @@
                         $allocatedAmount = (float) ($category['allocated_amount'] ?? 0);
                         $spentAmount = (float) ($category['total_spent'] ?? 0);
                         $remainingAmount = (float) ($category['remaining_budget'] ?? max(0, $allocatedAmount - $spentAmount));
+                        $overspentAmount = (float) ($category['overspent_amount'] ?? 0);
                         $categoryUsage = $allocatedAmount > 0 ? min(100, ($spentAmount / $allocatedAmount) * 100) : 0;
                         $isOver = (bool) ($category['is_overspent'] ?? false);
                     @endphp
@@ -144,7 +145,7 @@
                             </div>
                             <div class="budget-card-progress-meta">
                                 <span>{{ round($categoryUsage) }}% used</span>
-                                <span>{{ $isOver ? 'Overspent by RM ' . number_format(abs($remainingAmount), 2) : 'RM ' . number_format($remainingAmount, 2) . ' left' }}</span>
+                                <span>{{ $isOver ? 'Overspent by RM ' . number_format($overspentAmount, 2) : 'RM ' . number_format($remainingAmount, 2) . ' left' }}</span>
                             </div>
                         </div>
 

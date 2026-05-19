@@ -56,4 +56,12 @@ class BudgetCategory extends Model
     {
         return max(0, $this->allocated_amount - $this->total_spent);
     }
+
+    // Amount overspent for this category (0 if not overspent)
+    public function getOverspentAmountAttribute(): float
+    {
+        $overspent = $this->total_spent - $this->allocated_amount;
+
+        return $overspent > 0 ? round($overspent, 2) : 0.0;
+    }
 }

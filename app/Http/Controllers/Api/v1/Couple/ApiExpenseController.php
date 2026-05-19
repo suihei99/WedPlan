@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\v1\Couple;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Requests\Couple\ExpenseRequest;
+use App\Http\Resources\ExpenseResource;
 use App\Models\BudgetCategory;
 use App\Models\Expense;
 use App\Services\ExpenseService;
@@ -21,7 +22,7 @@ class ApiExpenseController extends Controller
 
         $expenses = $this->expenseService->getForCouple($couple);
 
-        return response()->json(['data' => $expenses]);
+        return response()->json(['data' => ExpenseResource::collection($expenses)]);
     }
 
     public function store(ExpenseRequest $request): JsonResponse
@@ -31,7 +32,7 @@ class ApiExpenseController extends Controller
 
         return response()->json([
             'message' => 'Expense created successfully.',
-            'data' => $expense,
+            'data' => new ExpenseResource($expense),
         ], 201);
     }
 
@@ -39,7 +40,7 @@ class ApiExpenseController extends Controller
     {
         $this->authorizeExpense($expense);
 
-        return response()->json(['data' => $expense]);
+        return response()->json(['data' => new ExpenseResource($expense)]);
     }
 
     public function update(ExpenseRequest $request, Expense $expense): JsonResponse
@@ -55,7 +56,7 @@ class ApiExpenseController extends Controller
 
         return response()->json([
             'message' => 'Expense updated successfully.',
-            'data' => $updated,
+            'data' => new ExpenseResource($updated),
         ]);
     }
 

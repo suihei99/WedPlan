@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -71,6 +72,10 @@ class User extends Authenticatable
             'is_active' => 'boolean',
         ];
     }
+
+    protected $appends = [
+        'profile_photo_url',
+    ];
 
     // Define the relationship with the Couple model
     public function couple(): HasOne
@@ -137,5 +142,36 @@ class User extends Authenticatable
     public function scopeVendors($query)
     {
         return $query->where('role', self::ROLE_VENDOR);
+    }
+
+    public function getProfilePhotoUrlAttribute(): ?string
+    {
+        $path = $this->profile_photo_path;
+
+        if (! $path) {
+            return null;
+        }
+
+        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+            return $path;
+        }
+
+        if (Storage::disk('public')->exists($path)) {
+            return asset('storage/'.ltrim($path, '/'));
+        }
+
+        if (str_starts_with($path, 'public/')) {
+            return asset('storage/'.ltrim(substr($path, 7), '/'));
+        }
+
+        if (str_starts_with($path, 'storage/')) {
+            return asset($path);
+        }
+
+        if (str_starts_with($path, '/')) {
+            return asset(ltrim($path, '/'));
+        }
+
+        return asset('storage/'.ltrim($path, '/'));
     }
 }

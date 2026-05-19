@@ -65,7 +65,11 @@
 			</div>
 			<div class="budget-progress-foot">
 				<span>{{ $budgetCategory->is_overspent ? 'This category is over budget' : 'This category is on track' }}</span>
-				<span>RM {{ number_format($remainingAmount, 2) }} left</span>
+				@if($budgetCategory->is_overspent)
+					<span>Overspent by RM {{ number_format($budgetCategory->overspent_amount, 2) }}</span>
+				@else
+					<span>RM {{ number_format($remainingAmount, 2) }} left</span>
+				@endif
 			</div>
 		</section>
 
