@@ -14,7 +14,7 @@ class UserAlertMail extends Mailable
 
     public function __construct(
         public string $title,
-        public string $message
+        public string $body
     ) {}
 
     public function envelope(): Envelope

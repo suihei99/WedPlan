@@ -35,6 +35,7 @@ class ExpenseService
             'payment_method' => $data['payment_method'] ?? null,
         ]);
 
+        $this->notifyIfCategoryOverLimit($category);
         $this->notifyIfCoupleBudgetOverLimit((int) $category->user_id);
 
         return $expense;
@@ -53,6 +54,7 @@ class ExpenseService
             'payment_method' => $data['payment_method'] ?? null,
         ]);
 
+        $this->notifyIfCategoryOverLimit($expense->budgetCategory);
         $this->notifyIfCoupleBudgetOverLimit((int) $expense->budgetCategory->user_id);
 
         return $expense->refresh();
@@ -110,5 +112,28 @@ class ExpenseService
         }
 
         $this->userNotificationService->notifyBudgetOverLimit($couple->user, $spent, $limit);
+    }
+
+    private function notifyIfCategoryOverLimit(BudgetCategory $category): void
+    {
+        $category->loadMissing('user');
+
+        if (! $category->user) {
+            return;
+        }
+
+        $spent = (float) $category->total_spent;
+        $limit = (float) $category->allocated_amount;
+
+        if ($limit <= 0 || $spent <= $limit) {
+            return;
+        }
+
+        $cacheKey = 'alerts:category-overlimit:'.$category->user_id.':'.$category->id.':'.now()->format('Y-m-d');
+        if (! Cache::add($cacheKey, true, now()->endOfDay())) {
+            return;
+        }
+
+        $this->userNotificationService->notifyBudgetCategoryOverLimit($category->user, $category, $spent, $limit);
     }
 }

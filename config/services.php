@@ -37,6 +37,7 @@ return [
 
     'firebase' => [
         'server_key' => env('FIREBASE_SERVER_KEY'),
+        'legacy_server_key' => env('FCM_SERVER_KEY'),
         'project_id' => env('FIREBASE_PROJECT_ID'),
     ],
 

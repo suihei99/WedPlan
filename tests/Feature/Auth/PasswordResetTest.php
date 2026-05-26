@@ -28,6 +28,22 @@ it('sends a password reset link email', function () {
     Notification::assertSentTo($user, BrandedResetPasswordNotification::class);
 });
 
+it('sends a password reset link email for vendor accounts', function () {
+    Notification::fake();
+
+    $user = User::factory()->vendor()->create([
+        'email' => 'vendor-reset@example.com',
+    ]);
+
+    post(route('password.email'), [
+        'email' => $user->email,
+    ])
+        ->assertRedirect(route('password.request'))
+        ->assertSessionHas('status');
+
+    Notification::assertSentTo($user, BrandedResetPasswordNotification::class);
+});
+
 it('resets the password with a valid token', function () {
     $user = User::factory()->create([
         'password' => 'OldPassword123',

@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Mail\UserAlertMail;
 use App\Models\Booking;
+use App\Models\BudgetCategory;
 use App\Models\Guest;
 use App\Models\User;
 use App\Models\UserNotification;
@@ -71,6 +72,15 @@ class UserNotificationService
             $coupleUser,
             'Budget Limit Exceeded',
             'Your total spending has exceeded your budget limit. Spent: RM '.number_format($spent, 2).' / Limit: RM '.number_format($limit, 2).'.'
+        );
+    }
+
+    public function notifyBudgetCategoryOverLimit(User $coupleUser, BudgetCategory $category, float $spent, float $limit): void
+    {
+        $this->send(
+            $coupleUser,
+            'Budget Category Over Limit: '.$category->category_name,
+            'Your '.$category->category_name.' category has exceeded its budget. Spent: RM '.number_format($spent, 2).' / Limit: RM '.number_format($limit, 2).'.'
         );
     }
 
