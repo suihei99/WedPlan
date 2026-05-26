@@ -18,6 +18,11 @@ it('sends a pending-approval email when a vendor registers', function () {
     Mail::fake();
     Storage::fake('public');
 
+    $admin = User::factory()->create([
+        'role' => User::ROLE_ADMIN,
+        'email' => 'admin@example.com',
+    ]);
+
     post(route('register.vendor'), [
         'email' => 'vendor@example.com',
         'password' => 'Password123!',
@@ -35,6 +40,11 @@ it('sends a pending-approval email when a vendor registers', function () {
     Mail::assertSent(UserAlertMail::class, function (UserAlertMail $mail) use ($vendorUser) {
         return $mail->hasTo($vendorUser->email)
             && $mail->title === 'Vendor Registration Received';
+    });
+
+    Mail::assertSent(UserAlertMail::class, function (UserAlertMail $mail) use ($admin) {
+        return $mail->hasTo($admin->email)
+            && $mail->title === 'New Vendor Registration';
     });
 });
 

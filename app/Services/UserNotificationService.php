@@ -36,6 +36,19 @@ class UserNotificationService
         );
     }
 
+    public function notifyAdminsVendorPendingApproval(User $vendorUser, Vendor $vendor): void
+    {
+        $admins = User::query()->admins()->get();
+
+        foreach ($admins as $admin) {
+            $this->send(
+                $admin,
+                'New Vendor Registration',
+                'Vendor '.$vendor->business_name.' ('.$vendorUser->email.') has registered and is waiting for approval.'
+            );
+        }
+    }
+
     public function notifyVendorApproved(User $vendorUser): void
     {
         $this->send(

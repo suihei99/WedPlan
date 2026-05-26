@@ -96,7 +96,7 @@ class AuthService
                 'role' => User::ROLE_VENDOR,
             ]);
 
-            $user->vendor()->create([
+            $vendor = $user->vendor()->create([
                 'business_name' => $data['business_name'],
                 'business_type' => $data['business_type'] ?? null,
                 'contact_number' => $data['contact_number'] ?? null,
@@ -106,6 +106,7 @@ class AuthService
             ]);
 
             $this->userNotificationService->notifyVendorPendingApproval($user);
+            $this->userNotificationService->notifyAdminsVendorPendingApproval($user, $vendor);
 
             return $user->load('vendor'); // Return user with vendor profile
         });
