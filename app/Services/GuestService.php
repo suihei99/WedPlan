@@ -51,6 +51,10 @@ class GuestService
 
     public function checkIn(Guest $guest): Guest
     {
+        if ($guest->isCheckedIn()) {
+            return $guest->fresh();
+        }
+
         $guest->update(['rsvp_status' => Guest::RSVP_CONFIRMED]);
 
         $guest = $guest->fresh();
@@ -60,6 +64,21 @@ class GuestService
         }
 
         return $guest;
+    }
+
+    public function checkInByInviteCode(string $inviteCode): ?Guest
+    {
+        $normalizedInviteCode = strtoupper(trim($inviteCode));
+
+        $guest = Guest::query()
+            ->where('invite_code', $normalizedInviteCode)
+            ->first();
+
+        if (! $guest) {
+            return null;
+        }
+
+        return $this->checkIn($guest);
     }
 
     public function getGuestCheckinUrl(string $inviteCode): string

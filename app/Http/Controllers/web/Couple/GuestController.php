@@ -20,6 +20,22 @@ class GuestController extends Controller
         return redirect()->away($this->guestService->getGuestQrImageUrl($code));
     }
 
+    // public function publicCheckin(string $code): JsonResponse
+    // {
+    //     $guest = $this->guestService->checkInByInviteCode($code);
+
+    //     if (! $guest) {
+    //         return response()->json([
+    //             'message' => 'Invitation not found.',
+    //         ], 404);
+    //     }
+
+    //     return response()->json([
+    //         'message' => 'Guest checked in successfully.',
+    //         'data' => $guest,
+    //     ]);
+    // }
+
     public function showGuests()
     {
         $couple = $this->currentCouple();

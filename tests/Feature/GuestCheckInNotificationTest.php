@@ -104,3 +104,46 @@ it('sends email, web, and push notifications when a couple checks in a guest fro
             && $mail->title === 'Guest Checked In: Dana Guest';
     });
 });
+
+it('sends email, web, and push notifications when a guest checks in from the public qr route', function () {
+    Mail::fake();
+    mock(Messaging::class, function ($mock) {
+        $mock->shouldReceive('send')->once()->andReturn('message-id');
+    });
+
+    $user = User::factory()->create([
+        'device_token' => 'device-token-public',
+    ]);
+
+    Couple::query()->create([
+        'user_id' => $user->id,
+        'partner_1_name' => 'Alya',
+        'partner_2_name' => 'Ben',
+        'total_budget_limit' => 1000,
+    ]);
+
+    $guest = Guest::query()->create([
+        'user_id' => $user->id,
+        'name' => 'Public Guest',
+        'phone' => '+60111222335',
+        'pax_count' => 1,
+        'rsvp_status' => Guest::RSVP_PENDING,
+        'invite_code' => 'CHKPUB01',
+        'qr_code_string' => 'INVITE:CHKPUB01',
+    ]);
+
+    get('/guest/checkin/CHKPUB01')
+        ->assertSuccessful()
+        ->assertJsonPath('message', 'Guest checked in successfully.')
+        ->assertJsonPath('data.rsvp_status', Guest::RSVP_CONFIRMED);
+
+    $guest->refresh();
+
+    expect($guest->rsvp_status)->toBe(Guest::RSVP_CONFIRMED);
+    expect(UserNotification::query()->where('user_id', $user->id)->value('title'))->toBe('Guest Checked In: Public Guest');
+
+    Mail::assertSent(UserAlertMail::class, function (UserAlertMail $mail) use ($user) {
+        return $mail->hasTo($user->email)
+            && $mail->title === 'Guest Checked In: Public Guest';
+    });
+});

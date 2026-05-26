@@ -21,6 +21,7 @@ Route::get('/', function () {
 });
 
 Route::get('/guest/qr/{code}', [GuestController::class, 'qr'])->name('guest.qr');
+//Route::get('/guest/checkin/{code}', [GuestController::class, 'publicCheckin'])->name('guest.checkin');
 
 Route::middleware('guest')->group(function () {
     // Authentication routes
