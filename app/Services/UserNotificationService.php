@@ -6,6 +6,7 @@ use App\Mail\UserAlertMail;
 use App\Models\Booking;
 use App\Models\BudgetCategory;
 use App\Models\Guest;
+use App\Models\Task;
 use App\Models\User;
 use App\Models\UserNotification;
 use App\Models\Vendor;
@@ -63,6 +64,34 @@ class UserNotificationService
             $coupleUser,
             'Overdue Task Reminder',
             'You have '.$overdueTaskCount.' overdue task(s). Please review your task list to stay on track.'
+        );
+    }
+
+    public function notifyTaskDueDateSet(User $coupleUser, Task $task): void
+    {
+        $deadline = $this->formatDeadline($task->deadline);
+
+        $this->send(
+            $coupleUser,
+            'Task Due Date Set: '.$task->task_name,
+            'The due date for '.$task->task_name.' has been set to '.$deadline.'.'
+        );
+    }
+
+    public function notifyTaskDueDateUpdated(User $coupleUser, Task $task, ?Carbon $previousDeadline): void
+    {
+        $currentDeadline = $this->formatDeadline($task->deadline);
+
+        if ($previousDeadline instanceof Carbon) {
+            $previousDeadline = $previousDeadline->copy();
+        }
+
+        $previousText = $this->formatDeadline($previousDeadline);
+
+        $this->send(
+            $coupleUser,
+            'Task Due Date Updated: '.$task->task_name,
+            'The due date for '.$task->task_name.' has been updated from '.$previousText.' to '.$currentDeadline.'.'
         );
     }
 
@@ -132,6 +161,19 @@ class UserNotificationService
             $title,
             'A vendor has '.$action.' your booking for '.$booking->type_service.' on '.$bookingDate.'.'
         );
+    }
+
+    private function formatDeadline(Carbon|string|null $deadline): string
+    {
+        if ($deadline instanceof Carbon) {
+            return $deadline->format('d M Y');
+        }
+
+        if (is_string($deadline) && trim($deadline) !== '') {
+            return Carbon::parse($deadline)->format('d M Y');
+        }
+
+        return 'N/A';
     }
 
     private function send(object $user, string $title, string $message): void

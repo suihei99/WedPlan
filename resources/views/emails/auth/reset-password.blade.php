@@ -18,7 +18,13 @@
           <!-- Header with background -->
           <tr>
             <td style="background:linear-gradient(135deg, #fff 0%, #faf9fa 100%); padding:40px 36px 24px; text-align:center; border-bottom:1px solid #f3e9ec;">
-              <img src="{{ $logoUrl }}" alt="WedPlan" width="120" height="auto" style="display:block; margin:0 auto 4px; max-height:80px;">
+              <img
+                src="{{ $logoUrl }}"
+                alt="WedPlan"
+                width="144"
+                height="144"
+                style="display:block; width:144px; height:144px; margin:0 auto 4px; border:0; outline:none; text-decoration:none;"
+              >
             </td>
           </tr>
 

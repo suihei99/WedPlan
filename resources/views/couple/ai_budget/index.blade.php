@@ -9,7 +9,32 @@
 @endpush
 
 @section('content')
+@php($aiBudgetNotice = config('ai_budget.notice'))
+@php($aiBudgetActions = config('ai_budget.actions'))
+
 <div class="ai-budget-page">
+    <div
+        class="ai-budget-notice-modal"
+        id="aiBudgetNoticeModal"
+        data-version="{{ $aiBudgetNotice['version'] ?? '1.00' }}"
+        aria-hidden="true"
+    >
+        <div class="ai-budget-notice-backdrop" id="aiBudgetNoticeBackdrop"></div>
+        <div class="ai-budget-notice-panel" role="dialog" aria-modal="true" aria-labelledby="aiBudgetNoticeTitle">
+            <div class="ai-budget-notice-tag">Version {{ $aiBudgetNotice['version'] ?? '1.00' }} Beta</div>
+            <h2 id="aiBudgetNoticeTitle">{{ $aiBudgetNotice['title'] ?? 'AI Budget Beta Notice' }}</h2>
+            <p>{{ $aiBudgetNotice['description'] ?? '' }}</p>
+            <ul>
+                @foreach (($aiBudgetNotice['points'] ?? []) as $point)
+                    <li>{{ $point }}</li>
+                @endforeach
+            </ul>
+            <button type="button" class="ai-budget-notice-btn" id="aiBudgetNoticeCloseBtn">
+                {{ $aiBudgetNotice['button_label'] ?? 'I Understand' }}
+            </button>
+        </div>
+    </div>
+
     <div class="budget-hero">
         <div class="budget-hero-top">
             <div>
@@ -35,9 +60,14 @@
                     <strong>Budget Assistant</strong>
                     <span id="chatStatusText">Online and ready</span>
                 </div>
-                <button type="button" class="ai-chat-add" aria-label="More options">
-                    <span>+</span>
-                </button>
+                <div class="ai-chat-actions">
+                    <button type="button" class="ai-chat-action-btn" id="printAiBudgetBtn" aria-label="Print budget output as PDF">
+                        <span>{{ $aiBudgetActions['print_label'] ?? 'Print PDF' }}</span>
+                    </button>
+                    <button type="button" class="ai-chat-action-btn ai-chat-action-secondary" id="forgetAiBudgetBtn" aria-label="Forget AI budget output">
+                        <span>{{ $aiBudgetActions['forget_label'] ?? 'Forget Output' }}</span>
+                    </button>
+                </div>
             </div>
 
             <!-- Messages Container -->
@@ -143,6 +173,78 @@
         const chatStatusText = document.getElementById('chatStatusText');
         const onlineStatus = document.getElementById('onlineStatus');
         const budgetPresence = document.getElementById('budgetPresence');
+        const aiBudgetNoticeModal = document.getElementById('aiBudgetNoticeModal');
+        const aiBudgetNoticeBackdrop = document.getElementById('aiBudgetNoticeBackdrop');
+        const aiBudgetNoticeCloseBtn = document.getElementById('aiBudgetNoticeCloseBtn');
+        const printAiBudgetBtn = document.getElementById('printAiBudgetBtn');
+        const forgetAiBudgetBtn = document.getElementById('forgetAiBudgetBtn');
+        const aiBudgetForgetMessage = @json($aiBudgetActions['forget_message'] ?? 'The AI output has been cleared from this screen.');
+
+        function getNoticeStorageKey(version) {
+            return `ai_budget_notice_seen_${version || '1.00'}`;
+        }
+
+        function closeNoticeModal(version) {
+            if (!aiBudgetNoticeModal) {
+                return;
+            }
+
+            aiBudgetNoticeModal.classList.remove('is-open');
+            aiBudgetNoticeModal.setAttribute('aria-hidden', 'true');
+            document.body.classList.remove('ai-budget-modal-open');
+
+            try {
+                localStorage.setItem(getNoticeStorageKey(version), '1');
+            } catch (error) {
+                console.warn('Unable to save AI budget notice state', error);
+            }
+        }
+
+        function openNoticeModal() {
+            if (!aiBudgetNoticeModal) {
+                return;
+            }
+
+            const version = aiBudgetNoticeModal.dataset.version || '1.00';
+            let alreadySeen = false;
+
+            try {
+                alreadySeen = localStorage.getItem(getNoticeStorageKey(version)) === '1';
+            } catch (error) {
+                alreadySeen = false;
+            }
+
+            if (alreadySeen) {
+                return;
+            }
+
+            aiBudgetNoticeModal.classList.add('is-open');
+            aiBudgetNoticeModal.setAttribute('aria-hidden', 'false');
+            document.body.classList.add('ai-budget-modal-open');
+            aiBudgetNoticeCloseBtn?.focus();
+
+            aiBudgetNoticeCloseBtn?.addEventListener('click', () => closeNoticeModal(version), { once: true });
+            aiBudgetNoticeBackdrop?.addEventListener('click', () => closeNoticeModal(version), { once: true });
+        }
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape' && aiBudgetNoticeModal?.classList.contains('is-open')) {
+                const version = aiBudgetNoticeModal.dataset.version || '1.00';
+                closeNoticeModal(version);
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            openNoticeModal();
+        });
+
+        printAiBudgetBtn?.addEventListener('click', function() {
+            window.print();
+        });
+
+        forgetAiBudgetBtn?.addEventListener('click', function() {
+            resetAiBudgetOutput();
+        });
 
         document.querySelectorAll('.budget-option-btn').forEach(btn => {
             btn.addEventListener('click', function() {
@@ -370,6 +472,32 @@
         function removeLoadingMessage() {
             const loadingMsg = document.getElementById('loadingMessage');
             if (loadingMsg) loadingMsg.remove();
+        }
+
+        function resetAiBudgetOutput() {
+            const messagesContainer = document.getElementById('chatMessages');
+            const initialQuestion = document.getElementById('initialQuestion');
+            const chatInputSection = document.getElementById('chatInputSection');
+
+            messagesContainer.querySelectorAll('.ai-message:not(#initialQuestion)').forEach(message => message.remove());
+
+            if (initialQuestion) {
+                initialQuestion.style.display = 'block';
+            }
+
+            if (chatInputSection) {
+                chatInputSection.style.display = 'none';
+            }
+
+            document.getElementById('guestCount').value = '';
+            document.getElementById('messageInput').value = '';
+            document.querySelectorAll('.budget-option-btn').forEach(button => button.classList.remove('selected'));
+            document.querySelectorAll('.ai-quick-chip').forEach(button => button.classList.remove('selected'));
+
+            selectedBudgetRange = null;
+            currentGuestCount = null;
+            setAssistantStatus(true);
+            addErrorMessage(aiBudgetForgetMessage);
         }
 
         function scrollToBottom() {
