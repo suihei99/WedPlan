@@ -4,13 +4,15 @@ This document is a complete integration guide for the WebPlan mobile app. All en
 
 ## Base URL
 
-Use your app domain with the API prefix:
+The Flutter app currently defaults to the hosted API at `https://wedplan.projectse.io/api/v1` and can be overridden with the `API_BASE_URL` compile-time environment variable.
+
+Use your hosted app domain with the API prefix:
 
 ```text
 https://your-domain.com/api/v1
 ```
 
-For local development:
+For local development only:
 
 ```text
 http://localhost:8000/api/v1
@@ -168,6 +170,8 @@ Request body:
 
 Valid values: `pending`, `confirmed`, `declined`
 
+The app also sends `code` and, when available, `guest_name` so the backend can match the invitation record consistently.
+
 Successful response (200):
 
 ```json
@@ -182,6 +186,35 @@ Successful response (200):
     "invite_code": "INV12345",
     "created_at": "2026-05-17T10:30:00.000000Z",
     "updated_at": "2026-05-17T10:35:00.000000Z"
+  }
+}
+```
+
+### Public Guest Check-In
+
+`POST /api/v1/guest/checkin/{code}`
+
+Allows guests to check in without authentication.
+
+Request body:
+
+```json
+{
+  "code": "INV12345",
+  "guest_name": "Charlie Guest"
+}
+```
+
+The app sends `code` on every request and includes `guest_name` when it is available from the invitation form.
+
+Successful response (200):
+
+```json
+{
+  "data": {
+    "id": 1,
+    "name": "Charlie Guest",
+    "checked_in_at": "2026-12-25T18:30:00.000000Z"
   }
 }
 ```
@@ -277,7 +310,7 @@ Successful response (201):
 Note: Vendor account will be inactive until admin approves the registration.
 `business_documents` is stored on the public disk under `vendor-documents/` and is accessible through `/storage/...`.
 
-The uploaded document must be a PDF or PNG file.
+The uploaded document must be a PDF, PNG, JPG, or JPEG file.
 
 ### Login
 
@@ -291,6 +324,8 @@ Request body:
   "password": "password123"
 }
 ```
+
+Note: The current mobile app does not send a push notification token during login. It fetches the Firebase device token locally and should send it after login using `PUT /api/v1/settings` with the `device_token` field.
 
 Successful response (200):
 
@@ -397,7 +432,7 @@ Successful response (200):
     "email": "vendor@example.com",
     "role": "vendor",
     "profile_photo_path": "profile-photos/avatar.jpg",
-    "profile_photo_url": "http://localhost/storage/profile-photos/avatar.jpg",
+    "profile_photo_url": "https://wedplan.projectse.io/storage/profile-photos/avatar.jpg",
     "is_active": true,
     "created_at": "2026-05-18T10:00:00.000000Z",
     "updated_at": "2026-05-18T10:00:00.000000Z"
@@ -426,6 +461,7 @@ Request body:
 
 Notes:
 
+- `device_token` stores the mobile push token for the authenticated user and is used for push notification delivery.
 - `profile_photo` is only accepted for vendor accounts.
 - `device_token` is optional and can be used for push notification registration.
 - To change the password, send `current_password`, `password`, and `password_confirmation` together.
@@ -441,13 +477,15 @@ Successful response (200):
     "email": "new-email@example.com",
     "role": "vendor",
     "profile_photo_path": "profile-photos/avatar.jpg",
-    "profile_photo_url": "http://localhost/storage/profile-photos/avatar.jpg",
+    "profile_photo_url": "https://wedplan.projectse.io/storage/profile-photos/avatar.jpg",
     "is_active": true,
     "created_at": "2026-05-18T10:00:00.000000Z",
     "updated_at": "2026-05-18T10:05:00.000000Z"
   }
 }
 ```
+
+Note: The `device_token` field is stored on the authenticated user but is not returned in the `data` payload.
 
 ## Couple Endpoints
 
@@ -626,7 +664,7 @@ Get all vendor services available to couples (approved vendors only):
 Query params:
 - `search` (optional) filter by business name
 - `type_service` (optional) filter by the stored service category name, such as `Venue`, `Catering`, or `Photography`
-- `per_page` (optional) number of items per page (default 9)
+- `per_page` (optional) number of items per page (default 100 in the current app integration)
 
 Successful response (200):
 
@@ -1078,7 +1116,7 @@ Successful response (200):
       "price_estimate": 4500,
       "description": "Full day wedding coverage",
       "image_url": "services/photo_1.jpg",
-      "image_url_resolved": "http://localhost/storage/services/photo_1.jpg",
+      "image_url_resolved": "https://wedplan.projectse.io/storage/services/photo_1.jpg",
       "created_at": "2026-05-18T10:00:00.000000Z",
       "updated_at": "2026-05-18T10:00:00.000000Z"
     }
@@ -1312,6 +1350,68 @@ Successful response (200):
 }
 ```
 
+## Couple Notification Endpoints
+
+All couple notification endpoints require:
+
+- Authentication via Sanctum token
+- `role:couple` (enforced via middleware)
+
+### Get Couple Notifications
+
+`GET /api/v1/couple/notifications`
+
+Successful response (200):
+
+```json
+{
+  "data": {
+    "current_page": 1,
+    "data": [
+      {
+        "id": 1,
+        "user_id": 2,
+        "title": "Booking Approved",
+        "message": "Your venue booking has been approved.",
+        "is_read": false,
+        "created_at": "2026-05-18T10:00:00.000000Z",
+        "updated_at": "2026-05-18T10:00:00.000000Z"
+      }
+    ],
+    "last_page": 1
+  }
+}
+```
+
+### Get Specific Couple Notification
+
+`GET /api/v1/couple/notifications/{notification}`
+
+### Mark Couple Notification as Read
+
+`PUT /api/v1/couple/notifications/{notification}/read`
+
+Successful response (200):
+
+```json
+{
+  "success": true,
+  "message": "Notification marked as read."
+}
+```
+
+### Delete Couple Notification
+
+`DELETE /api/v1/couple/notifications/{notification}`
+
+Successful response (200):
+
+```json
+{
+  "message": "Notification deleted successfully."
+}
+```
+
 ## Error Codes
 
 | Code | Status | Description |
@@ -1348,6 +1448,8 @@ Successful response (200):
 - Vendor service types are TitleCase values from `Venue`, `Catering`, `Photography`, `Makeup Artist`, `Wedding Planner`, `Bridal Wear`, `Decor & Styling`, `Entertainment`, `Transportation`, and `Other`.
 - Booking `status` is a boolean in the API: `true` means confirmed and `false` means pending.
 - Notification lists are paginated and return `user_id`, `title`, `message`, `is_read`, `created_at`, and `updated_at`.
+- Notification lists are paginated and return `user_id`, `title`, `message`, `is_read`, `created_at`, and `updated_at` for both vendor and couple APIs.
+- `device_token` is accepted by `PUT /api/v1/settings` and stored on the authenticated user for push notification delivery.
 
 ### Example Error Response (404)
 
@@ -1398,6 +1500,12 @@ curl -X POST https://your-domain.com/api/v1/auth/register/vendor \
 - Include it with every authenticated request
 - Refresh or re-authenticate if the token expires
 - Delete the token on logout
+
+### Push Notification Token
+
+- The app obtains the Firebase device token at startup with `FirebaseMessaging.getToken()`.
+- The token is not part of the login request in the current integration.
+- Send the token to the backend after authentication via `PUT /api/v1/settings` using the `device_token` field.
 
 ### Role-Based Routing
 

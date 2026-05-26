@@ -106,6 +106,12 @@ Route::prefix('v1')->group(function () {
             // Setting - Couple
             Route::get('/settings', [ApiSettingController::class, 'index']);
             Route::put('/settings', [ApiSettingController::class, 'update']);
+
+            // Notifications
+            Route::get('/notifications', [ApiNotificationController::class, 'index']);
+            Route::get('/notifications/{notification}', [ApiNotificationController::class, 'show']);
+            Route::put('/notifications/{notification}/read', [ApiNotificationController::class, 'markAsRead']);
+            Route::delete('/notifications/{notification}', [ApiNotificationController::class, 'destroy']);
         });
     });
 });
