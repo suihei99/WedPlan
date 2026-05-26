@@ -49,6 +49,19 @@ class GuestService
         return $guest;
     }
 
+    public function checkIn(Guest $guest): Guest
+    {
+        $guest->update(['rsvp_status' => Guest::RSVP_CONFIRMED]);
+
+        $guest = $guest->fresh();
+
+        if ($guest->user instanceof \App\Models\User) {
+            $this->userNotificationService->notifyGuestCheckedIn($guest->user, $guest);
+        }
+
+        return $guest;
+    }
+
     public function getGuestCheckinUrl(string $inviteCode): string
     {
         return url('/guest/checkin/'.$inviteCode);

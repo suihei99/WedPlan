@@ -118,7 +118,7 @@ class ApiGuestController extends Controller
     public function checkin(Guest $guest): JsonResponse
     {
         $this->authorizeGuest($guest);
-        $updated = $this->guestService->updateRsvp($guest, Guest::RSVP_CONFIRMED);
+        $updated = $this->guestService->checkIn($guest);
 
         return response()->json([
             'message' => 'Guest checked in successfully.',

@@ -114,6 +114,15 @@ class UserNotificationService
         );
     }
 
+    public function notifyGuestCheckedIn(User $coupleUser, Guest $guest): void
+    {
+        $this->send(
+            $coupleUser,
+            'Guest Checked In: '.($guest->name ?? 'Guest'),
+            ($guest->name ?? 'A guest').' has checked in successfully.'
+        );
+    }
+
     private function sendBookingNotification(User $coupleUser, Booking $booking, string $title, string $action): void
     {
         $bookingDate = $booking->booking_date ? Carbon::parse((string) $booking->booking_date)->format('d M Y') : 'N/A';

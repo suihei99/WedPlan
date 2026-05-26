@@ -84,7 +84,7 @@ class GuestController extends Controller
     public function checkin(Guest $guest): RedirectResponse
     {
         $this->authorizeGuest($guest);
-        $this->guestService->updateRsvp($guest, Guest::RSVP_CONFIRMED);
+        $this->guestService->checkIn($guest);
 
         return redirect()->route('couple.guests.index')->with('success', 'Guest checked in successfully.');
     }
