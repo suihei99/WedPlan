@@ -10,7 +10,10 @@
 </head>
 <body class="vendor-app">
 	@php
-		$vendorProfile = $vendor ?? auth()->user()?->vendor;
+			$vendorUser = auth()->user();
+			$vendorProfile = $vendor ?? $vendorUser?->vendor;
+			$vendorProfileImage = $vendorUser?->profile_photo_url ?? $vendorProfile?->user?->profile_photo_url;
+			$vendorInitial = strtoupper(substr($vendorProfile?->business_name ?? $vendorUser?->email ?? 'V', 0, 1));
 	@endphp
 
 	<div class="vendor-app-shell">
@@ -27,10 +30,14 @@
 
 			<section class="vendor-profile-card" aria-label="Vendor profile">
 				<div class="vendor-profile-avatar">
-					{{ strtoupper(substr(($vendorProfile->business_name ?? auth()->user()->email ?? 'V'), 0, 1)) }}
+					@if($vendorProfileImage)
+						<img src="{{ $vendorProfileImage }}" alt="{{ $vendorProfile?->business_name ?? ($vendorUser?->email ?? 'Vendor') }} profile photo" class="vendor-profile-avatar-image">
+					@else
+						{{ $vendorInitial }}
+					@endif
 				</div>
 				<div>
-					<h2>{{ $vendorProfile->business_name ?? (auth()->user()->email ?? 'Vendor') }}</h2>
+					<h2>{{ $vendorProfile?->business_name ?? ($vendorUser?->email ?? 'Vendor') }}</h2>
 					<p>Vendor</p>
 				</div>
 			</section>
