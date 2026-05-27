@@ -1217,6 +1217,33 @@ Successful response (200):
 
 ### Bookings
 
+Before creating a booking from Flutter, call the vendor couples endpoint to load the couple list and let the vendor pick a couple account by `id`.
+
+### Vendor Couples
+
+`GET /api/v1/vendor/couples`
+
+Requires authentication and `role:vendor`.
+
+Successful response (200):
+
+```json
+{
+  "data": [
+    {
+      "id": 5,
+      "email": "couple@example.com",
+      "couple_id": 2,
+      "couple_name": "Alya & Haziq",
+      "partner_1_name": "Alya",
+      "partner_2_name": "Haziq"
+    }
+  ]
+}
+```
+
+Use `data[].id` as the `couple_id` value when creating a booking.
+
 Get all vendor bookings:
 
 `GET /api/v1/vendor/bookings`

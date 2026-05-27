@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\v1\Vendor\ApiBookingController;
 use App\Http\Controllers\Api\v1\Vendor\ApiDashboardController as VendorApiDashboardController;
 use App\Http\Controllers\Api\v1\Vendor\ApiNotificationController;
 use App\Http\Controllers\Api\v1\Vendor\ApiServiceController;
+use App\Http\Controllers\Api\v1\Vendor\ApiVendorCoupleController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -52,6 +53,7 @@ Route::prefix('v1')->group(function () {
             Route::get('/services/{service}', [ApiServiceController::class, 'show']);
             Route::put('/services/{service}', [ApiServiceController::class, 'update']);
             Route::delete('/services/{service}', [ApiServiceController::class, 'destroy']);
+            Route::get('/couples', [ApiVendorCoupleController::class, 'index']);
             Route::apiResource('bookings', ApiBookingController::class);
             Route::get('/notifications', [ApiNotificationController::class, 'index']);
             Route::get('/notifications/{notification}', [ApiNotificationController::class, 'show']);
