@@ -88,7 +88,10 @@ it('sends email, web, and push notifications when a vendor creates a booking fro
     ])
         ->assertCreated()
         ->assertJsonPath('message', 'Booking created successfully.')
-        ->assertJsonPath('data.type_service', 'Catering');
+        ->assertJsonPath('data.type_service', 'Catering')
+        ->assertJsonPath('data.couple_id', $couple->id)
+        ->assertJsonPath('data.couple_email', $couple->email)
+        ->assertJsonPath('data.couple_name', 'Alya & Ben');
 
     $booking = Booking::query()->firstOrFail();
 

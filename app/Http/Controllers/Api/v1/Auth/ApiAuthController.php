@@ -40,6 +40,14 @@ class ApiAuthController extends Controller
             return response()->json(['message' => 'Invalid credentials'], 401);
         }
 
+        if (array_key_exists('device_token', $validated)) {
+            $result['user']->forceFill([
+                'device_token' => $validated['device_token'],
+            ])->save();
+
+            $result['user']->refresh();
+        }
+
         return response()->json([
             'message' => 'Login successful',
             'role' => $result['role'],

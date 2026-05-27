@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\v1\Vendor;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Requests\Vendor\BookingRequest;
+use App\Http\Resources\BookingResource;
 use App\Models\Booking;
 use App\Models\User;
 use App\Services\BookingService;
@@ -18,24 +19,24 @@ class ApiBookingController extends Controller
     {
         $bookings = $this->bookingService->paginateForVendor($this->currentVendorUser(), 100);
 
-        return response()->json(['data' => $bookings]);
+        return BookingResource::collection($bookings)->response();
     }
 
     public function store(BookingRequest $request): JsonResponse
     {
         $booking = $this->bookingService->create($this->currentVendorUser(), $request->validated());
 
-        return response()->json([
-            'message' => 'Booking created successfully.',
-            'data' => $booking,
-        ], 201);
+        return (new BookingResource($booking->load(['couple.couple', 'vendor'])))
+            ->additional(['message' => 'Booking created successfully.'])
+            ->response()
+            ->setStatusCode(201);
     }
 
     public function show(Booking $booking): JsonResponse
     {
         $this->authorizeVendorBooking($booking);
 
-        return response()->json(['data' => $booking->load(['couple.couple', 'vendor'])]);
+        return (new BookingResource($booking->load(['couple.couple', 'vendor'])))->response();
     }
 
     public function update(BookingRequest $request, Booking $booking): JsonResponse
@@ -43,10 +44,9 @@ class ApiBookingController extends Controller
         $this->authorizeVendorBooking($booking);
         $updatedBooking = $this->bookingService->update($booking, $request->validated());
 
-        return response()->json([
-            'message' => 'Booking updated successfully.',
-            'data' => $updatedBooking,
-        ]);
+        return (new BookingResource($updatedBooking->load(['couple.couple', 'vendor'])))
+            ->additional(['message' => 'Booking updated successfully.'])
+            ->response();
     }
 
     public function destroy(Booking $booking): JsonResponse

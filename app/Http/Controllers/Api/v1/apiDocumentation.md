@@ -264,33 +264,35 @@ Successful response (201):
       "partner_1_name": "Alya",
       "partner_2_name": "Haziq",
       "wedding_date": "2026-12-31",
-      "wedding_time": "19:30",
-      "wedding_venue": "Kuala Lumpur",
-      "total_budget_limit": 50000,
-      "display_name": "Alya & Haziq",
-      "created_at": "2026-05-18T10:00:00.000000Z",
-      "updated_at": "2026-05-18T10:00:00.000000Z"
+Note: Booking responses include the related couple user and their profile data when available. The returned `data` object may include a nested `couple` user object (with `id` and `email`) and a nested `couple` profile object containing partner names. Example:
+
+```json
+{
+  "message": "Booking created successfully.",
+  "data": {
+    "id": 1,
+    "couple_id": 5,
+    "couple_name": "Alya & Haziq",
+    "couple_email": "couple@example.com",
+    "type_service": "photography",
+    "booking_date": "2026-09-10",
+    "status": true,
+    "notes": "Morning session",
+    "created_at": "2026-05-18T10:00:00.000000Z",
+    "updated_at": "2026-05-18T10:00:00.000000Z",
+    "couple": {
+      "id": 5,
+      "email": "couple@example.com",
+      "couple": {
+        "id": 2,
+        "partner_1_name": "Alya",
+        "partner_2_name": "Haziq",
+        "display_name": "Alya & Haziq"
+      }
     }
   }
 }
 ```
-
-### Register Vendor
-
-`POST /api/v1/auth/register/vendor`
-
-Request must be sent as `multipart/form-data` (file upload required).
-
-Fields:
-
-- `email` (required, unique)
-- `password` (required, min 8 characters)
-- `password_confirmation` (required)
-- `business_name` (required)
-- `business_type` (required)
-- `contact_number` (required)
-- `address` (required)
-- `business_documents` (required, file: `pdf`, `png`, `jpg`, `jpeg`)
 
 Successful response (201):
 
@@ -321,11 +323,12 @@ Request body:
 ```json
 {
   "email": "user@example.com",
-  "password": "password123"
+  "password": "password123",
+  "device_token": "firebase-device-token"
 }
 ```
 
-Note: The current mobile app does not send a push notification token during login. It fetches the Firebase device token locally and should send it after login using `PUT /api/v1/settings` with the `device_token` field.
+Note: The mobile app can send the Firebase device token during login. If present, the API stores it on the authenticated user for push notification delivery.
 
 Successful response (200):
 
@@ -355,6 +358,8 @@ Successful response (200):
   }
 }
 ```
+
+If `device_token` is included in the login request, it is saved to the authenticated user record but is not returned in the response payload.
 
 For vendor login, the `vendor` object replaces `couple`:
 
@@ -1224,6 +1229,8 @@ Successful response (200):
     {
       "id": 1,
       "couple_id": 5,
+      "couple_name": "Alya & Haziq",
+      "couple_email": "couple@example.com",
       "type_service": "photography",
       "booking_date": "2026-09-10",
       "status": true,
@@ -1253,6 +1260,8 @@ Request body:
 
 Note: `status: true` means confirmed, `status: false` means pending
 
+Important: the API only needs `couple_id` in the request body. The backend stores that ID in the booking record, then the current `BookingResource` loads the related couple user and couple profile from the booking relation so the response can return `couple_name` and `couple_email` for Flutter.
+
 Successful response (201):
 
 ```json
@@ -1261,6 +1270,8 @@ Successful response (201):
   "data": {
     "id": 1,
     "couple_id": 5,
+    "couple_name": "Alya & Haziq",
+    "couple_email": "couple@example.com",
     "type_service": "photography",
     "booking_date": "2026-09-10",
     "status": true,
@@ -1274,6 +1285,8 @@ Successful response (201):
 Get specific booking:
 
 `GET /api/v1/vendor/bookings/{booking}`
+
+Successful response (200) follows the same booking resource shape as the list and store endpoints, including `couple_id`, `couple_name`, and `couple_email`.
 
 Update booking:
 
@@ -1450,6 +1463,9 @@ Successful response (200):
 - Notification lists are paginated and return `user_id`, `title`, `message`, `is_read`, `created_at`, and `updated_at`.
 - Notification lists are paginated and return `user_id`, `title`, `message`, `is_read`, `created_at`, and `updated_at` for both vendor and couple APIs.
 - `device_token` is accepted by `PUT /api/v1/settings` and stored on the authenticated user for push notification delivery.
+
+- Booking objects include the related `couple` user (containing `id` and `email`) and the nested `couple` profile (containing `partner_1_name`, `partner_2_name`, and `display_name`) when available. Mobile clients can read the couple's `email` and profile names directly from the booking payload.
+- Booking objects also expose flattened `couple_name` and `couple_email` fields for mobile clients that want an easier response shape.
 
 ### Example Error Response (404)
 
