@@ -22,14 +22,14 @@
         $coupleNames = ($couple->partner_1_name ?? 'Partner 1') . ' & ' . ($couple->partner_2_name ?? 'Partner 2');
         $inviteCode = $guest->invite_code ?? 'N/A';
         $qrLink = $guest->invite_code ? url('/guest/qr/' . $guest->invite_code) : url('/');
-        $appInstallUrl = url('/mobile-app');
+        $appInstallUrl = asset('downloads/webplan-release.apk');
 
         $whatsAppMessage = rawurlencode(
             "Hi {$guest->name},\n\n" .
             "You are invited to {$coupleNames}'s wedding.\n" .
             "Invite code: {$inviteCode}\n\n" .
             "View your QR code: {$qrLink}\n" .
-            "Install our mobile app to check-in: {$appInstallUrl}\n\n" .
+            "Download the mobile app here: {$appInstallUrl}\n\n" .
             "Please reply with your RSVP. Thank you."
         );
 

@@ -149,6 +149,65 @@
                     @endguest
                 </div>
 
+                <section id="mobile-app" class="mt-10 w-full max-w-5xl overflow-hidden rounded-[2rem] border border-white/80 bg-white/70 text-left shadow-[0_24px_70px_rgba(224,79,109,0.12)] backdrop-blur">
+                    <div class="grid gap-0 lg:grid-cols-[1.2fr_0.8fr]">
+                        <div class="p-7 sm:p-10">
+                            <span class="inline-flex items-center rounded-full border border-rose-200 bg-rose-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-[#d54564]">
+                                Mobile App
+                            </span>
+                            <h2 class="mt-4 max-w-xl text-3xl font-display font-semibold italic tracking-tight text-[#2d1b21] sm:text-4xl">
+                                Download the WebPlan Android app.
+                            </h2>
+                            <p class="mt-4 max-w-2xl text-sm leading-7 text-[#6b3d4d] sm:text-base">
+                                Save the APK to your phone for faster guest check-ins, easier QR scanning, and quick access to your wedding details on the day.
+                            </p>
+
+                            <div class="mt-6 grid gap-3 sm:grid-cols-2">
+                                <div class="rounded-2xl border border-rose-100 bg-white/85 p-4">
+                                    <h3 class="text-sm font-semibold text-[#4a2030]">Fast check-in</h3>
+                                    <p class="mt-1 text-sm leading-6 text-[#7a5561]">Scan the guest QR and confirm attendance without digging through menus.</p>
+                                </div>
+                                <div class="rounded-2xl border border-rose-100 bg-white/85 p-4">
+                                    <h3 class="text-sm font-semibold text-[#4a2030]">Offline-friendly</h3>
+                                    <p class="mt-1 text-sm leading-6 text-[#7a5561]">Keep the essentials visible even when you need to move quickly at the venue.</p>
+                                </div>
+                            </div>
+
+                            <div class="mt-7 flex flex-col gap-3 sm:flex-row">
+                                <a href="{{ asset('downloads/webplan-release.apk') }}" download class="inline-flex items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#f47b96_0%,#e04f6d_50%,#d63061_100%)] px-6 py-3 text-sm font-semibold text-white shadow-[0_12px_28px_rgba(224,79,109,0.34)] transition duration-300 hover:-translate-y-0.5 hover:bg-[linear-gradient(135deg,#ee708c_0%,#d54564_50%,#c52858_100%)]">
+                                    Download APK
+                                </a>
+                                <a href="{{ route('login') }}" class="inline-flex items-center justify-center rounded-2xl bg-[#1f2f45] px-6 py-3 text-sm font-semibold text-white shadow-[0_12px_24px_rgba(31,47,69,0.18)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#172438]">
+                                    Login to Continue
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-center bg-[radial-gradient(circle_at_top,_rgba(244,112,138,0.22),_transparent_65%)] p-7 sm:p-10 lg:min-h-full">
+                            <div class="w-full max-w-sm rounded-[2rem] border border-rose-100 bg-[#fff9fb] p-5 shadow-[0_18px_50px_rgba(224,79,109,0.14)]">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-xs font-semibold uppercase tracking-[0.22em] text-[#d54564]">WebPlan App</span>
+                                    <span class="rounded-full bg-[#fbe1e8] px-3 py-1 text-[11px] font-semibold text-[#b83f5c]">Android APK</span>
+                                </div>
+
+                                <div class="mt-5 rounded-[1.5rem] bg-[linear-gradient(180deg,#1f2f45_0%,#2a415f_100%)] p-5 text-white shadow-[0_18px_35px_rgba(31,47,69,0.2)]">
+                                    <p class="text-xs uppercase tracking-[0.24em] text-white/60">Check-in ready</p>
+                                    <p class="mt-3 text-2xl font-semibold leading-tight">Guest QR, RSVP, and wedding-day access in one place.</p>
+                                </div>
+
+                                <div class="mt-4 grid gap-3 text-sm text-[#5e3442]">
+                                    <div class="rounded-2xl bg-white px-4 py-3 shadow-[0_10px_22px_rgba(224,79,109,0.08)]">
+                                        Put the APK in public/downloads/webplan-release.apk for direct download.
+                                    </div>
+                                    <div class="rounded-2xl bg-white px-4 py-3 shadow-[0_10px_22px_rgba(224,79,109,0.08)]">
+                                        Built for couples, planners, and on-site check-in support.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
                 <p class="mt-8 text-sm text-[#9d7480]">
                     Love first, stress less.
                 </p>
