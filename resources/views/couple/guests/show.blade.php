@@ -22,7 +22,7 @@
         $coupleNames = ($couple->partner_1_name ?? 'Partner 1') . ' & ' . ($couple->partner_2_name ?? 'Partner 2');
         $inviteCode = $guest->invite_code ?? 'N/A';
         $qrLink = $guest->invite_code ? url('/guest/qr/' . $guest->invite_code) : url('/');
-        $appInstallUrl = asset('downloads/webplan-release.apk');
+        $appInstallUrl = asset('downloads/wedplan-release.apk');
 
         $whatsAppMessage = rawurlencode(
             "Hi {$guest->name},\n\n" .

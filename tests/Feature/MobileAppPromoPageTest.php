@@ -13,7 +13,7 @@ it('shows the mobile app promo section on the welcome page', function () {
 
     $response->assertOk();
     $response->assertSee('Mobile App', false);
-    $response->assertSee(asset('downloads/webplan-release.apk'), false);
+    $response->assertSee(asset('downloads/wedplan-release.apk'), false);
     $response->assertSee('Download APK', false);
 });
 
@@ -45,6 +45,6 @@ it('uses the apk download link in guest whatsapp invitations', function () {
         'errors' => new ViewErrorBag,
     ])->render();
 
-    expect(urldecode($html))->toContain(asset('downloads/webplan-release.apk'));
+    expect(urldecode($html))->toContain(asset('downloads/wedplan-release.apk'));
     expect(urldecode($html))->toContain('Download the mobile app here');
 });

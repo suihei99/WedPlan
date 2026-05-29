@@ -428,19 +428,52 @@ These endpoints are available to all authenticated users (couple, vendor, admin)
 
 Requires authentication.
 
+Returns the authenticated user plus the related profile record when available. Couples receive a nested `couple` object and vendors receive a nested `vendor` object.
+
 Successful response (200):
 
 ```json
 {
   "data": {
     "id": 1,
+    "email": "couple@example.com",
+    "role": "couple",
+    "profile_photo_path": null,
+    "profile_photo_url": null,
+    "is_active": true,
+    "couple": {
+      "id": 1,
+      "partner_1_name": "Alya",
+      "partner_2_name": "Haziq",
+      "wedding_date": "2026-12-31",
+      "wedding_time": "19:30",
+      "wedding_venue": "Kuala Lumpur",
+      "total_budget_limit": 50000,
+      "display_name": "Alya & Haziq"
+    }
+  }
+}
+```
+
+Vendor accounts return the same user object with a nested `vendor` profile instead:
+
+```json
+{
+  "data": {
+    "id": 2,
     "email": "vendor@example.com",
     "role": "vendor",
     "profile_photo_path": "profile-photos/avatar.jpg",
     "profile_photo_url": "https://wedplan.projectse.io/storage/profile-photos/avatar.jpg",
     "is_active": true,
-    "created_at": "2026-05-18T10:00:00.000000Z",
-    "updated_at": "2026-05-18T10:00:00.000000Z"
+    "vendor": {
+      "id": 1,
+      "business_name": "Photography Plus",
+      "business_type": "photography",
+      "contact_number": "+60123456789",
+      "address": "Kuala Lumpur, Malaysia",
+      "status": "approved"
+    }
   }
 }
 ```
@@ -451,6 +484,8 @@ Successful response (200):
 
 Requires authentication.
 
+This is the single settings endpoint for both couple and vendor users. It updates user-level fields for everyone, and role-specific profile fields for the authenticated user’s role.
+
 Request body:
 
 ```json
@@ -460,17 +495,31 @@ Request body:
   "current_password": "current-password",
   "password": "new-password123",
   "password_confirmation": "new-password123",
-  "profile_photo": "multipart file"
+  "profile_photo": "multipart file",
+  "partner_1_name": "Alya",
+  "partner_2_name": "Haziq",
+  "wedding_date": "2026-12-31",
+  "wedding_time": "19:30",
+  "wedding_venue": "Kuala Lumpur",
+  "total_budget_limit": 50000,
+  "business_name": "Photography Plus",
+  "business_type": "photography",
+  "contact_number": "+60123456789",
+  "address": "Kuala Lumpur, Malaysia",
+  "business_documents": "multipart file"
 }
 ```
 
 Notes:
 
 - `device_token` stores the mobile push token for the authenticated user and is used for push notification delivery.
-- `profile_photo` is only accepted for vendor accounts.
+- Couple accounts can update `partner_1_name`, `partner_2_name`, `wedding_date`, `wedding_time`, `wedding_venue`, and `total_budget_limit`.
+- Vendor accounts can update `business_name`, `business_type`, `contact_number`, and `address`.
+- `profile_photo` and `business_documents` are only accepted for vendor accounts.
 - `device_token` is optional and can be used for push notification registration.
 - To change the password, send `current_password`, `password`, and `password_confirmation` together.
 - The uploaded profile photo is stored on the public disk under `profile-photos/`.
+- Vendor documents are stored on the public disk under `vendor-documents/`.
 
 Successful response (200):
 
@@ -479,16 +528,26 @@ Successful response (200):
   "message": "Settings updated successfully.",
   "data": {
     "id": 1,
-    "email": "new-email@example.com",
-    "role": "vendor",
-    "profile_photo_path": "profile-photos/avatar.jpg",
-    "profile_photo_url": "https://wedplan.projectse.io/storage/profile-photos/avatar.jpg",
+    "email": "couple@example.com",
+    "role": "couple",
+    "profile_photo_path": null,
+    "profile_photo_url": null,
     "is_active": true,
-    "created_at": "2026-05-18T10:00:00.000000Z",
-    "updated_at": "2026-05-18T10:05:00.000000Z"
+    "couple": {
+      "id": 1,
+      "partner_1_name": "Alya",
+      "partner_2_name": "Haziq",
+      "wedding_date": "2026-12-31",
+      "wedding_time": "19:30",
+      "wedding_venue": "Kuala Lumpur",
+      "total_budget_limit": 50000,
+      "display_name": "Alya & Haziq"
+    }
   }
 }
 ```
+
+For vendor updates, the same response includes the nested `vendor` profile instead of `couple`.
 
 Note: The `device_token` field is stored on the authenticated user but is not returned in the `data` payload.
 

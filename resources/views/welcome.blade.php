@@ -174,7 +174,7 @@
                             </div>
 
                             <div class="mt-7 flex flex-col gap-3 sm:flex-row">
-                                <a href="{{ asset('downloads/webplan-release.apk') }}" download class="inline-flex items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#f47b96_0%,#e04f6d_50%,#d63061_100%)] px-6 py-3 text-sm font-semibold text-white shadow-[0_12px_28px_rgba(224,79,109,0.34)] transition duration-300 hover:-translate-y-0.5 hover:bg-[linear-gradient(135deg,#ee708c_0%,#d54564_50%,#c52858_100%)]">
+                                <a href="{{ asset('downloads/wedplan-release.apk') }}" download class="inline-flex items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#f47b96_0%,#e04f6d_50%,#d63061_100%)] px-6 py-3 text-sm font-semibold text-white shadow-[0_12px_28px_rgba(224,79,109,0.34)] transition duration-300 hover:-translate-y-0.5 hover:bg-[linear-gradient(135deg,#ee708c_0%,#d54564_50%,#c52858_100%)]">
                                     Download APK
                                 </a>
                                 <a href="{{ route('login') }}" class="inline-flex items-center justify-center rounded-2xl bg-[#1f2f45] px-6 py-3 text-sm font-semibold text-white shadow-[0_12px_24px_rgba(31,47,69,0.18)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#172438]">
@@ -197,7 +197,7 @@
 
                                 <div class="mt-4 grid gap-3 text-sm text-[#5e3442]">
                                     <div class="rounded-2xl bg-white px-4 py-3 shadow-[0_10px_22px_rgba(224,79,109,0.08)]">
-                                        Put the APK in public/downloads/webplan-release.apk for direct download.
+                                        Put the APK in public/downloads/wedplan-release.apk for direct download.
                                     </div>
                                     <div class="rounded-2xl bg-white px-4 py-3 shadow-[0_10px_22px_rgba(224,79,109,0.08)]">
                                         Built for couples, planners, and on-site check-in support.
