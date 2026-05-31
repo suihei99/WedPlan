@@ -16,7 +16,7 @@ class ApiVendorListController extends Controller
                 $q->whereHas('vendor', function ($subQ) {
                     $subQ->where('status', 'approved');
                 });
-            })->with(['user.vendor']);
+            })->with(['user.vendor.bookings']);
 
         if ($request->filled('search')) {
             $search = $request->input('search');
@@ -33,6 +33,12 @@ class ApiVendorListController extends Controller
 
         $services = $query->latest()->paginate($perPage)->appends($request->query());
 
+        $services->getCollection()->transform(function (Service $service): Service {
+            $service->setAttribute('booking_dates', $this->bookingDatesForService($service));
+
+            return $service;
+        });
+
         return response()->json(['data' => $services]);
     }
 
@@ -44,21 +50,37 @@ class ApiVendorListController extends Controller
             abort(404);
         }
 
-        $bookingDates = $vendor->bookings()
-            ->where('type_service', $service->type_service)
-            ->whereNotNull('booking_date')
-            ->orderBy('booking_date')
-            ->pluck('booking_date')
-            ->map(fn ($bookingDate): string => Carbon::parse((string) $bookingDate)->format('Y-m-d'))
-            ->values()
-            ->all();
+        $bookingDates = $this->bookingDatesForService($service);
+
+        $service->setAttribute('booking_dates', $bookingDates);
 
         return response()->json([
             'data' => [
-                'service' => $service->load('user.vendor'),
+                'service' => $service->load('user.vendor.bookings'),
                 'vendor' => $vendor,
                 'booking_dates' => $bookingDates,
             ],
         ]);
+    }
+
+    private function bookingDatesForService(Service $service): array
+    {
+        $vendor = $service->user->vendor ?? null;
+
+        if (! $vendor) {
+            return [];
+        }
+
+        $bookingQuery = $vendor->relationLoaded('bookings')
+            ? $vendor->bookings->where('type_service', $service->type_service)
+            : $vendor->bookings()->where('type_service', $service->type_service)->get();
+
+        return $bookingQuery
+            ->whereNotNull('booking_date')
+            ->sortBy('booking_date')
+            ->pluck('booking_date')
+            ->map(fn ($bookingDate): string => Carbon::parse((string) $bookingDate)->format('Y-m-d'))
+            ->values()
+            ->all();
     }
 }
