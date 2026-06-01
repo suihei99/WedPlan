@@ -44,12 +44,23 @@ class SettingController extends Controller
         abort_unless($user instanceof User, 401);
 
         if ($user->role === User::ROLE_VENDOR) {
+            $contactNumber = $request->input('contact_number');
+
+            if ($contactNumber !== null) {
+                $request->merge([
+                    'contact_number' => preg_replace('/[\s\-]/', '', (string) $contactNumber),
+                ]);
+            }
+
             $validated = $request->validateWithBag('profileUpdate', [
                 'business_type' => ['required', 'string', 'max:255'],
-                'contact_number' => ['required', 'string', 'max:20'],
+                'contact_number' => ['required', 'string', 'max:20', 'regex:/^(?:\+60|60|0)[1-9]\d{7,9}$/'],
                 'address' => ['required', 'string', 'max:255'],
                 'profile_photo' => ['nullable', 'file', 'mimes:png,webp,jpeg,jpg,gif', 'max:2048'],
-                'business_documents' => ['nullable', 'file', 'mimes:pdf,png,webp,jpeg,jpg,gif', 'max:2048'],
+                'business_documents' => ['nullable', 'file', 'mimes:pdf,png', 'max:2048'],
+            ], [
+                'contact_number.regex' => 'Please enter a valid Malaysia number (e.g. +60123456789).',
+                'business_documents.mimes' => 'Business document must be a PDF or PNG file.',
             ]);
 
             $vendor = $user->vendor;

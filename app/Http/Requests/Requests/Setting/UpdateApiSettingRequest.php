@@ -31,7 +31,7 @@ class UpdateApiSettingRequest extends FormRequest
                 'contact_number' => ['sometimes', 'required', 'string', 'max:20', 'regex:/^(?:\+60|60|0)[1-9]\d{7,9}$/'],
                 'address' => ['sometimes', 'required', 'string', 'max:255'],
                 'profile_photo' => ['sometimes', 'nullable', 'file', 'mimes:png,webp,jpeg,jpg,gif', 'max:2048'],
-                'business_documents' => ['sometimes', 'nullable', 'file', 'mimes:pdf,png,webp,jpeg,jpg,gif', 'max:2048'],
+                'business_documents' => ['sometimes', 'nullable', 'file', 'mimes:pdf,png', 'max:2048'],
             ]);
         }
 
@@ -66,6 +66,7 @@ class UpdateApiSettingRequest extends FormRequest
     {
         return [
             'contact_number.regex' => 'Please enter a valid Malaysia number (e.g. +60123456789).',
+            'business_documents.mimes' => 'Business document must be a PDF or PNG file.',
         ];
     }
 }

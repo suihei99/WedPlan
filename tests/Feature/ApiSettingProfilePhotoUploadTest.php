@@ -160,6 +160,78 @@ it('updates vendor profile details through the api settings endpoint', function 
     expect($user->vendor->address)->toBe('Putrajaya');
 });
 
+it('rejects invalid malaysia contact numbers in the api settings endpoint', function () {
+    $user = User::factory()->create([
+        'role' => User::ROLE_VENDOR,
+    ]);
+
+    Vendor::query()->create([
+        'user_id' => $user->id,
+        'business_name' => 'Vendor Co',
+        'business_type' => 'photography',
+        'contact_number' => '+60123456789',
+        'address' => 'Kuala Lumpur',
+        'status' => Vendor::STATUS_PENDING,
+    ]);
+
+    Sanctum::actingAs($user);
+
+    $request = HttpRequest::create('/api/v1/settings', 'POST', [
+        '_method' => 'PUT',
+        'business_name' => 'New Vendor Co',
+        'business_type' => 'planner',
+        'contact_number' => '12345',
+        'address' => 'Putrajaya',
+    ], [], [], [
+        'HTTP_ACCEPT' => 'application/json',
+    ]);
+
+    $response = app()->handle($request);
+
+    expect($response->getStatusCode())->toBe(422);
+
+    $payload = json_decode($response->getContent(), true);
+
+    expect($payload['errors']['contact_number'][0])->toBe('Please enter a valid Malaysia number (e.g. +60123456789).');
+});
+
+it('rejects business documents that are not pdf or png in the api settings endpoint', function () {
+    $user = User::factory()->create([
+        'role' => User::ROLE_VENDOR,
+    ]);
+
+    Vendor::query()->create([
+        'user_id' => $user->id,
+        'business_name' => 'Vendor Co',
+        'business_type' => 'photography',
+        'contact_number' => '+60123456789',
+        'address' => 'Kuala Lumpur',
+        'status' => Vendor::STATUS_PENDING,
+    ]);
+
+    Sanctum::actingAs($user);
+
+    $request = HttpRequest::create('/api/v1/settings', 'POST', [
+        '_method' => 'PUT',
+        'business_name' => 'New Vendor Co',
+        'business_type' => 'planner',
+        'contact_number' => '+60111111111',
+        'address' => 'Putrajaya',
+    ], [], [
+        'business_documents' => UploadedFile::fake()->create('license.txt', 10, 'text/plain'),
+    ], [
+        'HTTP_ACCEPT' => 'application/json',
+    ]);
+
+    $response = app()->handle($request);
+
+    expect($response->getStatusCode())->toBe(422);
+
+    $payload = json_decode($response->getContent(), true);
+
+    expect($payload['errors']['business_documents'][0])->toBe('Business document must be a PDF or PNG file.');
+});
+
 it('rejects profile photo uploads for non-vendor users', function () {
     $user = User::factory()->create([
         'role' => User::ROLE_COUPLE,
