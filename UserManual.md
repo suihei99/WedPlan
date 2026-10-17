@@ -1,4 +1,4 @@
-# WedPlan — User Manual
+# WedPlan — User Manual V.1.0.0
 
 This manual explains how to use the WedPlan web application. It is written for end users (couples and event planners) who will manage budgets, vendors, tasks, guests, and expenses via the web interface.
 
